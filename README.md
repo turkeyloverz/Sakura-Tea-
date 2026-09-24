@@ -19,6 +19,10 @@ Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic a
 - .NET: **10.0**
 - Frontend injection: **File Transformation** plugin
 
+## Test channel
+
+The first direct-install test package is published as internal version `0.1.0.0`.
+
 ## Build
 
 ```bash
