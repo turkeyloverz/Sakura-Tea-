@@ -19,189 +19,147 @@ html.sakura-tea-runtime.sakura-tea-home body {
         var(--sakura-tea-wallpaper) center / cover fixed !important;
 }
 
-/* Home starts at the very top so the hero sits behind the floating header. */
+/* Reserve no native header space on Home: the hero starts at y=0. */
 html.sakura-tea-runtime.sakura-tea-home body.withSectionTabs #indexPage.homePage.libraryPage,
 html.sakura-tea-runtime.sakura-tea-home body #indexPage.homePage.libraryPage,
-html.sakura-tea-runtime.sakura-tea-home body #indexPage.pageWithAbsoluteTabs {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    background: transparent !important;
-}
-
+html.sakura-tea-runtime.sakura-tea-home body #indexPage.pageWithAbsoluteTabs,
+html.sakura-tea-runtime.sakura-tea-home body #indexPage.libraryPage,
 html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab,
 html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab.is-active {
-    margin-top: 0 !important;
     padding-top: 0 !important;
+    margin-top: 0 !important;
+    top: 0 !important;
+    background: transparent !important;
 }
 
 html.sakura-tea-runtime.sakura-tea-home #sakuraTeaHero {
     margin-top: 0 !important;
 }
 
-/* Floating Sakura navigation over the hero. */
-html.sakura-tea-runtime.sakura-tea-home .skinHeader,
-html.sakura-tea-runtime.sakura-tea-home .skinHeader.skinHeader-withBackground,
-html.sakura-tea-runtime.sakura-tea-home .skinHeader.skinHeader-blurred {
-    position: fixed !important;
-    inset: 0 0 auto 0 !important;
-    min-height: 0 !important;
-    height: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
-    contain: none !important;
-    background: none !important;
+/* Keep Jellyfin's native controls alive for proxy clicks, but remove their visual bar. */
+html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    background: transparent !important;
     background-color: transparent !important;
     background-image: none !important;
-    border: 0 !important;
     box-shadow: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    pointer-events: none !important;
-    z-index: 1100 !important;
-}
-
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTop {
-    position: fixed !important;
-    inset: 0 0 auto 0 !important;
-    height: 74px !important;
-    min-height: 74px !important;
-    padding: 0 clamp(22px, 3.5vw, 66px) !important;
-    margin: 0 !important;
-    background: transparent !important;
     border: 0 !important;
-    box-shadow: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    pointer-events: none !important;
+    z-index: 1090 !important;
 }
 
-/* The old full-width Sakura Tea title is replaced by the flower inside the nav pill. */
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerLeft {
-    display: none !important;
+/* Sakura Tea owns the visible Home header from this point on. */
+#sakuraTeaFloatingHeader {
+    position: fixed;
+    z-index: 1200;
+    top: 17px;
+    left: clamp(22px, 3.5vw, 58px);
+    right: clamp(22px, 3.5vw, 58px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    pointer-events: none;
 }
 
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerRight {
-    position: absolute !important;
-    top: 17px !important;
-    right: clamp(22px, 3.5vw, 66px) !important;
-    height: 40px !important;
-    margin: 0 !important;
-    padding: 2px 4px !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 2px !important;
-    background: rgba(41, 25, 39, .20) !important;
-    border: 1px solid rgba(255, 225, 237, .10) !important;
-    border-radius: 14px !important;
-    box-shadow: 0 10px 28px rgba(7, 4, 10, .18) !important;
-    -webkit-backdrop-filter: blur(14px) saturate(135%) !important;
-    backdrop-filter: blur(14px) saturate(135%) !important;
-    pointer-events: auto !important;
-}
-
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerRight .headerButton,
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerRight button {
-    color: #fff8fb !important;
-    background: transparent !important;
-    border-radius: 10px !important;
-}
-
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerRight .headerButton:hover,
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerRight button:hover {
-    background: rgba(255, 196, 216, .22) !important;
-}
-
-/* Pastel-pink glass pill for Favorites / Anime / other home tabs. */
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs.sectionTabs {
-    position: fixed !important;
-    top: 16px !important;
-    left: clamp(22px, 3.5vw, 58px) !important;
-    right: auto !important;
-    width: auto !important;
-    max-width: min(70vw, 760px) !important;
-    height: 44px !important;
-    min-height: 44px !important;
-    margin: 0 !important;
-    padding: 4px 6px 4px 5px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 3px !important;
-    overflow: hidden !important;
+#sakuraTeaFloatingHeader .sakuraTeaHeaderPill {
+    pointer-events: auto;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 5px;
+    overflow: hidden;
+    border-radius: 18px;
     background:
-        linear-gradient(180deg, rgba(255, 225, 236, .50), rgba(255, 179, 205, .34)),
-        rgba(85, 42, 66, .24) !important;
-    border: 1px solid rgba(255, 235, 243, .34) !important;
-    border-radius: 16px !important;
+        linear-gradient(180deg, rgba(255, 224, 236, .56), rgba(255, 174, 204, .38)),
+        rgba(73, 40, 62, .30);
+    border: 1px solid rgba(255, 236, 244, .36);
     box-shadow:
-        inset 0 1px rgba(255,255,255,.28),
-        0 10px 30px rgba(10, 5, 14, .24) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
-    backdrop-filter: blur(18px) saturate(145%) !important;
-    pointer-events: auto !important;
-    transform: none !important;
+        inset 0 1px rgba(255,255,255,.30),
+        0 11px 30px rgba(8, 4, 12, .25);
+    -webkit-backdrop-filter: blur(20px) saturate(145%);
+    backdrop-filter: blur(20px) saturate(145%);
 }
 
-/* Sakura flower at the start of the pill. */
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs.sectionTabs::before {
-    content: "" !important;
-    flex: 0 0 34px !important;
-    width: 34px !important;
-    height: 34px !important;
-    margin: 0 4px 0 1px !important;
-    background: var(--sakura-tea-logo) center / contain no-repeat !important;
-    filter: drop-shadow(0 3px 8px rgba(84, 30, 57, .28));
+#sakuraTeaFloatingHeader .sakuraTeaNavPill {
+    max-width: min(72vw, 760px);
 }
 
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs .tabs-viewmenubar,
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs .emby-tabs-slider {
-    width: auto !important;
-    max-width: 100% !important;
-    height: 36px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 2px !important;
-    overflow: hidden !important;
-    transform: none !important;
+#sakuraTeaFloatingHeader .sakuraTeaHeaderFlower {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    margin: 0 4px 0 1px;
+    background: var(--sakura-tea-logo) center / contain no-repeat;
+    filter: drop-shadow(0 3px 8px rgba(73, 24, 48, .28));
 }
 
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs .emby-tab-button {
-    flex: 0 0 auto !important;
-    height: 36px !important;
-    min-height: 36px !important;
-    min-width: 0 !important;
-    margin: 0 !important;
-    padding: 0 14px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: rgba(255, 249, 252, .88) !important;
-    background: transparent !important;
-    border: 0 !important;
-    border-radius: 11px !important;
-    box-shadow: none !important;
-    font-size: 15px !important;
-    font-weight: 500 !important;
-    text-transform: none !important;
-    transition: background-color .18s ease, color .18s ease, transform .18s ease !important;
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton {
+    position: relative;
+    flex: 0 0 auto;
+    height: 38px;
+    min-width: 38px;
+    margin: 0;
+    padding: 0 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: rgba(255, 250, 252, .90);
+    background: transparent;
+    border: 0;
+    border-radius: 12px;
+    box-shadow: none;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 510;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs .emby-tab-button:hover {
-    color: #fff !important;
-    background: rgba(255, 234, 242, .22) !important;
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton:hover {
+    color: #fff;
+    background: rgba(255, 239, 245, .22);
+    transform: translateY(-1px);
 }
 
-html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs .emby-tab-button.emby-tab-button-active {
-    color: #fff !important;
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.is-active {
+    color: #fff;
     background:
-        linear-gradient(180deg, rgba(255, 185, 210, .58), rgba(244, 139, 174, .48)) !important;
+        linear-gradient(180deg, rgba(255, 191, 214, .72), rgba(240, 140, 176, .56));
     box-shadow:
-        inset 0 1px rgba(255,255,255,.22),
-        0 4px 12px rgba(94, 37, 64, .15) !important;
-    font-weight: 650 !important;
+        inset 0 1px rgba(255,255,255,.30),
+        0 4px 13px rgba(86, 31, 58, .16);
+    font-weight: 650;
+}
+
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.icon-only {
+    padding: 0;
+    width: 38px;
+}
+
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton :is(svg, img, .material-icons, .MuiSvgIcon-root) {
+    flex: 0 0 auto;
+    width: 19px !important;
+    height: 19px !important;
+    max-width: 19px !important;
+    max-height: 19px !important;
+    font-size: 19px !important;
+    line-height: 19px !important;
+    object-fit: contain;
+}
+
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton img {
+    border-radius: 50%;
+}
+
+#sakuraTeaFloatingHeader .sakuraTeaActionPill {
+    background:
+        linear-gradient(180deg, rgba(255, 224, 236, .40), rgba(255, 174, 204, .26)),
+        rgba(42, 28, 39, .26);
 }
 
 html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab.is-active > .sections {
@@ -230,18 +188,29 @@ html.sakura-tea-runtime.sakura-tea-home #indexPage .card:hover {
     transform: translateY(-3px) scale(1.015);
 }
 
-@media (max-width: 760px) {
-    html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs.sectionTabs {
-        left: 12px !important;
-        max-width: calc(100vw - 24px) !important;
+@media (max-width: 860px) {
+    #sakuraTeaFloatingHeader {
+        left: 12px;
+        right: 12px;
+        top: 12px;
     }
 
-    html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerRight {
-        display: none !important;
+    #sakuraTeaFloatingHeader .sakuraTeaActionPill {
+        display: none;
     }
 
-    html.sakura-tea-runtime.sakura-tea-home .skinHeader .headerTabs .emby-tab-button {
-        padding: 0 10px !important;
-        font-size: 13px !important;
+    #sakuraTeaFloatingHeader .sakuraTeaNavPill {
+        max-width: calc(100vw - 24px);
+    }
+
+    #sakuraTeaFloatingHeader .sakuraTeaHeaderButton {
+        padding: 0 10px;
+        font-size: 13px;
+    }
+
+    #sakuraTeaFloatingHeader .sakuraTeaHeaderFlower {
+        flex-basis: 34px;
+        width: 34px;
+        height: 34px;
     }
 }
