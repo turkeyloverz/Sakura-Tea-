@@ -1,10 +1,49 @@
-/* Hero module boundary. Full approved hero layout is wired in during the next step. */
 #sakuraTeaHero {
     position: relative;
-    min-height: 610px;
+    z-index: 3;
+    width: 100%;
     height: 76vh;
+    min-height: 610px;
+    max-height: 920px;
     overflow: hidden;
     isolation: isolate;
+    background: rgba(8, 6, 12, .58);
+}
+
+#sakuraTeaHero .sakuraTeaHeroBackdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 34%;
+    opacity: 1;
+    transition: opacity .38s ease, transform 8s ease;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,.92) 72%, rgba(0,0,0,.2) 94%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,.92) 72%, rgba(0,0,0,.2) 94%, transparent 100%);
+}
+
+#sakuraTeaHero[data-switching="true"] .sakuraTeaHeroBackdrop {
+    opacity: .36;
+}
+
+#sakuraTeaHero .sakuraTeaHeroVignette {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg,
+            rgba(7,5,11,.92) 0%,
+            rgba(7,5,11,.72) 20%,
+            rgba(7,5,11,.43) 42%,
+            rgba(7,5,11,.12) 64%,
+            transparent 78%),
+        linear-gradient(to bottom,
+            rgba(5,4,8,.14) 0%,
+            transparent 46%,
+            rgba(10,7,15,.18) 77%,
+            rgba(10,7,15,.64) 100%);
 }
 
 #sakuraTeaHero .sakuraTeaHeroContent {
@@ -13,5 +52,142 @@
     height: 100%;
     display: flex;
     align-items: flex-end;
-    padding: 100px var(--sakura-tea-gutter) 110px;
+    padding: 100px var(--sakura-tea-gutter) 112px;
+}
+
+#sakuraTeaHero .sakuraTeaHeroStack {
+    width: min(610px, 48vw);
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+#sakuraTeaHero[data-switching="true"] .sakuraTeaHeroStack {
+    opacity: .25;
+    transform: translateY(5px);
+}
+
+#sakuraTeaHero .sakuraTeaHeroLogo {
+    display: block;
+    max-width: min(430px, 42vw);
+    max-height: 145px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: left bottom;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,.62));
+    margin-bottom: 4px;
+}
+
+#sakuraTeaHero .sakuraTeaHeroTitle {
+    margin: 0;
+    max-width: 590px;
+    color: #fff;
+    font-size: clamp(44px, 5.1vw, 74px);
+    font-weight: 800;
+    line-height: .96;
+    letter-spacing: -.04em;
+    text-wrap: balance;
+    text-shadow: 0 4px 18px rgba(0,0,0,.62);
+}
+
+#sakuraTeaHero .sakuraTeaHeroMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    margin-top: 16px;
+    color: rgba(255,255,255,.87);
+    font-size: 15px;
+}
+
+#sakuraTeaHero .sakuraTeaHeroMeta > span + span::before {
+    content: "•";
+    margin: 0 8px;
+    color: rgba(255,255,255,.42);
+}
+
+#sakuraTeaHero .sakuraTeaHeroRating {
+    color: var(--sakura-tea-pink-light);
+}
+
+#sakuraTeaHero .sakuraTeaHeroDescription {
+    display: -webkit-box;
+    max-width: 570px;
+    margin: 12px 0 0;
+    overflow: hidden;
+    color: rgba(255,255,255,.81);
+    font-size: 15px;
+    line-height: 1.48;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    text-shadow: 0 2px 8px rgba(0,0,0,.48);
+}
+
+#sakuraTeaHero .sakuraTeaHeroActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+#sakuraTeaHero .sakuraTeaHeroButton {
+    min-width: 0;
+    height: 45px;
+    padding: 0 21px;
+    border: 0;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+#sakuraTeaHero .sakuraTeaHeroButton:hover {
+    transform: translateY(-1px);
+}
+
+#sakuraTeaHero .sakuraTeaHeroButtonPrimary {
+    color: #0a080d;
+    background: rgba(255,250,252,.97);
+    box-shadow: 0 6px 18px rgba(0,0,0,.18);
+}
+
+#sakuraTeaHero .sakuraTeaHeroButtonSecondary {
+    color: #fff;
+    background: rgba(29,22,38,.72);
+    border: 1px solid rgba(255,255,255,.10);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+}
+
+@media (max-width: 800px) {
+    #sakuraTeaHero {
+        height: 68vh;
+        min-height: 560px;
+    }
+
+    #sakuraTeaHero .sakuraTeaHeroContent {
+        padding: 92px 24px 92px;
+    }
+
+    #sakuraTeaHero .sakuraTeaHeroStack {
+        width: min(620px, 92vw);
+    }
+
+    #sakuraTeaHero .sakuraTeaHeroLogo {
+        max-width: 72vw;
+        max-height: 110px;
+    }
+
+    #sakuraTeaHero .sakuraTeaHeroTitle {
+        font-size: clamp(38px, 9vw, 58px);
+    }
+
+    #sakuraTeaHero .sakuraTeaHeroDescription {
+        -webkit-line-clamp: 2;
+    }
 }
