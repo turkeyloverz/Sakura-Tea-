@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Sakura Tea</title></head>
+<body>
+<div id="SakuraTeaConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+<div data-role="content"><div class="content-primary">
+<form id="SakuraTeaConfigForm">
+<h2>Sakura Tea</h2>
+<p>Early settings for Sakura Tea 0.1 alpha.</p>
+
+<label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label>
+<br>
+<label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label>
+<br>
+<label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable petals and flowers</span></label>
+
+<div class="inputContainer">
+<label class="inputLabel inputLabelUnfocused" for="AnimeLibraryName">Anime library name</label>
+<input id="AnimeLibraryName" type="text" is="emby-input">
+</div>
+
+<div class="inputContainer">
+<label class="inputLabel inputLabelUnfocused" for="HeroSlides">Hero slides</label>
+<input id="HeroSlides" type="number" min="1" max="20" is="emby-input">
+</div>
+
+<div class="inputContainer">
+<label class="inputLabel inputLabelUnfocused" for="HeroRotationSeconds">Rotation interval (seconds)</label>
+<input id="HeroRotationSeconds" type="number" min="3" max="60" is="emby-input">
+</div>
+
+<button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Save</span></button>
+</form></div></div>
+
+<script>
+var SakuraTeaConfig={pluginUniqueId:'3bf6515b-c10a-4307-a3e8-942eaffe900d'};
+document.querySelector('#SakuraTeaConfigPage').addEventListener('pageshow',function(){
+ Dashboard.showLoadingMsg();
+ ApiClient.getPluginConfiguration(SakuraTeaConfig.pluginUniqueId).then(function(c){
+  document.querySelector('#ThemeEnabled').checked=c.ThemeEnabled;
+  document.querySelector('#HeroEnabled').checked=c.HeroEnabled;
+  document.querySelector('#PetalsEnabled').checked=c.PetalsEnabled;
+  document.querySelector('#AnimeLibraryName').value=c.AnimeLibraryName||'Anime';
+  document.querySelector('#HeroSlides').value=c.HeroSlides||10;
+  document.querySelector('#HeroRotationSeconds').value=c.HeroRotationSeconds||9;
+  Dashboard.hideLoadingMsg();
+ });
+});
+document.querySelector('#SakuraTeaConfigForm').addEventListener('submit',function(e){
+ Dashboard.showLoadingMsg();
+ ApiClient.getPluginConfiguration(SakuraTeaConfig.pluginUniqueId).then(function(c){
+  c.ThemeEnabled=document.querySelector('#ThemeEnabled').checked;
+  c.HeroEnabled=document.querySelector('#HeroEnabled').checked;
+  c.PetalsEnabled=document.querySelector('#PetalsEnabled').checked;
+  c.AnimeLibraryName=document.querySelector('#AnimeLibraryName').value.trim()||'Anime';
+  c.HeroSlides=parseInt(document.querySelector('#HeroSlides').value,10)||10;
+  c.HeroRotationSeconds=parseInt(document.querySelector('#HeroRotationSeconds').value,10)||9;
+  ApiClient.updatePluginConfiguration(SakuraTeaConfig.pluginUniqueId,c).then(Dashboard.processPluginConfigurationUpdateResult);
+ });
+ e.preventDefault(); return false;
+});
+</script>
+</div>
+</body>
+</html>

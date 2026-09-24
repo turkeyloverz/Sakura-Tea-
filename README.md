@@ -2,9 +2,9 @@
 
 Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic anime-first home screen with Sakura styling.
 
-> **Status:** early development scaffold for `0.1.0-alpha.1`. This repository is not ready for normal installation yet.
+> **Status:** early development scaffold for `0.1.0-alpha.1`. It is not ready for normal installation yet.
 
-## Planned 0.1.0-alpha.1 scope
+## Planned 0.1.0-alpha.1
 
 - Sakura Tea theme foundation
 - Anime-library hero
@@ -19,31 +19,13 @@ Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic a
 - .NET: **10.0**
 - Frontend injection: **File Transformation** plugin
 
-## Project layout
-
-```text
-src/Jellyfin.Plugin.SakuraTea/
-├── Configuration/
-├── Controllers/
-├── Helpers/
-├── Model/
-├── Services/
-└── Inject/
-    ├── Theme/
-    ├── Hero/
-    ├── Petals/
-    └── Build/
-```
-
-## Development
-
-Build with:
+## Build
 
 ```bash
 dotnet build SakuraTea.slnx --configuration Release
 ```
 
-The plugin currently contains the server/plugin foundation and frontend module boundaries. The approved Sakura Tea preview will be wired into the Hero and Petal modules next.
+The repository currently contains the plugin/server foundation and frontend module boundaries. The approved Sakura Tea hero and petal design will be wired into these modules next.
 
 ## License
 

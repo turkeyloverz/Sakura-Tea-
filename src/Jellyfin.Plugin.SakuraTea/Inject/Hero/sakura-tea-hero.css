@@ -1,0 +1,17 @@
+/* Hero module boundary. Full approved hero layout is wired in during the next step. */
+#sakuraTeaHero {
+    position: relative;
+    min-height: 610px;
+    height: 76vh;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+#sakuraTeaHero .sakuraTeaHeroContent {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    padding: 100px var(--sakura-tea-gutter) 110px;
+}

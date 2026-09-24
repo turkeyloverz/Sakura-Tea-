@@ -1,0 +1,19 @@
+:root {
+    --sakura-tea-pink: #ff9fbd;
+    --sakura-tea-pink-deep: #f38eae;
+    --sakura-tea-pink-light: #ffd6e3;
+    --sakura-tea-lavender: #c8b6ff;
+    --sakura-tea-cream: #fff8f2;
+    --sakura-tea-home-veil: rgba(10, 7, 15, .24);
+    --sakura-tea-wallpaper: url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg");
+}
+
+html.sakura-tea-runtime {
+    --sakura-tea-gutter: clamp(28px, 6vw, 96px);
+}
+
+html.sakura-tea-runtime.sakura-tea-home body {
+    background:
+        linear-gradient(rgba(12,9,18,.57), rgba(15,10,22,.62)),
+        var(--sakura-tea-wallpaper) center / cover fixed;
+}
