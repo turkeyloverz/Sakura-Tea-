@@ -21,7 +21,8 @@
         rotateTimer: 0,
         reconcileTimer: 0,
         generation: 0,
-        config: null
+        config: null,
+        heroOffset: 0
     };
 
     function isVisible(element) {
@@ -652,6 +653,20 @@
         preloader.src = nextBackdrop;
     }
 
+    function alignHeroToTop() {
+        const hero = STATE.hero;
+        if (!hero || !hero.isConnected) {
+            return;
+        }
+
+        const previousOffset = Number(STATE.heroOffset || 0);
+        const measuredTop = hero.getBoundingClientRect().top + previousOffset;
+        const offset = Math.max(0, Math.min(180, Math.round(measuredTop)));
+
+        STATE.heroOffset = offset;
+        hero.style.setProperty('--sakura-tea-hero-offset', offset + 'px');
+    }
+
     function stopRotation() {
         if (STATE.rotateTimer) {
             window.clearInterval(STATE.rotateTimer);
@@ -700,6 +715,7 @@
         STATE.host = null;
         STATE.items = [];
         STATE.index = 0;
+        STATE.heroOffset = 0;
     }
 
     async function mount(host) {
@@ -734,6 +750,9 @@
             host.parentNode.insertBefore(STATE.hero, host);
             STATE.items = items;
             STATE.index = 0;
+            alignHeroToTop();
+            requestAnimationFrame(alignHeroToTop);
+            window.setTimeout(alignHeroToTop, 120);
             renderItem(items[0]);
             startRotation();
         }
