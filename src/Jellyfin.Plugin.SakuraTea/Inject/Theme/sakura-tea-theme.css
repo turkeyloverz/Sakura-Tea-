@@ -14,6 +14,37 @@ html.sakura-tea-runtime {
 
 html.sakura-tea-runtime.sakura-tea-home body {
     background:
-        linear-gradient(rgba(12,9,18,.57), rgba(15,10,22,.62)),
-        var(--sakura-tea-wallpaper) center / cover fixed;
+        linear-gradient(rgba(12, 9, 18, .57), rgba(15, 10, 22, .62)),
+        var(--sakura-tea-wallpaper) center / cover fixed !important;
+}
+
+html.sakura-tea-home #indexPage.homePage.libraryPage:has(#sakuraTeaHero) {
+    padding-top: 0 !important;
+    background: transparent !important;
+}
+
+html.sakura-tea-home #indexPage #homeTab.is-active > .sections {
+    position: relative;
+    isolation: isolate;
+    background: var(--sakura-tea-home-veil);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+}
+
+html.sakura-tea-home #indexPage #homeTab.is-active > .sections > *:not(#sakuraTeaHomeDecor) {
+    position: relative;
+    z-index: 2;
+}
+
+html.sakura-tea-home #indexPage .cardBox {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+html.sakura-tea-home #indexPage .card {
+    transition: transform .22s ease, filter .22s ease;
+}
+
+html.sakura-tea-home #indexPage .card:hover {
+    transform: translateY(-3px) scale(1.015);
 }
