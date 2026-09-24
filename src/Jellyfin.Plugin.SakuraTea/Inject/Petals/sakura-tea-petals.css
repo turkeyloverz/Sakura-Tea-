@@ -1,11 +1,13 @@
-/* Petal-system module boundary based on the approved preview. */
 .sakuraTeaPetalDivider {
     position: relative;
     z-index: 30;
     height: 38px;
     margin-top: -19px;
     background: var(--sakura-tea-home-veil);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     pointer-events: none;
+    overflow: visible;
 }
 
 .sakuraTeaPetalLine {
@@ -16,21 +18,107 @@
     height: 2px;
     transform: translateY(-50%);
     border-radius: 999px;
-    background: linear-gradient(90deg, transparent, rgba(255,159,189,.62) 18%, rgba(255,213,229,.95) 38%, #fff0f5 50%, rgba(255,159,189,.94) 67%, rgba(200,182,255,.50) 84%, transparent);
-    box-shadow: 0 0 5px rgba(255,190,215,.95), 0 0 11px rgba(255,159,189,.63), 0 0 25px rgba(255,159,189,.25);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,159,189,.18) 5%,
+        rgba(255,159,189,.62) 18%,
+        rgba(255,213,229,.95) 38%,
+        #fff0f5 50%,
+        rgba(255,159,189,.94) 67%,
+        rgba(200,182,255,.50) 84%,
+        transparent 100%
+    );
+    box-shadow:
+        0 0 5px rgba(255,190,215,.95),
+        0 0 11px rgba(255,159,189,.63),
+        0 0 25px rgba(255,159,189,.25);
 }
 
-.sakuraTeaPetal {
+.sakuraTeaPetalLine::after {
+    content: "✿";
     position: absolute;
-    width: 9px;
-    height: 14px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff0f5;
+    font-size: 16px;
+    text-shadow: 0 0 5px #ff9fbd, 0 0 12px rgba(255,159,189,.9);
+}
+
+.sakuraTeaLinePetal,
+.sakuraTeaBgPetal {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: calc(9px * var(--s, 1));
+    height: calc(14px * var(--s, 1));
     border-radius: 80% 20% 75% 25%;
-    background: linear-gradient(145deg,#fff5f8,#ffd2e0 38%,#ff9fbd);
-    box-shadow: 0 0 6px rgba(255,185,210,.55);
-    animation: sakuraTeaPetalFloat 8.5s ease-in-out infinite;
+    background: linear-gradient(145deg, rgba(255,247,249,.98), rgba(255,209,223,.9) 38%, #ff9fbd);
+    box-shadow: 0 0 7px rgba(255,159,189,.24);
+    transform: rotate(var(--r, 0deg));
+    animation: sakuraTeaPetalFloat var(--t, 7s) ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+}
+
+.sakuraTeaLinePetal {
+    opacity: .96;
+}
+
+.sakuraTeaLineFlower,
+.sakuraTeaBgFlower {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    color: rgba(255,230,239,.72);
+    font-size: var(--fs, 13px);
+    line-height: 1;
+    text-shadow: 0 0 9px rgba(255,159,189,.34);
+    animation: sakuraTeaFlowerGlow var(--t, 7s) ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+}
+
+#sakuraTeaHomeDecor {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+#sakuraTeaHomeDecor .sakuraTeaBgPetal {
+    opacity: var(--o, .38);
+}
+
+#sakuraTeaHomeDecor .sakuraTeaBgFlower {
+    opacity: var(--o, .48);
 }
 
 @keyframes sakuraTeaPetalFloat {
-    0%,100% { translate: 0 0; }
-    50% { translate: 0 -7px; }
+    0%, 100% {
+        translate: 0 0;
+    }
+    50% {
+        translate: 0 -8px;
+    }
+}
+
+@keyframes sakuraTeaFlowerGlow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: .38;
+    }
+    50% {
+        transform: scale(1.12);
+        opacity: .70;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sakuraTeaLinePetal,
+    .sakuraTeaBgPetal,
+    .sakuraTeaLineFlower,
+    .sakuraTeaBgFlower {
+        animation: none !important;
+    }
 }
