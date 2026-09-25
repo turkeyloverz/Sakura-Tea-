@@ -406,6 +406,8 @@
         header.style.setProperty('--sakura-tea-header-gap', spacing + 'px');
         header.style.setProperty('--sakura-tea-header-alpha', opacity.toFixed(2));
         header.style.setProperty('--sakura-tea-header-alpha-soft', Math.max(.18, opacity * .68).toFixed(2));
+        header.style.setProperty('--sakura-tea-action-alpha', Math.max(.18, opacity * .76).toFixed(2));
+        header.style.setProperty('--sakura-tea-action-alpha-soft', Math.max(.14, opacity * .50).toFixed(2));
         header.dataset.position = String(config.BuilderHeaderPosition || 'Left');
         header.classList.toggle('has-split', hasSplit);
     }
