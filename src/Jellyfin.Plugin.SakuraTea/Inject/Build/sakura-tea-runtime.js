@@ -271,6 +271,111 @@
         return clone;
     }
 
+    function sourceCatalogId(source) {
+        const label = sourceLabel(source).trim().toLowerCase();
+        const href = (source.getAttribute('href') || '').trim();
+
+        if (source.matches('.headerSearchButton') || /\bsearch\b/.test(label)) return 'jellyfin:search';
+        if (source.matches('.headerCastButton') || /\bcast\b/.test(label)) return 'jellyfin:cast';
+        if (source.matches('.headerSyncButton') || /sync\s*play/.test(label)) return 'jellyfin:syncplay';
+        if (source.matches('.headerUserButton, [aria-controls="app-user-menu"]') || source.querySelector('.MuiAvatar-root, .headerUserButtonRound')) return 'jellyfin:user-menu';
+        if (/favo(u)?rites?/.test(label)) return 'jellyfin:favorites';
+        if (label === 'home') return 'jellyfin:home';
+        if (label === 'more') return 'jellyfin:more';
+        if (/audio/.test(label)) return 'jellyfin:audio-player';
+
+        if (href) {
+            try {
+                const url = new URL(href, document.baseURI);
+                const parentId =
+                    url.searchParams.get('topParentId') ||
+                    url.searchParams.get('parentId') ||
+                    url.searchParams.get('collectionId') ||
+                    '';
+                if (parentId) {
+                    return 'jellyfin:view:' + parentId.toLowerCase();
+                }
+                const route = (url.hash || url.pathname || href).toLowerCase();
+                if (route) {
+                    return 'jellyfin:route:' + encodeURIComponent(route).slice(0, 160);
+                }
+            } catch (error) {}
+        }
+
+        const slug = label.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+        return slug ? 'jellyfin:label:' + slug : '';
+    }
+
+    function sourceShape(source) {
+        if (
+            source.matches('.headerUserButton, [aria-controls="app-user-menu"]') ||
+            source.querySelector('.MuiAvatar-root, .headerUserButtonRound')
+        ) {
+            return 'avatar';
+        }
+        const label = sourceLabel(source);
+        return label ? 'text' : 'icon';
+    }
+
+    function sourceIconMarkup(source) {
+        const icon = sourceIcon(source);
+        if (!icon) {
+            return '';
+        }
+
+        icon.querySelectorAll('script, style').forEach((node) => node.remove());
+        icon.removeAttribute('onload');
+        icon.removeAttribute('onclick');
+        icon.querySelectorAll('*').forEach((node) => {
+            Array.from(node.attributes || []).forEach((attribute) => {
+                if (/^on/i.test(attribute.name)) {
+                    node.removeAttribute(attribute.name);
+                }
+            });
+        });
+
+        return icon.outerHTML || '';
+    }
+
+    function publishHeaderCatalog(result) {
+        const descriptors = [];
+        const seen = new Set();
+
+        [
+            ...(result.nav || []).map((source) => ({ source, group: 'nav' })),
+            ...(result.actions || []).map((source) => ({ source, group: 'action' }))
+        ].forEach((entry) => {
+            const id = sourceCatalogId(entry.source);
+            if (!id || seen.has(id)) {
+                return;
+            }
+
+            seen.add(id);
+            descriptors.push({
+                id,
+                label: sourceLabel(entry.source) || entry.source.getAttribute('aria-label') || entry.source.getAttribute('title') || id,
+                group: entry.group,
+                shape: sourceShape(entry.source),
+                iconHtml: sourceIconMarkup(entry.source)
+            });
+        });
+
+        const payload = {
+            version: 1,
+            updatedAt: Date.now(),
+            items: descriptors
+        };
+
+        window.__sakuraTeaHeaderCatalog = payload;
+        try {
+            window.sessionStorage.setItem('sakuraTeaHeaderCatalog', JSON.stringify(payload));
+        } catch (error) {}
+
+        try {
+            window.dispatchEvent(new CustomEvent('sakura-tea:header-catalog-changed', { detail: payload }));
+        } catch (error) {}
+    }
+
     function collectHeaderSources() {
         const header = getNativeHeader();
         if (!header) {
@@ -344,7 +449,9 @@
                 .slice(0, 6);
         }
 
-        return { nav: nav.slice(0, 6), actions: actions.slice(0, 6) };
+        const result = { nav: nav.slice(0, 6), actions: actions.slice(0, 6) };
+        publishHeaderCatalog(result);
+        return result;
     }
 
     function makeProxyButton(source, includeLabel) {
