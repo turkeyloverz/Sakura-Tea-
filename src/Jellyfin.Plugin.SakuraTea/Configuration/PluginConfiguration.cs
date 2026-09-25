@@ -29,6 +29,6 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public int BuilderAnimationSpeed { get; set; } = 100;
 
     public string BuilderPerformanceMode { get; set; } = "Balanced";
-    public string BuilderHeaderItems { get; set; } = "Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More";
+    public string BuilderHeaderItems { get; set; } = "jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more";
     public string BuilderNavOrder { get; set; } = "Favourites|Anime|Not Safe";
 }
