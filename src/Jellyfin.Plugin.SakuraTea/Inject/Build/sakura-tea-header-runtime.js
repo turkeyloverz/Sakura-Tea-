@@ -87,6 +87,37 @@
         );
     }
 
+    function sourceAvatar(source) {
+        const candidate =
+            source.querySelector('.MuiAvatar-root img') ||
+            source.querySelector('.headerUserButtonRound img') ||
+            source.querySelector('img') ||
+            source.querySelector('.MuiAvatar-root') ||
+            source.querySelector('.headerUserButtonRound');
+
+        if (!candidate) {
+            return null;
+        }
+
+        const clone = candidate.cloneNode(true);
+        clone.removeAttribute('id');
+        clone.removeAttribute('srcset');
+        clone.querySelectorAll?.('[id]').forEach((node) => node.removeAttribute('id'));
+
+        if (clone.matches('img')) {
+            clone.src = candidate.currentSrc || candidate.src;
+        } else {
+            const nestedImage = clone.querySelector('img');
+            const liveImage = candidate.querySelector && candidate.querySelector('img');
+            if (nestedImage && liveImage) {
+                nestedImage.src = liveImage.currentSrc || liveImage.src;
+                nestedImage.removeAttribute('srcset');
+            }
+        }
+
+        return clone;
+    }
+
     function sourceId(source) {
         const label = sourceLabel(source).trim().toLowerCase();
         const href = (source.getAttribute('href') || '').trim();
@@ -130,24 +161,31 @@
         return isAvatarSource(source) ? 'avatar' : (sourceLabel(source) ? 'text' : 'icon');
     }
 
-    function sourceIconMarkup(source) {
-        const icon = sourceIcon(source);
-        if (!icon) {
+    function safeMarkup(node) {
+        if (!node) {
             return '';
         }
 
-        icon.querySelectorAll('script, style').forEach((node) => node.remove());
-        icon.removeAttribute('onload');
-        icon.removeAttribute('onclick');
-        icon.querySelectorAll('*').forEach((node) => {
-            Array.from(node.attributes || []).forEach((attribute) => {
+        node.querySelectorAll?.('script, style').forEach((child) => child.remove());
+        node.removeAttribute('onload');
+        node.removeAttribute('onclick');
+        [node, ...(node.querySelectorAll ? node.querySelectorAll('*') : [])].forEach((child) => {
+            Array.from(child.attributes || []).forEach((attribute) => {
                 if (/^on/i.test(attribute.name)) {
-                    node.removeAttribute(attribute.name);
+                    child.removeAttribute(attribute.name);
                 }
             });
         });
 
-        return icon.outerHTML || '';
+        return node.outerHTML || '';
+    }
+
+    function sourceIconMarkup(source) {
+        return safeMarkup(sourceIcon(source));
+    }
+
+    function sourceAvatarMarkup(source) {
+        return safeMarkup(sourceAvatar(source));
     }
 
     function collectSources() {
@@ -262,7 +300,7 @@
                     label: 'Profile Avatar',
                     group: entry.group,
                     shape: 'avatar',
-                    iconHtml: sourceIconMarkup(entry.source)
+                    iconHtml: sourceAvatarMarkup(entry.source)
                 });
             }
         });
@@ -293,8 +331,9 @@
         button.className = 'sakuraTeaHeaderButton';
         button.dataset.itemId = item.id;
 
+        const isProfileAvatar = item.id === 'jellyfin:profile-avatar';
         const useSourceIcon = !(item.id === 'jellyfin:user-menu' && isAvatarSource(source));
-        const icon = useSourceIcon ? sourceIcon(source) : null;
+        const icon = isProfileAvatar ? sourceAvatar(source) : (useSourceIcon ? sourceIcon(source) : null);
         if (icon) {
             button.appendChild(icon);
         } else if (item.icon) {
@@ -317,7 +356,7 @@
             button.classList.add('icon-only');
         }
 
-        if (item.id === 'jellyfin:profile-avatar' || isAvatarSource(source)) {
+        if (item.id === 'jellyfin:profile-avatar') {
             button.classList.add('has-avatar');
         }
 
@@ -399,7 +438,7 @@
         return pill.childElementCount ? pill : null;
     }
 
-    function applySettings(header, config, hasSplit) {
+    function applySettings(header, config, groupCount) {
         const height = Math.max(34, Math.min(58, Number(config.BuilderHeaderHeight || 44)));
         const button = Math.max(28, Math.min(44, Number(config.BuilderHeaderButtonSize || 34)));
         const icon = Math.max(13, Math.min(22, Number(config.BuilderHeaderIconSize || 17)));
@@ -417,7 +456,8 @@
         header.style.setProperty('--sakura-tea-action-alpha', Math.max(.18, opacity * .76).toFixed(2));
         header.style.setProperty('--sakura-tea-action-alpha-soft', Math.max(.14, opacity * .50).toFixed(2));
         header.dataset.position = String(config.BuilderHeaderPosition || 'Left');
-        header.classList.toggle('has-split', hasSplit);
+        header.dataset.groupCount = String(Math.max(1, groupCount || 1));
+        header.classList.toggle('has-split', (groupCount || 1) > 1);
     }
 
     function create(config) {
@@ -431,24 +471,26 @@
         const catalog = Core.mergeCatalog(published.items);
         const rawOrder = (config && config.BuilderHeaderItems) || Core.DEFAULT_HEADER_ITEMS;
         const migratedOrder = Core.upgradeLegacyOrder(rawOrder);
-        const layout = Core.splitOrder(migratedOrder);
+        const layout = Core.groupOrder(migratedOrder);
+        const populatedGroups = layout.groups.filter((group) => group.length > 0);
 
         STATE.sourceBindings = [];
 
         const header = document.createElement('div');
         header.id = 'sakuraTeaFloatingHeader';
-        applySettings(header, config || {}, layout.hasSplit);
+        applySettings(header, config || {}, populatedGroups.length || 1);
 
-        if (layout.hasSplit) {
-            const leftPill = createPill(layout.left, sourceMap, catalog, 'left');
-            const rightPill = createPill(layout.right, sourceMap, catalog, 'right');
-
-            if (leftPill) header.appendChild(leftPill);
-            if (rightPill) header.appendChild(rightPill);
-        } else {
-            const pill = createPill(layout.left, sourceMap, catalog, 'left');
-            if (pill) header.appendChild(pill);
-        }
+        populatedGroups.forEach((group, index) => {
+            const ids = group.map((entry) => entry.id);
+            const role = index === populatedGroups.length - 1 && populatedGroups.length > 1
+                ? 'right'
+                : 'left';
+            const pill = createPill(ids, sourceMap, catalog, role);
+            if (pill) {
+                pill.dataset.groupIndex = String(index);
+                header.appendChild(pill);
+            }
+        });
 
         return header.childElementCount ? header : null;
     }
