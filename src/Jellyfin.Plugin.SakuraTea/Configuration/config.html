@@ -189,7 +189,7 @@
   <div class="st-title-flower" aria-hidden="true"></div>
   <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
  </div>
- <div class="st-badge">0.1.0.10 SleekFin-style builder test</div>
+ <div class="st-badge">0.1.0.11 cleaned builder foundation</div>
 </div>
 
 <div class="st-toolbar">
@@ -566,10 +566,6 @@
   return ghost;
  }
 
- function findPreviewInstance(instance){
-  return previewHost.querySelector('.st-preview-item[data-instance="'+instance+'"]');
- }
-
  function startHeaderDrag(id,fromPreview,source,previewElement,x,y){
   var item=catalogItem(id);
   if(!item.repeatable&&!fromPreview&&headerItems().indexOf(id)>=0)return false;
@@ -752,11 +748,15 @@
  });
 
  var previewResizeObserver=null;
+ var usesWindowResizeFallback=false;
  function startPreviewObserver(){
   if(typeof ResizeObserver==='function'){
    previewResizeObserver=new ResizeObserver(updateHeaderOverflow);
    previewResizeObserver.observe(q('SakuraTeaHeaderPreview'));
-  }else window.addEventListener('resize',updateHeaderOverflow);
+  }else{
+   usesWindowResizeFallback=true;
+   window.addEventListener('resize',updateHeaderOverflow);
+  }
  }
  startPreviewObserver();
 
@@ -765,7 +765,19 @@
  nav.addEventListener('dragover',function(e){e.preventDefault();if(!navDrag)return;var t=e.target.closest('.st-labelchip[data-label]');if(!t||t===navDrag)return;var r=t.getBoundingClientRect();nav.insertBefore(navDrag,e.clientX>r.left+r.width/2?t.nextSibling:t)});
  nav.addEventListener('dragend',function(){if(navDrag)navDrag.classList.remove('is-dragging');navDrag=null;saveNavLabelsFromDom();renderNavLabels()});
 
- window.addEventListener('sakura-tea:header-catalog-changed',function(){refreshCatalog();renderHeaderBuilder();renderHeaderPreview()});
+ function handleHeaderCatalogChanged(){
+  if(!page.isConnected)return;
+  refreshCatalog();renderHeaderBuilder();renderHeaderPreview();
+ }
+ function cleanupBuilder(){
+  window.removeEventListener('sakura-tea:header-catalog-changed',handleHeaderCatalogChanged);
+  if(usesWindowResizeFallback)window.removeEventListener('resize',updateHeaderOverflow);
+  if(previewResizeObserver)previewResizeObserver.disconnect();
+  if(dragGhost)dragGhost.remove();
+  dragGhost=null;dragState=null;pointerState=null;
+ }
+ window.addEventListener('sakura-tea:header-catalog-changed',handleHeaderCatalogChanged);
+ page.addEventListener('pagehide',cleanupBuilder,{once:true});
  page.addEventListener('pageshow',load);
  form.addEventListener('submit',function(e){
   e.preventDefault();Dashboard.showLoadingMsg();setHeaderItems(previewOrder());saveNavLabelsFromDom();
