@@ -5,332 +5,126 @@
 <title>Sakura Tea</title>
 </head>
 <body>
-<div id="SakuraTeaConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox,emby-select">
+<div id="SakuraTeaConfigPage" data-role="page" class="page type-interior pluginConfigurationPage fullWidthContent" data-require="emby-input,emby-button,emby-checkbox,emby-select">
 <style>
-#SakuraTeaConfigPage {
-    --st-pink: #ff9fbd;
-    --st-pink-deep: #f38eae;
-    --st-pink-light: #ffd6e3;
-    --st-lavender: #c8b6ff;
-    --st-cream: #fff8f2;
-    --st-panel: rgba(255,255,255,.045);
-    --st-border: rgba(255,255,255,.09);
+#SakuraTeaConfigPage{
+ --st-pink:#ff9fbd;--st-pink2:#f38eae;--st-light:#ffd6e3;--st-lav:#c8b6ff;
+ --st-panel:rgba(255,255,255,.045);--st-panel2:rgba(255,255,255,.028);--st-border:rgba(255,255,255,.09);
+ padding:1em .8em 3em;box-sizing:border-box
 }
-#SakuraTeaConfigPage .st-shell {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 1.2em 1em 4em;
+#SakuraTeaConfigPage *{box-sizing:border-box}
+#SakuraTeaConfigPage .st-shell{max-width:1280px;margin:0 auto}
+#SakuraTeaConfigPage .st-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1em;margin-bottom:1em}
+#SakuraTeaConfigPage .st-top h2{margin:0;font-size:2em;line-height:1.1}
+#SakuraTeaConfigPage .st-sub{margin:.3em 0 0;opacity:.64}
+#SakuraTeaConfigPage .st-badge{padding:.42em .75em;border:1px solid rgba(255,159,189,.42);border-radius:999px;color:var(--st-light);background:rgba(255,159,189,.08);white-space:nowrap}
+#SakuraTeaConfigPage .st-navrow{display:flex;justify-content:space-between;align-items:center;gap:1em;margin-bottom:1em}
+#SakuraTeaConfigPage .st-tabs,#SakuraTeaConfigPage .st-devices{display:inline-flex;gap:3px;padding:3px;border:1px solid var(--st-border);border-radius:11px;background:rgba(255,255,255,.025)}
+#SakuraTeaConfigPage .st-tab,#SakuraTeaConfigPage .st-device{border:0;border-radius:8px;background:transparent;color:inherit;padding:.62em 1em;cursor:pointer;min-width:0}
+#SakuraTeaConfigPage .st-tab.is-active,#SakuraTeaConfigPage .st-device.is-active{background:linear-gradient(180deg,rgba(255,185,210,.48),rgba(243,142,174,.32));color:#fff;box-shadow:inset 0 1px rgba(255,255,255,.12)}
+#SakuraTeaConfigPage .st-panel[hidden]{display:none!important}
+#SakuraTeaConfigPage .st-card{border:1px solid var(--st-border);border-radius:14px;background:var(--st-panel2);overflow:hidden;margin-bottom:1em}
+#SakuraTeaConfigPage .st-card-head{display:flex;align-items:center;gap:.75em;padding:.9em 1em .75em;border-bottom:1px solid rgba(255,255,255,.055)}
+#SakuraTeaConfigPage .st-card-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:#1a0e14;background:linear-gradient(180deg,var(--st-pink),var(--st-pink2));font-weight:800}
+#SakuraTeaConfigPage .st-card-title{font-size:1.12em;font-weight:600}
+#SakuraTeaConfigPage .st-card-copy{margin:.15em 0 0;opacity:.62;font-size:.9em}
+#SakuraTeaConfigPage .st-builder-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(270px,.8fr)}
+#SakuraTeaConfigPage .st-preview-area{padding:.9em;border-right:1px solid rgba(255,255,255,.055);min-width:0}
+#SakuraTeaConfigPage .st-controls{padding:.7em .9em;display:grid;align-content:start;gap:.2em}
+#SakuraTeaConfigPage .st-control{padding:.58em .1em}
+#SakuraTeaConfigPage .st-control-head{display:flex;align-items:center;justify-content:space-between;gap:1em;font-size:.9em;margin-bottom:.35em}
+#SakuraTeaConfigPage .st-value{color:var(--st-light);font-variant-numeric:tabular-nums}
+#SakuraTeaConfigPage .st-range{width:100%;accent-color:var(--st-pink)}
+#SakuraTeaConfigPage .st-segment{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;border:1px solid var(--st-border);border-radius:9px;background:rgba(255,255,255,.025)}
+#SakuraTeaConfigPage .st-segment button{border:0;border-radius:7px;background:transparent;color:inherit;padding:.5em .45em;cursor:pointer}
+#SakuraTeaConfigPage .st-segment button.is-active{background:rgba(255,159,189,.24);color:#fff}
+#SakuraTeaConfigPage .st-stage{width:100%;margin:0 auto;transition:max-width .18s ease}
+#SakuraTeaConfigPage .st-stage[data-device="desktop"]{max-width:100%}
+#SakuraTeaConfigPage .st-stage[data-device="tablet"]{max-width:720px}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"]{max-width:390px}
+#SakuraTeaConfigPage .st-header-preview{
+ --hp-h:40px;--hp-b:32px;--hp-i:16px;--hp-a:28px;--hp-gap:6px;--hp-alpha:.58;
+ position:relative;height:190px;border-radius:11px;overflow:hidden;
+ background:linear-gradient(rgba(15,8,17,.10),rgba(15,8,17,.25)),url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg") center/cover no-repeat
 }
-#SakuraTeaConfigPage .st-title-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1em;
-    margin-bottom: 1.1em;
+#SakuraTeaConfigPage .st-header-preview::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,5,12,.05),rgba(9,5,12,.16));pointer-events:none}
+#SakuraTeaConfigPage .st-header-wrap{position:absolute;z-index:2;top:18px;left:18px;right:18px;display:flex;align-items:flex-start;justify-content:flex-start}
+#SakuraTeaConfigPage .st-header-preview[data-position="Center"] .st-header-wrap{justify-content:center}
+#SakuraTeaConfigPage .st-header-preview[data-position="Right"] .st-header-wrap{justify-content:flex-end}
+#SakuraTeaConfigPage .st-header-pill{height:var(--hp-h);padding:4px;display:flex;align-items:center;gap:var(--hp-gap);border:1px solid rgba(255,239,245,.28);border-radius:13px;background:linear-gradient(180deg,rgba(255,224,236,var(--hp-alpha)),rgba(255,174,204,calc(var(--hp-alpha)*.72))),rgba(67,40,58,.28);box-shadow:inset 0 1px rgba(255,255,255,.23),0 8px 24px rgba(8,4,12,.24);backdrop-filter:blur(14px)}
+#SakuraTeaConfigPage .st-flower{width:calc(var(--hp-b) - 2px);height:calc(var(--hp-b) - 2px);flex:0 0 calc(var(--hp-b) - 2px);background:url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/pngwing.com.png") center/contain no-repeat}
+#SakuraTeaConfigPage .st-nav-preview{display:flex;align-items:center;gap:var(--hp-gap)}
+#SakuraTeaConfigPage .st-nav-chip{height:var(--hp-b);padding:0 10px;display:flex;align-items:center;gap:6px;border-radius:9px;font-size:12px;color:rgba(255,255,255,.91);white-space:nowrap}
+#SakuraTeaConfigPage .st-nav-chip.is-active{background:linear-gradient(180deg,rgba(255,191,214,.72),rgba(240,140,176,.55));box-shadow:inset 0 1px rgba(255,255,255,.22)}
+#SakuraTeaConfigPage .st-actions-preview{display:flex;align-items:center;gap:var(--hp-gap);margin-left:4px}
+#SakuraTeaConfigPage .st-iconbtn{width:var(--hp-b);height:var(--hp-b);display:grid;place-items:center;border-radius:9px;font-size:var(--hp-i);color:#fff}
+#SakuraTeaConfigPage .st-avatar{width:var(--hp-a);height:var(--hp-a);border-radius:50%;background:linear-gradient(135deg,#4f3454,#d497b2);box-shadow:0 0 0 1px rgba(255,255,255,.12) inset;background-position:center;background-size:cover}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-preview{height:235px}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-wrap{top:auto;bottom:16px;left:12px;right:12px;justify-content:center}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-pill{max-width:100%;overflow:hidden}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-nav-chip{padding:0 7px;font-size:11px}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-actions-preview{display:none}
+
+#SakuraTeaConfigPage .st-hero-preview{
+ --hero-h:76;--hero-title:1;--hero-btn:.9;--hero-dark:.48;--hero-petals:.55;
+ position:relative;height:calc(180px + (var(--hero-h) * .85px));min-height:235px;max-height:290px;border-radius:11px;overflow:hidden;color:#fff;
+ background:url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg") center 46%/cover no-repeat
 }
-#SakuraTeaConfigPage .st-title-row h2 {
-    margin: 0;
-    font-size: 2em;
+#SakuraTeaConfigPage .st-hero-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,4,9,.84),rgba(7,4,9,.28) 45%,transparent 73%),linear-gradient(180deg,transparent 55%,rgba(7,4,9,var(--hero-dark)) 100%)}
+#SakuraTeaConfigPage .st-hero-content{position:absolute;z-index:2;left:5%;bottom:10%;width:min(52%,430px)}
+#SakuraTeaConfigPage .st-hero-title{font-size:calc(34px * var(--hero-title));font-weight:800;line-height:.93;letter-spacing:-.04em;text-shadow:0 4px 18px rgba(0,0,0,.46)}
+#SakuraTeaConfigPage .st-meta{display:flex;flex-wrap:wrap;gap:.65em;margin-top:.6em;font-size:11px;opacity:.86}
+#SakuraTeaConfigPage .st-copy{font-size:11px;line-height:1.4;opacity:.76;margin:.65em 0 0;max-width:390px}
+#SakuraTeaConfigPage .st-hero-actions{display:flex;gap:8px;margin-top:.75em;transform:scale(var(--hero-btn));transform-origin:left center}
+#SakuraTeaConfigPage .st-hero-action{height:32px;padding:0 13px;border-radius:999px;display:flex;align-items:center;gap:7px;font-size:11px}
+#SakuraTeaConfigPage .st-hero-action.primary{background:#fff8fb;color:#111}
+#SakuraTeaConfigPage .st-hero-action.secondary{background:rgba(22,17,26,.76);border:1px solid rgba(255,255,255,.10)}
+#SakuraTeaConfigPage .st-petals{position:absolute;inset:0;z-index:1;opacity:var(--hero-petals);pointer-events:none}
+#SakuraTeaConfigPage .st-petal{position:absolute;width:6px;height:10px;border-radius:80% 20% 75% 25%;background:linear-gradient(145deg,#fff4f8,#ffd2df 42%,#ff9fbd);transform:rotate(var(--r))}
+#SakuraTeaConfigPage .st-hero-line{position:absolute;z-index:2;left:5%;right:5%;bottom:5%;height:2px;background:linear-gradient(90deg,transparent,var(--st-pink),#fff2f6,var(--st-lav),transparent);box-shadow:0 0 8px rgba(255,159,189,.62)}
+#SakuraTeaConfigPage .st-stage[data-device="tablet"] .st-hero-content{width:62%}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-hero-preview{height:390px;max-height:none;background-position:center}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-hero-preview::before{background:linear-gradient(180deg,rgba(7,4,9,.16),rgba(7,4,9,.80) 72%,rgba(7,4,9,.95))}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-hero-content{left:7%;right:7%;bottom:11%;width:auto}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-hero-title{font-size:calc(29px * var(--hero-title))}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-copy{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+#SakuraTeaConfigPage .st-lower{display:grid;grid-template-columns:1fr 1fr;gap:1em}
+#SakuraTeaConfigPage .st-inner{padding:.95em}
+#SakuraTeaConfigPage .st-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:.6em}
+#SakuraTeaConfigPage .st-preset{border:1px solid var(--st-border);border-radius:11px;background:rgba(255,255,255,.022);color:inherit;padding:.85em;text-align:left;cursor:pointer}
+#SakuraTeaConfigPage .st-preset.is-active{border-color:rgba(255,159,189,.70);background:linear-gradient(180deg,rgba(255,159,189,.13),rgba(255,159,189,.055))}
+#SakuraTeaConfigPage .st-preset strong{display:block;margin-bottom:.25em}
+#SakuraTeaConfigPage .st-preset span{opacity:.62;font-size:.82em;line-height:1.35}
+#SakuraTeaConfigPage .st-sort{display:flex;gap:.55em;flex-wrap:wrap}
+#SakuraTeaConfigPage .st-sort-chip{display:flex;align-items:center;gap:.55em;padding:.65em .85em;border:1px solid var(--st-border);border-radius:10px;background:rgba(255,255,255,.025);user-select:none;cursor:grab}
+#SakuraTeaConfigPage .st-sort-chip.is-active{background:linear-gradient(180deg,rgba(255,185,210,.54),rgba(243,142,174,.36));color:#fff}
+#SakuraTeaConfigPage .st-sort-chip.is-dragging{opacity:.42}
+#SakuraTeaConfigPage .st-grip{opacity:.6;font-size:1.1em}
+#SakuraTeaConfigPage .st-note{padding:.8em .95em;border:1px solid rgba(200,182,255,.18);border-radius:11px;background:rgba(200,182,255,.055);line-height:1.45;font-size:.9em;margin-bottom:1em}
+#SakuraTeaConfigPage .st-footer{display:flex;justify-content:space-between;align-items:center;gap:1em;padding-top:.2em}
+#SakuraTeaConfigPage .st-footer-right{display:flex;gap:.6em}
+#SakuraTeaConfigPage .st-btn{min-width:0!important;width:auto!important;padding:.7em 1em!important}
+#SakuraTeaConfigPage .st-save{background:linear-gradient(180deg,var(--st-pink),var(--st-pink2))!important;color:#1a0e14!important}
+#SakuraTeaConfigPage .st-overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:1em}
+#SakuraTeaConfigPage .st-overview-card{padding:1em;border:1px solid var(--st-border);border-radius:14px;background:var(--st-panel2)}
+#SakuraTeaConfigPage .st-overview-card h3{margin:.1em 0 .8em}
+@media(max-width:900px){
+ #SakuraTeaConfigPage{padding:.8em .4em 2em}
+ #SakuraTeaConfigPage .st-navrow{align-items:stretch;flex-direction:column}
+ #SakuraTeaConfigPage .st-tabs,#SakuraTeaConfigPage .st-devices{width:100%;display:grid;grid-template-columns:1fr 1fr}
+ #SakuraTeaConfigPage .st-devices{grid-template-columns:repeat(3,1fr)}
+ #SakuraTeaConfigPage .st-builder-grid{grid-template-columns:1fr}
+ #SakuraTeaConfigPage .st-preview-area{border-right:0;border-bottom:1px solid rgba(255,255,255,.055)}
+ #SakuraTeaConfigPage .st-lower,#SakuraTeaConfigPage .st-overview-grid{grid-template-columns:1fr}
 }
-#SakuraTeaConfigPage .st-kicker {
-    margin: .35em 0 0;
-    opacity: .66;
-}
-#SakuraTeaConfigPage .st-badge {
-    flex: 0 0 auto;
-    padding: .45em .75em;
-    border: 1px solid rgba(255,159,189,.28);
-    border-radius: 999px;
-    background: rgba(255,159,189,.11);
-    color: var(--st-pink-light);
-    font-size: .82em;
-}
-#SakuraTeaConfigPage .st-tabs {
-    display: inline-flex;
-    gap: .25em;
-    padding: .28em;
-    margin-bottom: 1.35em;
-    border: 1px solid var(--st-border);
-    border-radius: 14px;
-    background: rgba(255,255,255,.035);
-}
-#SakuraTeaConfigPage .st-tab {
-    min-width: 0;
-    padding: .68em 1.05em;
-    border: 0;
-    border-radius: 10px;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
-}
-#SakuraTeaConfigPage .st-tab.is-active {
-    background: linear-gradient(180deg, rgba(255,190,214,.28), rgba(243,142,174,.18));
-    color: #fff;
-    box-shadow: inset 0 1px rgba(255,255,255,.09);
-}
-#SakuraTeaConfigPage .st-panel[hidden] {
-    display: none !important;
-}
-#SakuraTeaConfigPage .st-card {
-    margin-bottom: 1em;
-    padding: 1.05em 1.15em;
-    border: 1px solid var(--st-border);
-    border-radius: 16px;
-    background: var(--st-panel);
-}
-#SakuraTeaConfigPage .st-card h3 {
-    margin: 0 0 .35em;
-}
-#SakuraTeaConfigPage .st-muted {
-    margin: 0 0 1em;
-    opacity: .65;
-    line-height: 1.45;
-}
-#SakuraTeaConfigPage .st-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0,1fr));
-    gap: 1em;
-}
-#SakuraTeaConfigPage .st-builder-grid {
-    display: grid;
-    grid-template-columns: minmax(0,1.35fr) minmax(270px,.65fr);
-    gap: 1em;
-    align-items: start;
-}
-#SakuraTeaConfigPage .st-preview-card {
-    position: sticky;
-    top: 1em;
-    padding: .75em;
-    border: 1px solid var(--st-border);
-    border-radius: 18px;
-    background: rgba(255,255,255,.035);
-}
-#SakuraTeaConfigPage .st-preview-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1em;
-    padding: .25em .3em .7em;
-    font-size: .9em;
-    opacity: .72;
-}
-#SakuraTeaConfigPage .st-preview {
-    --st-preview-header-scale: .86;
-    --st-preview-header-alpha: .58;
-    --st-preview-hero-height: 76%;
-    --st-preview-button-scale: .88;
-    --st-preview-darkness: .48;
-    --st-preview-petals: .55;
-    position: relative;
-    aspect-ratio: 16 / 9;
-    min-height: 360px;
-    overflow: hidden;
-    border-radius: 14px;
-    background:
-        linear-gradient(90deg, rgba(11,7,14,.86), rgba(11,7,14,.30) 43%, rgba(11,7,14,.04) 72%),
-        linear-gradient(180deg, rgba(8,5,11,.02), rgba(8,5,11,var(--st-preview-darkness))),
-        url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg") center / cover no-repeat;
-    isolation: isolate;
-}
-#SakuraTeaConfigPage .st-preview::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 25%;
-    background: linear-gradient(to bottom, transparent, rgba(13,8,17,.72));
-    pointer-events: none;
-}
-#SakuraTeaConfigPage .st-preview-nav-wrap {
-    position: absolute;
-    z-index: 5;
-    top: 4%;
-    left: 4%;
-    right: 4%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    pointer-events: none;
-}
-#SakuraTeaConfigPage .st-preview[data-header-position="Center"] .st-preview-nav-wrap {
-    justify-content: center;
-}
-#SakuraTeaConfigPage .st-preview[data-header-position="Right"] .st-preview-nav-wrap {
-    justify-content: flex-end;
-}
-#SakuraTeaConfigPage .st-preview-pill {
-    transform: scale(var(--st-preview-header-scale));
-    transform-origin: left top;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    padding: 5px;
-    border: 1px solid rgba(255,242,247,.34);
-    border-radius: 16px;
-    background:
-        linear-gradient(180deg, rgba(255,224,236,var(--st-preview-header-alpha)), rgba(255,174,204,calc(var(--st-preview-header-alpha) * .74))),
-        rgba(73,40,62,.27);
-    box-shadow: inset 0 1px rgba(255,255,255,.24), 0 10px 28px rgba(7,4,10,.24);
-    backdrop-filter: blur(16px);
-    pointer-events: auto;
-}
-#SakuraTeaConfigPage .st-preview-flower {
-    width: 32px;
-    height: 32px;
-    flex: 0 0 32px;
-    background: url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/pngwing.com.png") center / contain no-repeat;
-}
-#SakuraTeaConfigPage .st-preview-nav-item {
-    padding: 0 11px;
-    height: 33px;
-    display: inline-flex;
-    align-items: center;
-    border-radius: 10px;
-    color: rgba(255,255,255,.90);
-    font-size: 12px;
-    user-select: none;
-    cursor: grab;
-}
-#SakuraTeaConfigPage .st-preview-nav-item.is-active {
-    background: linear-gradient(180deg, rgba(255,190,214,.67), rgba(241,142,176,.50));
-    box-shadow: inset 0 1px rgba(255,255,255,.22);
-}
-#SakuraTeaConfigPage .st-preview-nav-item.is-dragging {
-    opacity: .42;
-}
-#SakuraTeaConfigPage .st-preview-hero {
-    position: absolute;
-    z-index: 3;
-    left: 5%;
-    bottom: calc(100% - var(--st-preview-hero-height));
-    width: min(47%, 460px);
-    color: #fff;
-}
-#SakuraTeaConfigPage .st-preview-hero .st-sample-logo {
-    font-size: clamp(30px,4.1vw,60px);
-    line-height: .93;
-    font-weight: 800;
-    letter-spacing: -.04em;
-    text-shadow: 0 4px 18px rgba(0,0,0,.58);
-}
-#SakuraTeaConfigPage .st-preview-meta {
-    margin-top: .65em;
-    display: flex;
-    gap: .65em;
-    font-size: 11px;
-    opacity: .83;
-}
-#SakuraTeaConfigPage .st-preview-copy {
-    margin: .7em 0 0;
-    max-width: 420px;
-    font-size: 11px;
-    line-height: 1.42;
-    opacity: .74;
-}
-#SakuraTeaConfigPage .st-preview-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: .9em;
-    transform: scale(var(--st-preview-button-scale));
-    transform-origin: left center;
-}
-#SakuraTeaConfigPage .st-preview-action {
-    height: 34px;
-    padding: 0 14px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 11px;
-}
-#SakuraTeaConfigPage .st-preview-action.primary {
-    background: rgba(255,250,252,.97);
-    color: #111;
-}
-#SakuraTeaConfigPage .st-preview-action.secondary {
-    background: rgba(30,22,37,.70);
-    border: 1px solid rgba(255,255,255,.10);
-}
-#SakuraTeaConfigPage .st-preview-divider {
-    position: absolute;
-    z-index: 4;
-    left: 5%;
-    right: 5%;
-    bottom: 6%;
-    height: 2px;
-    border-radius: 999px;
-    background: linear-gradient(90deg, transparent, var(--st-pink) 22%, #fff1f6 50%, var(--st-lavender) 78%, transparent);
-    box-shadow: 0 0 5px rgba(255,190,215,.9), 0 0 14px rgba(255,159,189,.48);
-}
-#SakuraTeaConfigPage .st-preview-petals {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    opacity: var(--st-preview-petals);
-}
-#SakuraTeaConfigPage .st-preview-petal {
-    position: absolute;
-    width: 7px;
-    height: 11px;
-    border-radius: 80% 20% 75% 25%;
-    background: linear-gradient(145deg,#fff4f8,#ffd3e0 42%,#ff9fbd);
-    transform: rotate(var(--r));
-}
-#SakuraTeaConfigPage .st-controls {
-    display: grid;
-    gap: .8em;
-}
-#SakuraTeaConfigPage .st-control {
-    padding: .9em;
-    border: 1px solid var(--st-border);
-    border-radius: 14px;
-    background: rgba(255,255,255,.03);
-}
-#SakuraTeaConfigPage .st-control-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1em;
-    margin-bottom: .55em;
-    font-size: .9em;
-}
-#SakuraTeaConfigPage .st-value {
-    color: var(--st-pink-light);
-    font-variant-numeric: tabular-nums;
-}
-#SakuraTeaConfigPage .st-range {
-    width: 100%;
-    accent-color: var(--st-pink);
-}
-#SakuraTeaConfigPage .st-note {
-    padding: .85em 1em;
-    border: 1px solid rgba(200,182,255,.18);
-    border-radius: 12px;
-    background: rgba(200,182,255,.07);
-    line-height: 1.45;
-    font-size: .9em;
-}
-#SakuraTeaConfigPage .st-builder-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: .7em;
-    margin-top: .9em;
-}
-#SakuraTeaConfigPage .st-small-button {
-    min-width: 0 !important;
-    width: auto !important;
-    padding: .65em .9em !important;
-}
-@media (max-width: 850px) {
-    #SakuraTeaConfigPage .st-builder-grid,
-    #SakuraTeaConfigPage .st-grid {
-        grid-template-columns: 1fr;
-    }
-    #SakuraTeaConfigPage .st-preview-card {
-        position: static;
-    }
-    #SakuraTeaConfigPage .st-preview {
-        min-height: 300px;
-    }
+@media(max-width:560px){
+ #SakuraTeaConfigPage .st-top{align-items:flex-start}
+ #SakuraTeaConfigPage .st-badge{font-size:.74em}
+ #SakuraTeaConfigPage .st-presets{grid-template-columns:1fr}
+ #SakuraTeaConfigPage .st-footer{align-items:stretch;flex-direction:column}
+ #SakuraTeaConfigPage .st-footer-right{display:grid;grid-template-columns:1fr 1fr;width:100%}
+ #SakuraTeaConfigPage .st-footer>.st-btn{width:100%!important}
 }
 </style>
 
@@ -338,327 +132,224 @@
 <div class="content-primary st-shell">
 <form id="SakuraTeaConfigForm">
 
-<div class="st-title-row">
-    <div>
-        <h2>Sakura Tea</h2>
-        <p class="st-kicker">Sakura-inspired Jellyfin interface</p>
-    </div>
-    <div class="st-badge">UI Builder test</div>
+<div class="st-top">
+ <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
+ <div class="st-badge">0.1.0.6 preview</div>
 </div>
 
-<nav class="st-tabs" aria-label="Sakura Tea settings">
-    <button type="button" class="st-tab is-active" data-st-panel="overview">Overview</button>
-    <button type="button" class="st-tab" data-st-panel="builder">UI Builder</button>
-</nav>
+<div class="st-navrow">
+ <nav class="st-tabs">
+  <button type="button" class="st-tab" data-panel="overview">Overview</button>
+  <button type="button" class="st-tab is-active" data-panel="builder">UI Builder</button>
+ </nav>
+ <div id="SakuraTeaDeviceSwitcher" class="st-devices">
+  <button type="button" class="st-device is-active" data-device="desktop">▣ Desktop</button>
+  <button type="button" class="st-device" data-device="tablet">▯ Tablet</button>
+  <button type="button" class="st-device" data-device="mobile">▯ Mobile</button>
+ </div>
+</div>
 
-<section class="st-panel" data-st-panel="overview">
-    <div class="st-card">
-        <h3>Core features</h3>
-        <p class="st-muted">These are the settings currently connected to the live Sakura Tea Home experience.</p>
-        <label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label>
-        <br>
-        <label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label>
-        <br>
-        <label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable petals and flowers</span></label>
-    </div>
-
-    <div class="st-grid">
-        <div class="st-card">
-            <h3>Anime source</h3>
-            <div class="inputContainer">
-                <label class="inputLabel inputLabelUnfocused" for="AnimeLibraryName">Anime library name</label>
-                <input id="AnimeLibraryName" type="text" is="emby-input">
-            </div>
-        </div>
-
-        <div class="st-card">
-            <h3>Hero rotation</h3>
-            <div class="inputContainer">
-                <label class="inputLabel inputLabelUnfocused" for="HeroSlides">Hero slides</label>
-                <input id="HeroSlides" type="number" min="1" max="20" is="emby-input">
-            </div>
-            <div class="inputContainer">
-                <label class="inputLabel inputLabelUnfocused" for="HeroRotationSeconds">Rotation interval (seconds)</label>
-                <input id="HeroRotationSeconds" type="number" min="3" max="60" is="emby-input">
-            </div>
-        </div>
-    </div>
+<section class="st-panel" data-panel="overview" hidden>
+ <div class="st-overview-grid">
+  <div class="st-overview-card">
+   <h3>Core features</h3>
+   <label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label><br>
+   <label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label><br>
+   <label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable petals and flowers</span></label>
+  </div>
+  <div class="st-overview-card">
+   <h3>Anime source</h3>
+   <div class="inputContainer"><label class="inputLabel inputLabelUnfocused" for="AnimeLibraryName">Anime library name</label><input id="AnimeLibraryName" type="text" is="emby-input"></div>
+  </div>
+  <div class="st-overview-card">
+   <h3>Hero rotation</h3>
+   <div class="inputContainer"><label class="inputLabel inputLabelUnfocused" for="HeroSlides">Hero slides</label><input id="HeroSlides" type="number" min="1" max="20" is="emby-input"></div>
+   <div class="inputContainer"><label class="inputLabel inputLabelUnfocused" for="HeroRotationSeconds">Rotation interval (seconds)</label><input id="HeroRotationSeconds" type="number" min="3" max="60" is="emby-input"></div>
+  </div>
+  <div class="st-overview-card">
+   <h3>Builder status</h3>
+   <p style="opacity:.66;line-height:1.5;margin:.2em 0">The redesigned builder is in preview mode. Its visual values are stored, but they do not alter the live Home layout yet.</p>
+  </div>
+ </div>
 </section>
 
-<section class="st-panel" data-st-panel="builder" hidden>
-    <div class="st-note">
-        <strong>Test build:</strong> this builder is for preview and interaction testing. The values below are saved to Sakura Tea now, but they do not change the live Home layout yet. That wiring comes after we approve the builder design.
-    </div>
+<section class="st-panel" data-panel="builder">
+ <div class="st-note"><strong>Preview build:</strong> interact with the controls freely. Save stores your test values, but the builder is intentionally not wired into the live Home layout yet.</div>
 
-    <div class="st-builder-grid" style="margin-top:1em;">
-        <div class="st-preview-card">
-            <div class="st-preview-label">
-                <span>Live preview</span>
-                <span>Drag the nav labels to reorder them</span>
-            </div>
-
-            <div id="SakuraTeaBuilderPreview" class="st-preview" data-header-position="Left">
-                <div class="st-preview-nav-wrap">
-                    <div id="SakuraTeaPreviewNav" class="st-preview-pill">
-                        <span class="st-preview-flower" aria-hidden="true"></span>
-                        <span class="st-preview-nav-item" draggable="true">Favorites</span>
-                        <span class="st-preview-nav-item is-active" draggable="true">Anime</span>
-                        <span class="st-preview-nav-item" draggable="true">Not Safe</span>
-                    </div>
-                </div>
-
-                <div class="st-preview-hero">
-                    <div class="st-sample-logo">SAKURA<br>FEATURED</div>
-                    <div class="st-preview-meta"><span>★ 8.4</span><span>2026</span><span>TV Show</span><span>Anime</span></div>
-                    <p class="st-preview-copy">A compact preview of the Sakura Tea hero, floating navigation, buttons, and petal divider.</p>
-                    <div class="st-preview-actions">
-                        <span class="st-preview-action primary">▶ Play</span>
-                        <span class="st-preview-action secondary">ⓘ More info</span>
-                    </div>
-                </div>
-
-                <div class="st-preview-divider"></div>
-                <div class="st-preview-petals" aria-hidden="true">
-                    <i class="st-preview-petal" style="left:7%;top:25%;--r:24deg"></i>
-                    <i class="st-preview-petal" style="left:17%;top:60%;--r:-36deg"></i>
-                    <i class="st-preview-petal" style="left:28%;top:18%;--r:70deg"></i>
-                    <i class="st-preview-petal" style="left:39%;top:71%;--r:-18deg"></i>
-                    <i class="st-preview-petal" style="left:51%;top:30%;--r:44deg"></i>
-                    <i class="st-preview-petal" style="left:63%;top:65%;--r:-52deg"></i>
-                    <i class="st-preview-petal" style="left:74%;top:22%;--r:18deg"></i>
-                    <i class="st-preview-petal" style="left:85%;top:57%;--r:73deg"></i>
-                    <i class="st-preview-petal" style="left:92%;top:31%;--r:-28deg"></i>
-                </div>
-            </div>
+ <section class="st-card">
+  <div class="st-card-head"><div class="st-card-icon">▰</div><div><div class="st-card-title">Header Builder</div><p class="st-card-copy">Customize your floating navigation header.</p></div></div>
+  <div class="st-builder-grid">
+   <div class="st-preview-area">
+    <div class="st-stage" data-device="desktop">
+     <div id="SakuraTeaHeaderPreview" class="st-header-preview" data-position="Left">
+      <div class="st-header-wrap">
+       <div class="st-header-pill">
+        <span class="st-flower"></span>
+        <div id="SakuraTeaHeaderNavPreview" class="st-nav-preview"></div>
+        <div class="st-actions-preview">
+         <span class="st-iconbtn">♟</span><span class="st-iconbtn">⌁</span><span id="SakuraTeaPreviewAvatar" class="st-avatar"></span>
         </div>
-
-        <div class="st-controls">
-            <div class="st-control">
-                <div class="st-control-head"><span>Floating header size</span><span id="BuilderHeaderScaleValue" class="st-value"></span></div>
-                <input id="BuilderHeaderScale" class="st-range" type="range" min="70" max="115" step="1">
-            </div>
-
-            <div class="st-control">
-                <div class="st-control-head"><span>Pink glass opacity</span><span id="BuilderHeaderOpacityValue" class="st-value"></span></div>
-                <input id="BuilderHeaderOpacity" class="st-range" type="range" min="25" max="90" step="1">
-            </div>
-
-            <div class="st-control">
-                <label class="inputLabel inputLabelUnfocused" for="BuilderHeaderPosition">Header position</label>
-                <select id="BuilderHeaderPosition" is="emby-select">
-                    <option value="Left">Left</option>
-                    <option value="Center">Center</option>
-                    <option value="Right">Right</option>
-                </select>
-            </div>
-
-            <div class="st-control">
-                <div class="st-control-head"><span>Hero content height</span><span id="BuilderHeroHeightValue" class="st-value"></span></div>
-                <input id="BuilderHeroHeight" class="st-range" type="range" min="58" max="88" step="1">
-            </div>
-
-            <div class="st-control">
-                <div class="st-control-head"><span>Hero button size</span><span id="BuilderHeroButtonScaleValue" class="st-value"></span></div>
-                <input id="BuilderHeroButtonScale" class="st-range" type="range" min="70" max="115" step="1">
-            </div>
-
-            <div class="st-control">
-                <div class="st-control-head"><span>Backdrop darkness</span><span id="BuilderBackdropDarknessValue" class="st-value"></span></div>
-                <input id="BuilderBackdropDarkness" class="st-range" type="range" min="15" max="80" step="1">
-            </div>
-
-            <div class="st-control">
-                <div class="st-control-head"><span>Petal density</span><span id="BuilderPetalDensityValue" class="st-value"></span></div>
-                <input id="BuilderPetalDensity" class="st-range" type="range" min="0" max="100" step="1">
-            </div>
-
-            <div class="st-control">
-                <label class="inputLabel inputLabelUnfocused" for="BuilderPerformanceMode">Performance preset</label>
-                <select id="BuilderPerformanceMode" is="emby-select">
-                    <option value="Performance">Performance</option>
-                    <option value="Balanced">Balanced</option>
-                    <option value="Full Effects">Full Effects</option>
-                </select>
-            </div>
-
-            <div class="st-builder-actions">
-                <button id="SakuraTeaBuilderReset" is="emby-button" type="button" class="raised st-small-button"><span>Reset preview</span></button>
-                <span style="opacity:.55;font-size:.82em;align-self:center;">Save button below stores test values</span>
-            </div>
-        </div>
+       </div>
+      </div>
+     </div>
     </div>
+   </div>
+   <div class="st-controls">
+    <div class="st-control"><div class="st-control-head"><span>Header height</span><span id="BuilderHeaderHeightValue" class="st-value"></span></div><input id="BuilderHeaderHeight" class="st-range" type="range" min="34" max="58" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Button size</span><span id="BuilderHeaderButtonSizeValue" class="st-value"></span></div><input id="BuilderHeaderButtonSize" class="st-range" type="range" min="28" max="44" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Icon size</span><span id="BuilderHeaderIconSizeValue" class="st-value"></span></div><input id="BuilderHeaderIconSize" class="st-range" type="range" min="13" max="22" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Avatar size</span><span id="BuilderHeaderAvatarSizeValue" class="st-value"></span></div><input id="BuilderHeaderAvatarSize" class="st-range" type="range" min="22" max="36" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Button spacing</span><span id="BuilderHeaderSpacingValue" class="st-value"></span></div><input id="BuilderHeaderSpacing" class="st-range" type="range" min="2" max="14" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Glass opacity</span><span id="BuilderHeaderOpacityValue" class="st-value"></span></div><input id="BuilderHeaderOpacity" class="st-range" type="range" min="25" max="90" step="1"></div>
+    <div class="st-control">
+     <div class="st-control-head"><span>Position</span><span></span></div>
+     <div id="BuilderHeaderPositionControl" class="st-segment"><button type="button" data-value="Left">Left</button><button type="button" data-value="Center">Center</button><button type="button" data-value="Right">Right</button></div>
+     <input id="BuilderHeaderPosition" type="hidden">
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section class="st-card">
+  <div class="st-card-head"><div class="st-card-icon">▧</div><div><div class="st-card-title">Hero Builder</div><p class="st-card-copy">Customize the home screen hero section.</p></div></div>
+  <div class="st-builder-grid">
+   <div class="st-preview-area">
+    <div class="st-stage" data-device="desktop">
+     <div id="SakuraTeaHeroPreview" class="st-hero-preview">
+      <div class="st-hero-content">
+       <div class="st-hero-title">SAKURA<br>FEATURED</div>
+       <div class="st-meta"><span>★ 8.4</span><span>2026</span><span>TV Show</span><span>Anime</span></div>
+       <p class="st-copy">A compact preview of the Sakura Tea hero, floating navigation, buttons, and petal divider.</p>
+       <div class="st-hero-actions"><span class="st-hero-action primary">▶ Play</span><span class="st-hero-action secondary">ⓘ More info</span></div>
+      </div>
+      <div class="st-petals">
+       <i class="st-petal" style="left:8%;top:18%;--r:22deg"></i><i class="st-petal" style="left:19%;top:63%;--r:-32deg"></i><i class="st-petal" style="left:31%;top:26%;--r:72deg"></i><i class="st-petal" style="left:43%;top:69%;--r:16deg"></i><i class="st-petal" style="left:56%;top:34%;--r:-48deg"></i><i class="st-petal" style="left:67%;top:17%;--r:34deg"></i><i class="st-petal" style="left:77%;top:61%;--r:62deg"></i><i class="st-petal" style="left:89%;top:29%;--r:-18deg"></i>
+      </div>
+      <div class="st-hero-line"></div>
+     </div>
+    </div>
+   </div>
+   <div class="st-controls">
+    <div class="st-control"><div class="st-control-head"><span>Hero height</span><span id="BuilderHeroHeightValue" class="st-value"></span></div><input id="BuilderHeroHeight" class="st-range" type="range" min="60" max="90" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Title size</span><span id="BuilderHeroTitleSizeValue" class="st-value"></span></div><input id="BuilderHeroTitleSize" class="st-range" type="range" min="70" max="125" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Button size</span><span id="BuilderHeroButtonSizeValue" class="st-value"></span></div><input id="BuilderHeroButtonSize" class="st-range" type="range" min="70" max="115" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Backdrop darkness</span><span id="BuilderBackdropDarknessValue" class="st-value"></span></div><input id="BuilderBackdropDarkness" class="st-range" type="range" min="15" max="80" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Petal density</span><span id="BuilderPetalDensityValue" class="st-value"></span></div><input id="BuilderPetalDensity" class="st-range" type="range" min="0" max="100" step="1"></div>
+    <div class="st-control"><div class="st-control-head"><span>Animation speed</span><span id="BuilderAnimationSpeedValue" class="st-value"></span></div><input id="BuilderAnimationSpeed" class="st-range" type="range" min="0" max="140" step="5"></div>
+   </div>
+  </div>
+ </section>
+
+ <div class="st-lower">
+  <section class="st-card">
+   <div class="st-card-head"><div class="st-card-icon">ϟ</div><div><div class="st-card-title">Performance</div><p class="st-card-copy">Adjust effects for your device.</p></div></div>
+   <div class="st-inner"><div id="SakuraTeaPerformance" class="st-presets">
+    <button type="button" class="st-preset" data-value="Performance"><strong>Performance</strong><span>Minimal effects, best for lower-end devices.</span></button>
+    <button type="button" class="st-preset" data-value="Balanced"><strong>Balanced</strong><span>Good balance of quality and performance.</span></button>
+    <button type="button" class="st-preset" data-value="Full Effects"><strong>Full Effects</strong><span>All animations and visual effects.</span></button>
+   </div><input id="BuilderPerformanceMode" type="hidden"></div>
+  </section>
+
+  <section class="st-card">
+   <div class="st-card-head"><div class="st-card-icon">≡</div><div><div class="st-card-title">Navigation Labels</div><p class="st-card-copy">Drag to reorder your navigation labels.</p></div></div>
+   <div class="st-inner"><div id="SakuraTeaNavSort" class="st-sort"></div><input id="BuilderNavOrder" type="hidden"></div>
+  </section>
+ </div>
+
+ <div class="st-footer">
+  <button id="SakuraTeaBuilderReset" is="emby-button" type="button" class="raised st-btn"><span>↶ Reset to defaults</span></button>
+  <div class="st-footer-right">
+   <button id="SakuraTeaPreviewOnly" is="emby-button" type="button" class="raised st-btn"><span>◉ Preview only</span></button>
+   <button is="emby-button" type="submit" class="raised st-btn st-save"><span>✓ Save changes</span></button>
+  </div>
+ </div>
 </section>
 
-<button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Save Sakura Tea settings</span></button>
 </form>
 </div>
 </div>
 
 <script>
-(function () {
-    var pluginId = '3bf6515b-c10a-4307-a3e8-942eaffe900d';
-    var page = document.querySelector('#SakuraTeaConfigPage');
-    var form = document.querySelector('#SakuraTeaConfigForm');
-    var preview = document.querySelector('#SakuraTeaBuilderPreview');
-
-    function byId(id) { return document.querySelector('#' + id); }
-
-    function numberValue(id, fallback) {
-        var value = parseInt(byId(id).value, 10);
-        return isNaN(value) ? fallback : value;
-    }
-
-    function setBuilderDefaults() {
-        byId('BuilderHeaderScale').value = 86;
-        byId('BuilderHeaderOpacity').value = 58;
-        byId('BuilderHeaderPosition').value = 'Left';
-        byId('BuilderHeroHeight').value = 76;
-        byId('BuilderHeroButtonScale').value = 88;
-        byId('BuilderBackdropDarkness').value = 48;
-        byId('BuilderPetalDensity').value = 55;
-        byId('BuilderPerformanceMode').value = 'Balanced';
-        updateBuilderPreview();
-    }
-
-    function updateBuilderPreview() {
-        if (!preview) return;
-
-        var headerScale = numberValue('BuilderHeaderScale', 86);
-        var headerOpacity = numberValue('BuilderHeaderOpacity', 58);
-        var heroHeight = numberValue('BuilderHeroHeight', 76);
-        var buttonScale = numberValue('BuilderHeroButtonScale', 88);
-        var darkness = numberValue('BuilderBackdropDarkness', 48);
-        var petals = numberValue('BuilderPetalDensity', 55);
-        var performance = byId('BuilderPerformanceMode').value || 'Balanced';
-
-        if (performance === 'Performance') {
-            petals = Math.min(petals, 28);
-            headerOpacity = Math.min(headerOpacity, 52);
-        } else if (performance === 'Full Effects') {
-            petals = Math.max(petals, 68);
-        }
-
-        preview.style.setProperty('--st-preview-header-scale', (headerScale / 100).toFixed(2));
-        preview.style.setProperty('--st-preview-header-alpha', (headerOpacity / 100).toFixed(2));
-        preview.style.setProperty('--st-preview-hero-height', heroHeight + '%');
-        preview.style.setProperty('--st-preview-button-scale', (buttonScale / 100).toFixed(2));
-        preview.style.setProperty('--st-preview-darkness', (darkness / 100).toFixed(2));
-        preview.style.setProperty('--st-preview-petals', (petals / 100).toFixed(2));
-        preview.setAttribute('data-header-position', byId('BuilderHeaderPosition').value || 'Left');
-
-        byId('BuilderHeaderScaleValue').textContent = headerScale + '%';
-        byId('BuilderHeaderOpacityValue').textContent = headerOpacity + '%';
-        byId('BuilderHeroHeightValue').textContent = heroHeight + '%';
-        byId('BuilderHeroButtonScaleValue').textContent = buttonScale + '%';
-        byId('BuilderBackdropDarknessValue').textContent = darkness + '%';
-        byId('BuilderPetalDensityValue').textContent = petals + '%';
-    }
-
-    function loadConfiguration() {
-        Dashboard.showLoadingMsg();
-        ApiClient.getPluginConfiguration(pluginId).then(function (c) {
-            byId('ThemeEnabled').checked = c.ThemeEnabled !== false;
-            byId('HeroEnabled').checked = c.HeroEnabled !== false;
-            byId('PetalsEnabled').checked = c.PetalsEnabled !== false;
-            byId('AnimeLibraryName').value = c.AnimeLibraryName || 'Anime';
-            byId('HeroSlides').value = c.HeroSlides || 10;
-            byId('HeroRotationSeconds').value = c.HeroRotationSeconds || 9;
-
-            byId('BuilderHeaderScale').value = c.BuilderHeaderScale || 86;
-            byId('BuilderHeaderOpacity').value = c.BuilderHeaderOpacity || 58;
-            byId('BuilderHeaderPosition').value = c.BuilderHeaderPosition || 'Left';
-            byId('BuilderHeroHeight').value = c.BuilderHeroHeight || 76;
-            byId('BuilderHeroButtonScale').value = c.BuilderHeroButtonScale || 88;
-            byId('BuilderBackdropDarkness').value = c.BuilderBackdropDarkness || 48;
-            byId('BuilderPetalDensity').value = (typeof c.BuilderPetalDensity === 'number') ? c.BuilderPetalDensity : 55;
-            byId('BuilderPerformanceMode').value = c.BuilderPerformanceMode || 'Balanced';
-
-            updateBuilderPreview();
-            Dashboard.hideLoadingMsg();
-        }).catch(function () {
-            Dashboard.hideLoadingMsg();
-        });
-    }
-
-    page.querySelectorAll('.st-tab').forEach(function (button) {
-        button.addEventListener('click', function () {
-            var panelName = button.getAttribute('data-st-panel');
-            page.querySelectorAll('.st-tab').forEach(function (tab) {
-                tab.classList.toggle('is-active', tab === button);
-            });
-            page.querySelectorAll('.st-panel').forEach(function (panel) {
-                panel.hidden = panel.getAttribute('data-st-panel') !== panelName;
-            });
-            if (panelName === 'builder') updateBuilderPreview();
-        });
-    });
-
-    [
-        'BuilderHeaderScale',
-        'BuilderHeaderOpacity',
-        'BuilderHeaderPosition',
-        'BuilderHeroHeight',
-        'BuilderHeroButtonScale',
-        'BuilderBackdropDarkness',
-        'BuilderPetalDensity',
-        'BuilderPerformanceMode'
-    ].forEach(function (id) {
-        byId(id).addEventListener('input', updateBuilderPreview);
-        byId(id).addEventListener('change', updateBuilderPreview);
-    });
-
-    byId('SakuraTeaBuilderReset').addEventListener('click', setBuilderDefaults);
-
-    var dragItem = null;
-    var nav = byId('SakuraTeaPreviewNav');
-    nav.addEventListener('dragstart', function (event) {
-        var item = event.target.closest('.st-preview-nav-item');
-        if (!item) return;
-        dragItem = item;
-        item.classList.add('is-dragging');
-        if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
-    });
-    nav.addEventListener('dragend', function () {
-        if (dragItem) dragItem.classList.remove('is-dragging');
-        dragItem = null;
-    });
-    nav.addEventListener('dragover', function (event) {
-        event.preventDefault();
-        if (!dragItem) return;
-        var target = event.target.closest('.st-preview-nav-item');
-        if (!target || target === dragItem) return;
-        var box = target.getBoundingClientRect();
-        var after = event.clientX > box.left + box.width / 2;
-        nav.insertBefore(dragItem, after ? target.nextSibling : target);
-    });
-
-    page.addEventListener('pageshow', loadConfiguration);
-
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-        Dashboard.showLoadingMsg();
-
-        ApiClient.getPluginConfiguration(pluginId).then(function (c) {
-            c.ThemeEnabled = byId('ThemeEnabled').checked;
-            c.HeroEnabled = byId('HeroEnabled').checked;
-            c.PetalsEnabled = byId('PetalsEnabled').checked;
-            c.AnimeLibraryName = byId('AnimeLibraryName').value.trim() || 'Anime';
-            c.HeroSlides = numberValue('HeroSlides', 10);
-            c.HeroRotationSeconds = numberValue('HeroRotationSeconds', 9);
-
-            c.BuilderHeaderScale = numberValue('BuilderHeaderScale', 86);
-            c.BuilderHeaderOpacity = numberValue('BuilderHeaderOpacity', 58);
-            c.BuilderHeaderPosition = byId('BuilderHeaderPosition').value || 'Left';
-            c.BuilderHeroHeight = numberValue('BuilderHeroHeight', 76);
-            c.BuilderHeroButtonScale = numberValue('BuilderHeroButtonScale', 88);
-            c.BuilderBackdropDarkness = numberValue('BuilderBackdropDarkness', 48);
-            c.BuilderPetalDensity = numberValue('BuilderPetalDensity', 55);
-            c.BuilderPerformanceMode = byId('BuilderPerformanceMode').value || 'Balanced';
-
-            return ApiClient.updatePluginConfiguration(pluginId, c);
-        }).then(Dashboard.processPluginConfigurationUpdateResult);
-        return false;
-    });
+(function(){
+ var pluginId='3bf6515b-c10a-4307-a3e8-942eaffe900d';
+ var page=document.querySelector('#SakuraTeaConfigPage');
+ var form=document.querySelector('#SakuraTeaConfigForm');
+ function q(id){return document.querySelector('#'+id)}
+ function num(id,f){var v=parseInt(q(id).value,10);return isNaN(v)?f:v}
+ function setVal(id,v){q(id).value=v}
+ function setText(id,v){var e=q(id);if(e)e.textContent=v}
+ function currentDevice(){
+  var active=page.querySelector('.st-device.is-active');
+  return active?active.dataset.device:'desktop';
+ }
+ function syncDevice(){
+  var d=currentDevice();
+  page.querySelectorAll('.st-stage').forEach(function(stage){stage.dataset.device=d});
+ }
+ function navOrder(){
+  return Array.from(q('SakuraTeaNavSort').querySelectorAll('.st-sort-chip')).map(function(x){return x.dataset.label});
+ }
+ function renderNav(){
+  var labels=(q('BuilderNavOrder').value||'Favourites|Anime|Not Safe').split('|').filter(Boolean);
+  var sort=q('SakuraTeaNavSort');
+  var preview=q('SakuraTeaHeaderNavPreview');
+  sort.replaceChildren();preview.replaceChildren();
+  labels.forEach(function(label){
+   var chip=document.createElement('div');chip.className='st-sort-chip'+(label==='Anime'?' is-active':'');chip.draggable=true;chip.dataset.label=label;chip.innerHTML='<span class="st-grip">⠿</span><span></span>';chip.lastChild.textContent=label;sort.appendChild(chip);
+   var p=document.createElement('span');p.className='st-nav-chip'+(label==='Anime'?' is-active':'');p.textContent=label;preview.appendChild(p);
+  });
+ }
+ function update(){
+  var hp=q('SakuraTeaHeaderPreview'),hero=q('SakuraTeaHeroPreview');
+  var hh=num('BuilderHeaderHeight',40),bs=num('BuilderHeaderButtonSize',32),is=num('BuilderHeaderIconSize',16),as=num('BuilderHeaderAvatarSize',28),sp=num('BuilderHeaderSpacing',6),op=num('BuilderHeaderOpacity',58);
+  hp.style.setProperty('--hp-h',hh+'px');hp.style.setProperty('--hp-b',bs+'px');hp.style.setProperty('--hp-i',is+'px');hp.style.setProperty('--hp-a',as+'px');hp.style.setProperty('--hp-gap',sp+'px');hp.style.setProperty('--hp-alpha',(op/100).toFixed(2));hp.dataset.position=q('BuilderHeaderPosition').value||'Left';
+  setText('BuilderHeaderHeightValue',hh+'px');setText('BuilderHeaderButtonSizeValue',bs+'px');setText('BuilderHeaderIconSizeValue',is+'px');setText('BuilderHeaderAvatarSizeValue',as+'px');setText('BuilderHeaderSpacingValue',sp+'px');setText('BuilderHeaderOpacityValue',op+'%');
+  page.querySelectorAll('#BuilderHeaderPositionControl button').forEach(function(b){b.classList.toggle('is-active',b.dataset.value===q('BuilderHeaderPosition').value)});
+  var h=num('BuilderHeroHeight',76),ts=num('BuilderHeroTitleSize',100),hb=num('BuilderHeroButtonSize',90),dark=num('BuilderBackdropDarkness',48),pet=num('BuilderPetalDensity',55),anim=num('BuilderAnimationSpeed',100);
+  var mode=q('BuilderPerformanceMode').value||'Balanced';
+  var visualPet=pet;if(mode==='Performance')visualPet=Math.min(pet,28);if(mode==='Full Effects')visualPet=Math.max(pet,68);
+  hero.style.setProperty('--hero-h',h);hero.style.setProperty('--hero-title',(ts/100).toFixed(2));hero.style.setProperty('--hero-btn',(hb/100).toFixed(2));hero.style.setProperty('--hero-dark',(dark/100).toFixed(2));hero.style.setProperty('--hero-petals',(visualPet/100).toFixed(2));
+  setText('BuilderHeroHeightValue',h+'%');setText('BuilderHeroTitleSizeValue',ts+'%');setText('BuilderHeroButtonSizeValue',hb+'%');setText('BuilderBackdropDarknessValue',dark+'%');setText('BuilderPetalDensityValue',pet+'%');setText('BuilderAnimationSpeedValue',anim+'%');
+  page.querySelectorAll('#SakuraTeaPerformance .st-preset').forEach(function(b){b.classList.toggle('is-active',b.dataset.value===mode)});
+  syncDevice();
+ }
+ function defaults(){
+  setVal('BuilderHeaderHeight',40);setVal('BuilderHeaderButtonSize',32);setVal('BuilderHeaderIconSize',16);setVal('BuilderHeaderAvatarSize',28);setVal('BuilderHeaderSpacing',6);setVal('BuilderHeaderOpacity',58);setVal('BuilderHeaderPosition','Left');
+  setVal('BuilderHeroHeight',76);setVal('BuilderHeroTitleSize',100);setVal('BuilderHeroButtonSize',90);setVal('BuilderBackdropDarkness',48);setVal('BuilderPetalDensity',55);setVal('BuilderAnimationSpeed',100);setVal('BuilderPerformanceMode','Balanced');setVal('BuilderNavOrder','Favourites|Anime|Not Safe');renderNav();update();
+ }
+ function load(){
+  Dashboard.showLoadingMsg();
+  ApiClient.getPluginConfiguration(pluginId).then(function(c){
+   q('ThemeEnabled').checked=c.ThemeEnabled!==false;q('HeroEnabled').checked=c.HeroEnabled!==false;q('PetalsEnabled').checked=c.PetalsEnabled!==false;q('AnimeLibraryName').value=c.AnimeLibraryName||'Anime';q('HeroSlides').value=c.HeroSlides||10;q('HeroRotationSeconds').value=c.HeroRotationSeconds||9;
+   setVal('BuilderHeaderHeight',c.BuilderHeaderHeight||40);setVal('BuilderHeaderButtonSize',c.BuilderHeaderButtonSize||32);setVal('BuilderHeaderIconSize',c.BuilderHeaderIconSize||16);setVal('BuilderHeaderAvatarSize',c.BuilderHeaderAvatarSize||28);setVal('BuilderHeaderSpacing',typeof c.BuilderHeaderSpacing==='number'?c.BuilderHeaderSpacing:6);setVal('BuilderHeaderOpacity',c.BuilderHeaderOpacity||58);setVal('BuilderHeaderPosition',c.BuilderHeaderPosition||'Left');
+   setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
+   renderNav();update();
+   try{var uid=ApiClient.getCurrentUserId();if(uid){q('SakuraTeaPreviewAvatar').style.backgroundImage='url("'+ApiClient.getImageUrl(uid,{type:'Primary',maxWidth:96,quality:90})+'")'}}catch(e){}
+   Dashboard.hideLoadingMsg();
+  }).catch(function(){Dashboard.hideLoadingMsg()});
+ }
+ page.querySelectorAll('.st-tab').forEach(function(b){b.addEventListener('click',function(){var name=b.dataset.panel;page.querySelectorAll('.st-tab').forEach(function(x){x.classList.toggle('is-active',x===b)});page.querySelectorAll('.st-panel').forEach(function(p){p.hidden=p.dataset.panel!==name});q('SakuraTeaDeviceSwitcher').style.display=name==='builder'?'inline-flex':'none'})});
+ page.querySelectorAll('.st-device').forEach(function(b){b.addEventListener('click',function(){page.querySelectorAll('.st-device').forEach(function(x){x.classList.toggle('is-active',x===b)});syncDevice()})});
+ ['BuilderHeaderHeight','BuilderHeaderButtonSize','BuilderHeaderIconSize','BuilderHeaderAvatarSize','BuilderHeaderSpacing','BuilderHeaderOpacity','BuilderHeroHeight','BuilderHeroTitleSize','BuilderHeroButtonSize','BuilderBackdropDarkness','BuilderPetalDensity','BuilderAnimationSpeed'].forEach(function(id){q(id).addEventListener('input',update)});
+ q('BuilderHeaderPositionControl').addEventListener('click',function(e){var b=e.target.closest('button[data-value]');if(!b)return;q('BuilderHeaderPosition').value=b.dataset.value;update()});
+ q('SakuraTeaPerformance').addEventListener('click',function(e){var b=e.target.closest('.st-preset[data-value]');if(!b)return;q('BuilderPerformanceMode').value=b.dataset.value;update()});
+ q('SakuraTeaBuilderReset').addEventListener('click',defaults);
+ q('SakuraTeaPreviewOnly').addEventListener('click',function(){update();if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Preview updated. No live Home settings were changed.')});
+ var drag=null,sort=q('SakuraTeaNavSort');
+ sort.addEventListener('dragstart',function(e){var item=e.target.closest('.st-sort-chip');if(!item)return;drag=item;item.classList.add('is-dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move'});
+ sort.addEventListener('dragend',function(){if(drag)drag.classList.remove('is-dragging');drag=null;q('BuilderNavOrder').value=navOrder().join('|');renderNav();update()});
+ sort.addEventListener('dragover',function(e){e.preventDefault();if(!drag)return;var t=e.target.closest('.st-sort-chip');if(!t||t===drag)return;var r=t.getBoundingClientRect();sort.insertBefore(drag,e.clientX>r.left+r.width/2?t.nextSibling:t)});
+ page.addEventListener('pageshow',load);
+ form.addEventListener('submit',function(e){
+  e.preventDefault();Dashboard.showLoadingMsg();q('BuilderNavOrder').value=navOrder().join('|');
+  ApiClient.getPluginConfiguration(pluginId).then(function(c){
+   c.ThemeEnabled=q('ThemeEnabled').checked;c.HeroEnabled=q('HeroEnabled').checked;c.PetalsEnabled=q('PetalsEnabled').checked;c.AnimeLibraryName=q('AnimeLibraryName').value.trim()||'Anime';c.HeroSlides=num('HeroSlides',10);c.HeroRotationSeconds=num('HeroRotationSeconds',9);
+   c.BuilderHeaderHeight=num('BuilderHeaderHeight',40);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',32);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',16);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',28);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',6);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',58);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';
+   c.BuilderHeroHeight=num('BuilderHeroHeight',76);c.BuilderHeroTitleSize=num('BuilderHeroTitleSize',100);c.BuilderHeroButtonSize=num('BuilderHeroButtonSize',90);c.BuilderBackdropDarkness=num('BuilderBackdropDarkness',48);c.BuilderPetalDensity=num('BuilderPetalDensity',55);c.BuilderAnimationSpeed=num('BuilderAnimationSpeed',100);c.BuilderPerformanceMode=q('BuilderPerformanceMode').value||'Balanced';c.BuilderNavOrder=q('BuilderNavOrder').value||'Favourites|Anime|Not Safe';
+   return ApiClient.updatePluginConfiguration(pluginId,c)
+  }).then(Dashboard.processPluginConfigurationUpdateResult);
+  return false;
+ });
 })();
 </script>
 </div>
