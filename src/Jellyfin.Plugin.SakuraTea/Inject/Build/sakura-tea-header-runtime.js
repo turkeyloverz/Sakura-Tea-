@@ -8,7 +8,8 @@
     const Core = window.SakuraTeaHeaderCore;
     const STATE = {
         root: null,
-        sourceBindings: []
+        sourceBindings: [],
+        config: null
     };
 
     function getNativeHeader() {
@@ -79,6 +80,13 @@
         return clone;
     }
 
+    function isAvatarSource(source) {
+        return Boolean(
+            source.matches('.headerUserButton, [aria-controls="app-user-menu"]') ||
+            source.querySelector('.MuiAvatar-root, .headerUserButtonRound')
+        );
+    }
+
     function sourceId(source) {
         const label = sourceLabel(source).trim().toLowerCase();
         const href = (source.getAttribute('href') || '').trim();
@@ -86,8 +94,10 @@
         if (source.matches('.headerSearchButton') || /\bsearch\b/.test(label)) return 'jellyfin:search';
         if (source.matches('.headerCastButton') || /\bcast\b/.test(label)) return 'jellyfin:cast';
         if (source.matches('.headerSyncButton') || /sync\s*play/.test(label)) return 'jellyfin:syncplay';
-        if (source.matches('.headerUserButton, [aria-controls="app-user-menu"]') || source.querySelector('.MuiAvatar-root, .headerUserButtonRound')) return 'jellyfin:user-menu';
+        if (isAvatarSource(source)) return 'jellyfin:user-menu';
         if (/favo(u)?rites?/.test(label)) return 'jellyfin:favorites';
+        if (label === 'anime') return 'sakura:anime';
+        if (label === 'not safe') return 'sakura:not-safe';
         if (label === 'home') return 'jellyfin:home';
         if (label === 'more') return 'jellyfin:more';
         if (/audio/.test(label)) return 'jellyfin:audio-player';
@@ -117,14 +127,7 @@
     }
 
     function sourceShape(source) {
-        if (
-            source.matches('.headerUserButton, [aria-controls="app-user-menu"]') ||
-            source.querySelector('.MuiAvatar-root, .headerUserButtonRound')
-        ) {
-            return 'avatar';
-        }
-
-        return sourceLabel(source) ? 'text' : 'icon';
+        return isAvatarSource(source) ? 'avatar' : (sourceLabel(source) ? 'text' : 'icon');
     }
 
     function sourceIconMarkup(source) {
@@ -187,7 +190,7 @@
 
                     return Boolean(source.matches('a[href]') || source.classList.contains('emby-tab-button'));
                 })
-                .slice(0, 8);
+                .slice(0, 10);
         }
 
         nav = nav.filter((source) => {
@@ -218,11 +221,11 @@
                         (!sourceLabel(source) && sourceIcon(source))
                     );
                 })
-                .slice(0, 8);
+                .slice(0, 10);
         }
 
         publishCatalog(nav, actions);
-        return { nav: nav.slice(0, 8), actions: actions.slice(0, 8) };
+        return { nav: nav.slice(0, 10), actions: actions.slice(0, 10) };
     }
 
     function publishCatalog(nav, actions) {
@@ -243,22 +246,50 @@
             }
 
             seen.add(id);
-            items.push({
+            const descriptor = {
                 id,
                 label: sourceLabel(entry.source) || entry.source.getAttribute('aria-label') || entry.source.getAttribute('title') || id,
                 group: entry.group,
                 shape: sourceShape(entry.source),
                 iconHtml: sourceIconMarkup(entry.source)
-            });
+            };
+            items.push(descriptor);
+
+            if (id === 'jellyfin:user-menu' && isAvatarSource(entry.source)) {
+                items.push({
+                    ...descriptor,
+                    id: 'jellyfin:profile-avatar',
+                    label: 'Profile Avatar',
+                    shape: 'avatar'
+                });
+            }
         });
 
         Core.publishCatalog(items);
     }
 
-    function makeProxyButton(source, includeLabel) {
+    function buildSourceMap(sources) {
+        const map = new Map();
+
+        [...sources.nav, ...sources.actions].forEach((source) => {
+            const id = sourceId(source);
+            if (id && !map.has(id)) {
+                map.set(id, source);
+            }
+
+            if (id === 'jellyfin:user-menu' && isAvatarSource(source)) {
+                map.set('jellyfin:profile-avatar', source);
+            }
+        });
+
+        return map;
+    }
+
+    function makeProxyButton(source, item) {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'sakuraTeaHeaderButton';
+        button.dataset.itemId = item.id;
 
         const icon = sourceIcon(source);
         if (icon) {
@@ -266,6 +297,7 @@
         }
 
         const label = sourceLabel(source);
+        const includeLabel = item.shape === 'text';
         if (includeLabel && label) {
             const text = document.createElement('span');
             text.className = 'sakuraTeaHeaderLabel';
@@ -277,14 +309,11 @@
             button.classList.add('icon-only');
         }
 
-        if (
-            source.matches('.headerUserButton, [aria-controls="app-user-menu"]') ||
-            source.querySelector('.MuiAvatar-root, .headerUserButtonRound')
-        ) {
+        if (item.id === 'jellyfin:profile-avatar' || isAvatarSource(source)) {
             button.classList.add('has-avatar');
         }
 
-        const title = source.getAttribute('aria-label') || source.getAttribute('title') || label;
+        const title = item.label || source.getAttribute('aria-label') || source.getAttribute('title') || label;
         if (title) {
             button.setAttribute('aria-label', title);
             button.title = title;
@@ -311,41 +340,113 @@
         return button;
     }
 
-    function create() {
-        const sources = collectSources();
-        if (!sources.nav.length && !sources.actions.length) {
+    function createStructuralItem(item) {
+        if (item.shape === 'flower') {
+            const flower = document.createElement('span');
+            flower.className = 'sakuraTeaHeaderFlower';
+            flower.dataset.itemId = item.id;
+            flower.setAttribute('aria-hidden', 'true');
+            return flower;
+        }
+
+        if (item.shape === 'space') {
+            const spacer = document.createElement('span');
+            spacer.className = 'sakuraTeaHeaderSpacer';
+            spacer.dataset.itemId = item.id;
+            spacer.setAttribute('aria-hidden', 'true');
+            return spacer;
+        }
+
+        if (item.shape === 'separator') {
+            const separator = document.createElement('span');
+            separator.className = 'sakuraTeaHeaderSeparator';
+            separator.dataset.itemId = item.id;
+            separator.setAttribute('aria-hidden', 'true');
+            return separator;
+        }
+
+        return null;
+    }
+
+    function createPill(ids, sourceMap, catalog, role) {
+        const pill = document.createElement('div');
+        pill.className = 'sakuraTeaHeaderPill ' + (role === 'right' ? 'sakuraTeaActionPill' : 'sakuraTeaNavPill');
+
+        ids.forEach((id) => {
+            const item = Core.itemById(catalog, id);
+            const structural = createStructuralItem(item);
+            if (structural) {
+                pill.appendChild(structural);
+                return;
+            }
+
+            const source = sourceMap.get(id);
+            if (!source) {
+                return;
+            }
+
+            pill.appendChild(makeProxyButton(source, item));
+        });
+
+        return pill.childElementCount ? pill : null;
+    }
+
+    function applySettings(header, config, hasSplit) {
+        const height = Math.max(34, Math.min(58, Number(config.BuilderHeaderHeight || 44)));
+        const button = Math.max(28, Math.min(44, Number(config.BuilderHeaderButtonSize || 34)));
+        const icon = Math.max(13, Math.min(22, Number(config.BuilderHeaderIconSize || 17)));
+        const avatar = Math.max(22, Math.min(36, Number(config.BuilderHeaderAvatarSize || 30)));
+        const spacing = Math.max(2, Math.min(14, Number(config.BuilderHeaderSpacing || 7)));
+        const opacity = Math.max(25, Math.min(90, Number(config.BuilderHeaderOpacity || 68))) / 100;
+
+        header.style.setProperty('--sakura-tea-header-height', height + 'px');
+        header.style.setProperty('--sakura-tea-button-size', button + 'px');
+        header.style.setProperty('--sakura-tea-icon-size', icon + 'px');
+        header.style.setProperty('--sakura-tea-avatar-size', avatar + 'px');
+        header.style.setProperty('--sakura-tea-header-gap', spacing + 'px');
+        header.style.setProperty('--sakura-tea-header-alpha', opacity.toFixed(2));
+        header.style.setProperty('--sakura-tea-header-alpha-soft', Math.max(.18, opacity * .68).toFixed(2));
+        header.dataset.position = String(config.BuilderHeaderPosition || 'Left');
+        header.classList.toggle('has-split', hasSplit);
+    }
+
+    function create(config) {
+        if (!Core) {
             return null;
         }
+
+        const sources = collectSources();
+        const sourceMap = buildSourceMap(sources);
+        const published = Core.readPublishedCatalog();
+        const catalog = Core.mergeCatalog(published.items);
+        const layout = Core.splitOrder(
+            (config && config.BuilderHeaderItems) || Core.DEFAULT_HEADER_ITEMS
+        );
 
         STATE.sourceBindings = [];
 
         const header = document.createElement('div');
         header.id = 'sakuraTeaFloatingHeader';
+        applySettings(header, config || {}, layout.hasSplit);
 
-        const navPill = document.createElement('div');
-        navPill.className = 'sakuraTeaHeaderPill sakuraTeaNavPill';
+        if (layout.hasSplit) {
+            const leftPill = createPill(layout.left, sourceMap, catalog, 'left');
+            const rightPill = createPill(layout.right, sourceMap, catalog, 'right');
 
-        const flower = document.createElement('span');
-        flower.className = 'sakuraTeaHeaderFlower';
-        flower.setAttribute('aria-hidden', 'true');
-        navPill.appendChild(flower);
-
-        sources.nav.forEach((source) => navPill.appendChild(makeProxyButton(source, true)));
-        header.appendChild(navPill);
-
-        if (sources.actions.length) {
-            const actionPill = document.createElement('div');
-            actionPill.className = 'sakuraTeaHeaderPill sakuraTeaActionPill';
-            sources.actions.forEach((source) => actionPill.appendChild(makeProxyButton(source, false)));
-            header.appendChild(actionPill);
+            if (leftPill) header.appendChild(leftPill);
+            if (rightPill) header.appendChild(rightPill);
+        } else {
+            const pill = createPill(layout.left, sourceMap, catalog, 'left');
+            if (pill) header.appendChild(pill);
         }
 
-        return header;
+        return header.childElementCount ? header : null;
     }
 
-    function mount() {
+    function mount(config) {
         unmount();
-        STATE.root = create();
+        STATE.config = config || STATE.config || {};
+        STATE.root = create(STATE.config);
         if (STATE.root) {
             document.body.appendChild(STATE.root);
         }
@@ -358,7 +459,7 @@
         }
 
         if (STATE.sourceBindings.some((record) => !record.source.isConnected)) {
-            mount();
+            mount(STATE.config);
             return;
         }
 
