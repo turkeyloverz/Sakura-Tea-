@@ -263,17 +263,17 @@
 
         try {
             const parsed = JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) || 'null');
-            if (parsed && Array.isArray(parsed.items)) {
+            if (parsed && parsed.version === 2 && Array.isArray(parsed.items)) {
                 return parsed;
             }
         } catch (error) {}
 
-        return { version: 1, updatedAt: 0, items: [] };
+        return { version: 2, updatedAt: 0, items: [] };
     }
 
     function publishCatalog(items) {
         const payload = {
-            version: 1,
+            version: 2,
             updatedAt: Date.now(),
             items: Array.isArray(items) ? items : []
         };
