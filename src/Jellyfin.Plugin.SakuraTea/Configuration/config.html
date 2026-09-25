@@ -101,6 +101,20 @@
 #SakuraTeaConfigPage .st-sort-chip.is-active{background:linear-gradient(180deg,rgba(255,185,210,.54),rgba(243,142,174,.36));color:#fff}
 #SakuraTeaConfigPage .st-sort-chip.is-dragging{opacity:.42}
 #SakuraTeaConfigPage .st-grip{opacity:.6;font-size:1.1em}
+#SakuraTeaConfigPage .st-nav-builder{margin-top:.8em;padding-top:.8em;border-top:1px solid rgba(255,255,255,.055)}
+#SakuraTeaConfigPage .st-nav-builder-head{display:flex;align-items:center;justify-content:space-between;gap:1em;margin-bottom:.55em}
+#SakuraTeaConfigPage .st-nav-builder-title{font-size:.95em;font-weight:600}
+#SakuraTeaConfigPage .st-nav-builder-copy{opacity:.55;font-size:.8em}
+#SakuraTeaConfigPage .st-header-pool-label{margin:.65em 0 .4em;font-size:.78em;opacity:.58}
+#SakuraTeaConfigPage .st-header-items{display:flex;flex-wrap:wrap;gap:.45em;min-height:36px}
+#SakuraTeaConfigPage .st-header-item{display:inline-flex;align-items:center;gap:.5em;min-height:32px;padding:0 .7em;border:1px solid rgba(255,159,189,.24);border-radius:9px;background:rgba(255,255,255,.025);color:inherit;font-size:.82em;cursor:grab;user-select:none}
+#SakuraTeaConfigPage .st-header-item.selected{background:linear-gradient(180deg,rgba(255,159,189,.12),rgba(255,159,189,.045));border-color:rgba(255,159,189,.38)}
+#SakuraTeaConfigPage .st-header-item.is-dragging{opacity:.38}
+#SakuraTeaConfigPage .st-header-item .st-item-icon{color:var(--st-pink);font-size:1.05em}
+#SakuraTeaConfigPage .st-header-item .st-remove{margin-left:.15em;opacity:0;width:14px;height:14px;display:grid;place-items:center;border-radius:50%;font-size:11px;cursor:pointer;transition:opacity .15s ease}
+#SakuraTeaConfigPage .st-header-item.selected:hover .st-remove{opacity:.72}
+#SakuraTeaConfigPage .st-header-item.available{border-color:rgba(255,255,255,.10)}
+#SakuraTeaConfigPage .st-header-item.available:hover{border-color:rgba(255,159,189,.32);background:rgba(255,159,189,.055)}
 #SakuraTeaConfigPage .st-note{padding:.8em .95em;border:1px solid rgba(200,182,255,.18);border-radius:11px;background:rgba(200,182,255,.055);line-height:1.45;font-size:.9em;margin-bottom:1em}
 #SakuraTeaConfigPage .st-footer{display:flex;justify-content:space-between;align-items:center;gap:1em;padding-top:.2em}
 #SakuraTeaConfigPage .st-footer-right{display:flex;gap:.6em}
@@ -134,7 +148,7 @@
 
 <div class="st-top">
  <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
- <div class="st-badge">0.1.0.6 preview</div>
+ <div class="st-badge">0.1.0.7 preview</div>
 </div>
 
 <div class="st-navrow">
@@ -193,6 +207,16 @@
       </div>
      </div>
     </div>
+    <div class="st-nav-builder">
+     <div class="st-nav-builder-head">
+      <div><div class="st-nav-builder-title">Navigation Builder</div><div class="st-nav-builder-copy">Drag your favorite things into the header bar.</div></div>
+     </div>
+     <div class="st-header-pool-label">Selected header items (drag to reorder)</div>
+     <div id="SakuraTeaHeaderSelected" class="st-header-items"></div>
+     <div class="st-header-pool-label">Available items (drag or click to add)</div>
+     <div id="SakuraTeaHeaderAvailable" class="st-header-items"></div>
+     <input id="BuilderHeaderItems" type="hidden">
+    </div>
    </div>
    <div class="st-controls">
     <div class="st-control"><div class="st-control-head"><span>Header height</span><span id="BuilderHeaderHeightValue" class="st-value"></span></div><input id="BuilderHeaderHeight" class="st-range" type="range" min="34" max="58" step="1"></div>
@@ -209,6 +233,22 @@
    </div>
   </div>
  </section>
+
+ <div class="st-lower">
+  <section class="st-card">
+   <div class="st-card-head"><div class="st-card-icon">ϟ</div><div><div class="st-card-title">Performance</div><p class="st-card-copy">Adjust effects for your device.</p></div></div>
+   <div class="st-inner"><div id="SakuraTeaPerformance" class="st-presets">
+    <button type="button" class="st-preset" data-value="Performance"><strong>Performance</strong><span>Minimal effects, best for lower-end devices.</span></button>
+    <button type="button" class="st-preset" data-value="Balanced"><strong>Balanced</strong><span>Good balance of quality and performance.</span></button>
+    <button type="button" class="st-preset" data-value="Full Effects"><strong>Full Effects</strong><span>All animations and visual effects.</span></button>
+   </div><input id="BuilderPerformanceMode" type="hidden"></div>
+  </section>
+
+  <section class="st-card">
+   <div class="st-card-head"><div class="st-card-icon">≡</div><div><div class="st-card-title">Navigation Labels</div><p class="st-card-copy">Drag to reorder your navigation labels.</p></div></div>
+   <div class="st-inner"><div id="SakuraTeaNavSort" class="st-sort"></div><input id="BuilderNavOrder" type="hidden"></div>
+  </section>
+ </div>
 
  <section class="st-card">
   <div class="st-card-head"><div class="st-card-icon">▧</div><div><div class="st-card-title">Hero Builder</div><p class="st-card-copy">Customize the home screen hero section.</p></div></div>
@@ -239,22 +279,6 @@
    </div>
   </div>
  </section>
-
- <div class="st-lower">
-  <section class="st-card">
-   <div class="st-card-head"><div class="st-card-icon">ϟ</div><div><div class="st-card-title">Performance</div><p class="st-card-copy">Adjust effects for your device.</p></div></div>
-   <div class="st-inner"><div id="SakuraTeaPerformance" class="st-presets">
-    <button type="button" class="st-preset" data-value="Performance"><strong>Performance</strong><span>Minimal effects, best for lower-end devices.</span></button>
-    <button type="button" class="st-preset" data-value="Balanced"><strong>Balanced</strong><span>Good balance of quality and performance.</span></button>
-    <button type="button" class="st-preset" data-value="Full Effects"><strong>Full Effects</strong><span>All animations and visual effects.</span></button>
-   </div><input id="BuilderPerformanceMode" type="hidden"></div>
-  </section>
-
-  <section class="st-card">
-   <div class="st-card-head"><div class="st-card-icon">≡</div><div><div class="st-card-title">Navigation Labels</div><p class="st-card-copy">Drag to reorder your navigation labels.</p></div></div>
-   <div class="st-inner"><div id="SakuraTeaNavSort" class="st-sort"></div><input id="BuilderNavOrder" type="hidden"></div>
-  </section>
- </div>
 
  <div class="st-footer">
   <button id="SakuraTeaBuilderReset" is="emby-button" type="button" class="raised st-btn"><span>↶ Reset to defaults</span></button>
@@ -289,6 +313,45 @@
  function navOrder(){
   return Array.from(q('SakuraTeaNavSort').querySelectorAll('.st-sort-chip')).map(function(x){return x.dataset.label});
  }
+ var headerInventory=[
+  {label:'Space',icon:'□'},{label:'Separator',icon:'│'},{label:'Favourites',icon:'♥'},{label:'Anime',icon:'▶'},{label:'Not Safe',icon:'◈'},
+  {label:'Search',icon:'⌕'},{label:'Cast',icon:'▣'},{label:'SyncPlay',icon:'↻'},{label:'User Menu',icon:'▦'},{label:'Profile',icon:'●'},
+  {label:'Home',icon:'⌂'},{label:'More',icon:'•••'},{label:'Random',icon:'⤨'},{label:'Activity',icon:'▥'},{label:'Requests',icon:'☷'},
+  {label:'Calendar',icon:'▣'},{label:'Movies',icon:'▤'},{label:'TV Shows',icon:'▭'},{label:'Recommendations',icon:'★'},{label:'Audio Player',icon:'♫'}
+ ];
+ function headerItems(){
+  return (q('BuilderHeaderItems').value||'Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More').split('|').filter(Boolean);
+ }
+ function iconFor(label){
+  var item=headerInventory.find(function(x){return x.label===label});
+  return item?item.icon:'•';
+ }
+ function saveHeaderItemsFromDom(){
+  q('BuilderHeaderItems').value=Array.from(q('SakuraTeaHeaderSelected').querySelectorAll('.st-header-item.selected')).map(function(x){return x.dataset.label}).join('|');
+ }
+ function renderHeaderBuilder(){
+  var selected=q('SakuraTeaHeaderSelected'),available=q('SakuraTeaHeaderAvailable');
+  selected.replaceChildren();available.replaceChildren();
+  headerItems().forEach(function(label){
+   var chip=document.createElement('div');chip.className='st-header-item selected';chip.draggable=true;chip.dataset.label=label;
+   chip.innerHTML='<span class="st-item-icon"></span><span class="st-item-label"></span><span class="st-remove">×</span>';
+   chip.querySelector('.st-item-icon').textContent=iconFor(label);chip.querySelector('.st-item-label').textContent=label;selected.appendChild(chip);
+  });
+  headerInventory.forEach(function(item){
+   var chip=document.createElement('div');chip.className='st-header-item available';chip.draggable=true;chip.dataset.label=item.label;
+   chip.innerHTML='<span class="st-item-icon"></span><span class="st-item-label"></span>';
+   chip.querySelector('.st-item-icon').textContent=item.icon;chip.querySelector('.st-item-label').textContent=item.label;available.appendChild(chip);
+  });
+ }
+ function renderHeaderPreview(){
+  var preview=q('SakuraTeaHeaderNavPreview');preview.replaceChildren();
+  headerItems().forEach(function(label){
+   if(label==='Space'||label==='Separator'||label==='Profile')return;
+   var p=document.createElement('span');p.className='st-nav-chip'+(label==='Anime'?' is-active':'');
+   p.textContent=(['Search','Cast','User Menu','Home','More','SyncPlay','Random','Activity'].indexOf(label)>=0)?iconFor(label):label;
+   preview.appendChild(p);
+  });
+ }
  function renderNav(){
   var labels=(q('BuilderNavOrder').value||'Favourites|Anime|Not Safe').split('|').filter(Boolean);
   var sort=q('SakuraTeaNavSort');
@@ -315,15 +378,15 @@
  }
  function defaults(){
   setVal('BuilderHeaderHeight',40);setVal('BuilderHeaderButtonSize',32);setVal('BuilderHeaderIconSize',16);setVal('BuilderHeaderAvatarSize',28);setVal('BuilderHeaderSpacing',6);setVal('BuilderHeaderOpacity',58);setVal('BuilderHeaderPosition','Left');
-  setVal('BuilderHeroHeight',76);setVal('BuilderHeroTitleSize',100);setVal('BuilderHeroButtonSize',90);setVal('BuilderBackdropDarkness',48);setVal('BuilderPetalDensity',55);setVal('BuilderAnimationSpeed',100);setVal('BuilderPerformanceMode','Balanced');setVal('BuilderNavOrder','Favourites|Anime|Not Safe');renderNav();update();
+  setVal('BuilderHeroHeight',76);setVal('BuilderHeroTitleSize',100);setVal('BuilderHeroButtonSize',90);setVal('BuilderBackdropDarkness',48);setVal('BuilderPetalDensity',55);setVal('BuilderAnimationSpeed',100);setVal('BuilderPerformanceMode','Balanced');setVal('BuilderHeaderItems','Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More');setVal('BuilderNavOrder','Favourites|Anime|Not Safe');renderHeaderBuilder();renderHeaderPreview();renderNav();update();
  }
  function load(){
   Dashboard.showLoadingMsg();
   ApiClient.getPluginConfiguration(pluginId).then(function(c){
    q('ThemeEnabled').checked=c.ThemeEnabled!==false;q('HeroEnabled').checked=c.HeroEnabled!==false;q('PetalsEnabled').checked=c.PetalsEnabled!==false;q('AnimeLibraryName').value=c.AnimeLibraryName||'Anime';q('HeroSlides').value=c.HeroSlides||10;q('HeroRotationSeconds').value=c.HeroRotationSeconds||9;
    setVal('BuilderHeaderHeight',c.BuilderHeaderHeight||40);setVal('BuilderHeaderButtonSize',c.BuilderHeaderButtonSize||32);setVal('BuilderHeaderIconSize',c.BuilderHeaderIconSize||16);setVal('BuilderHeaderAvatarSize',c.BuilderHeaderAvatarSize||28);setVal('BuilderHeaderSpacing',typeof c.BuilderHeaderSpacing==='number'?c.BuilderHeaderSpacing:6);setVal('BuilderHeaderOpacity',c.BuilderHeaderOpacity||58);setVal('BuilderHeaderPosition',c.BuilderHeaderPosition||'Left');
-   setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
-   renderNav();update();
+   setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderHeaderItems',c.BuilderHeaderItems||'Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
+   renderHeaderBuilder();renderHeaderPreview();renderNav();update();
    try{var uid=ApiClient.getCurrentUserId();if(uid){q('SakuraTeaPreviewAvatar').style.backgroundImage='url("'+ApiClient.getImageUrl(uid,{type:'Primary',maxWidth:96,quality:90})+'")'}}catch(e){}
    Dashboard.hideLoadingMsg();
   }).catch(function(){Dashboard.hideLoadingMsg()});
@@ -335,17 +398,37 @@
  q('SakuraTeaPerformance').addEventListener('click',function(e){var b=e.target.closest('.st-preset[data-value]');if(!b)return;q('BuilderPerformanceMode').value=b.dataset.value;update()});
  q('SakuraTeaBuilderReset').addEventListener('click',defaults);
  q('SakuraTeaPreviewOnly').addEventListener('click',function(){update();if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Preview updated. No live Home settings were changed.')});
+ var headerDrag=null;
+ var selectedHeader=q('SakuraTeaHeaderSelected'),availableHeader=q('SakuraTeaHeaderAvailable');
+ function beginHeaderDrag(e){
+  var item=e.target.closest('.st-header-item');if(!item)return;headerDrag={label:item.dataset.label,source:item.classList.contains('selected')?'selected':'available',node:item};item.classList.add('is-dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move';
+ }
+ selectedHeader.addEventListener('dragstart',beginHeaderDrag);availableHeader.addEventListener('dragstart',beginHeaderDrag);
+ selectedHeader.addEventListener('dragend',function(){page.querySelectorAll('.st-header-item.is-dragging').forEach(function(x){x.classList.remove('is-dragging')});headerDrag=null});
+ availableHeader.addEventListener('dragend',function(){page.querySelectorAll('.st-header-item.is-dragging').forEach(function(x){x.classList.remove('is-dragging')});headerDrag=null});
+ selectedHeader.addEventListener('dragover',function(e){
+  e.preventDefault();if(!headerDrag)return;
+  var target=e.target.closest('.st-header-item.selected');
+  if(headerDrag.source==='available'){
+   var chip=document.createElement('div');chip.className='st-header-item selected';chip.draggable=true;chip.dataset.label=headerDrag.label;chip.innerHTML='<span class="st-item-icon"></span><span class="st-item-label"></span><span class="st-remove">×</span>';chip.querySelector('.st-item-icon').textContent=iconFor(headerDrag.label);chip.querySelector('.st-item-label').textContent=headerDrag.label;selectedHeader.appendChild(chip);headerDrag={label:headerDrag.label,source:'selected',node:chip};
+  }
+  if(target&&target!==headerDrag.node){var r=target.getBoundingClientRect();selectedHeader.insertBefore(headerDrag.node,e.clientX>r.left+r.width/2?target.nextSibling:target)}
+  saveHeaderItemsFromDom();renderHeaderPreview();
+ });
+ selectedHeader.addEventListener('drop',function(e){e.preventDefault();saveHeaderItemsFromDom();renderHeaderBuilder();renderHeaderPreview();update()});
+ selectedHeader.addEventListener('click',function(e){var remove=e.target.closest('.st-remove');if(!remove)return;var chip=remove.closest('.st-header-item.selected');if(chip){chip.remove();saveHeaderItemsFromDom();renderHeaderPreview();}});
+ availableHeader.addEventListener('click',function(e){var chip=e.target.closest('.st-header-item.available');if(!chip)return;var vals=headerItems();vals.push(chip.dataset.label);q('BuilderHeaderItems').value=vals.join('|');renderHeaderBuilder();renderHeaderPreview();update()});
  var drag=null,sort=q('SakuraTeaNavSort');
  sort.addEventListener('dragstart',function(e){var item=e.target.closest('.st-sort-chip');if(!item)return;drag=item;item.classList.add('is-dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move'});
  sort.addEventListener('dragend',function(){if(drag)drag.classList.remove('is-dragging');drag=null;q('BuilderNavOrder').value=navOrder().join('|');renderNav();update()});
  sort.addEventListener('dragover',function(e){e.preventDefault();if(!drag)return;var t=e.target.closest('.st-sort-chip');if(!t||t===drag)return;var r=t.getBoundingClientRect();sort.insertBefore(drag,e.clientX>r.left+r.width/2?t.nextSibling:t)});
  page.addEventListener('pageshow',load);
  form.addEventListener('submit',function(e){
-  e.preventDefault();Dashboard.showLoadingMsg();q('BuilderNavOrder').value=navOrder().join('|');
+  e.preventDefault();Dashboard.showLoadingMsg();saveHeaderItemsFromDom();q('BuilderNavOrder').value=navOrder().join('|');
   ApiClient.getPluginConfiguration(pluginId).then(function(c){
    c.ThemeEnabled=q('ThemeEnabled').checked;c.HeroEnabled=q('HeroEnabled').checked;c.PetalsEnabled=q('PetalsEnabled').checked;c.AnimeLibraryName=q('AnimeLibraryName').value.trim()||'Anime';c.HeroSlides=num('HeroSlides',10);c.HeroRotationSeconds=num('HeroRotationSeconds',9);
    c.BuilderHeaderHeight=num('BuilderHeaderHeight',40);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',32);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',16);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',28);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',6);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',58);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';
-   c.BuilderHeroHeight=num('BuilderHeroHeight',76);c.BuilderHeroTitleSize=num('BuilderHeroTitleSize',100);c.BuilderHeroButtonSize=num('BuilderHeroButtonSize',90);c.BuilderBackdropDarkness=num('BuilderBackdropDarkness',48);c.BuilderPetalDensity=num('BuilderPetalDensity',55);c.BuilderAnimationSpeed=num('BuilderAnimationSpeed',100);c.BuilderPerformanceMode=q('BuilderPerformanceMode').value||'Balanced';c.BuilderNavOrder=q('BuilderNavOrder').value||'Favourites|Anime|Not Safe';
+   c.BuilderHeroHeight=num('BuilderHeroHeight',76);c.BuilderHeroTitleSize=num('BuilderHeroTitleSize',100);c.BuilderHeroButtonSize=num('BuilderHeroButtonSize',90);c.BuilderBackdropDarkness=num('BuilderBackdropDarkness',48);c.BuilderPetalDensity=num('BuilderPetalDensity',55);c.BuilderAnimationSpeed=num('BuilderAnimationSpeed',100);c.BuilderPerformanceMode=q('BuilderPerformanceMode').value||'Balanced';c.BuilderHeaderItems=q('BuilderHeaderItems').value||'Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More';c.BuilderNavOrder=q('BuilderNavOrder').value||'Favourites|Anime|Not Safe';
    return ApiClient.updatePluginConfiguration(pluginId,c)
   }).then(Dashboard.processPluginConfigurationUpdateResult);
   return false;
