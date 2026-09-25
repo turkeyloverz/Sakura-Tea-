@@ -57,6 +57,8 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
     --sakura-tea-header-gap: 7px;
     --sakura-tea-header-alpha: .68;
     --sakura-tea-header-alpha-soft: .46;
+    --sakura-tea-action-alpha: .52;
+    --sakura-tea-action-alpha-soft: .34;
     position: fixed;
     z-index: 1200;
     top: 12px;
@@ -220,8 +222,8 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
     background:
         linear-gradient(
             180deg,
-            rgba(255, 224, 236, calc(var(--sakura-tea-header-alpha) * .76)),
-            rgba(255, 174, 204, calc(var(--sakura-tea-header-alpha-soft) * .74))
+            rgba(255, 224, 236, var(--sakura-tea-action-alpha)),
+            rgba(255, 174, 204, var(--sakura-tea-action-alpha-soft))
         ),
         rgba(42, 28, 39, .26);
 }
