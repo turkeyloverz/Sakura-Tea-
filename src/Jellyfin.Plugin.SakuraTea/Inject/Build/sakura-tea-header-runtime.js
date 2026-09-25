@@ -246,21 +246,23 @@
             }
 
             seen.add(id);
+            const avatarSource = id === 'jellyfin:user-menu' && isAvatarSource(entry.source);
             const descriptor = {
                 id,
-                label: sourceLabel(entry.source) || entry.source.getAttribute('aria-label') || entry.source.getAttribute('title') || id,
+                label: avatarSource ? 'User Menu' : (sourceLabel(entry.source) || entry.source.getAttribute('aria-label') || entry.source.getAttribute('title') || id),
                 group: entry.group,
-                shape: sourceShape(entry.source),
-                iconHtml: sourceIconMarkup(entry.source)
+                shape: avatarSource ? 'icon' : sourceShape(entry.source),
+                iconHtml: avatarSource ? '' : sourceIconMarkup(entry.source)
             };
             items.push(descriptor);
 
-            if (id === 'jellyfin:user-menu' && isAvatarSource(entry.source)) {
+            if (avatarSource) {
                 items.push({
-                    ...descriptor,
                     id: 'jellyfin:profile-avatar',
                     label: 'Profile Avatar',
-                    shape: 'avatar'
+                    group: entry.group,
+                    shape: 'avatar',
+                    iconHtml: sourceIconMarkup(entry.source)
                 });
             }
         });
@@ -291,9 +293,15 @@
         button.className = 'sakuraTeaHeaderButton';
         button.dataset.itemId = item.id;
 
-        const icon = sourceIcon(source);
+        const useSourceIcon = !(item.id === 'jellyfin:user-menu' && isAvatarSource(source));
+        const icon = useSourceIcon ? sourceIcon(source) : null;
         if (icon) {
             button.appendChild(icon);
+        } else if (item.icon) {
+            const fallbackIcon = document.createElement('span');
+            fallbackIcon.className = 'sakuraTeaHeaderFallbackIcon';
+            fallbackIcon.textContent = item.icon;
+            button.appendChild(fallbackIcon);
         }
 
         const label = sourceLabel(source);
