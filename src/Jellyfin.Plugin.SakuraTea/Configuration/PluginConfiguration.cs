@@ -11,8 +11,7 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public int HeroSlides { get; set; } = 10;
     public int HeroRotationSeconds { get; set; } = 9;
 
-    // UI Builder values are persisted now and will be applied to the live
-    // Home header in the next wiring phase.
+    // UI Builder values are persisted and applied to the live Home header.
     public int BuilderHeaderHeight { get; set; } = 44;
     public int BuilderHeaderButtonSize { get; set; } = 34;
     public int BuilderHeaderIconSize { get; set; } = 17;
@@ -29,6 +28,6 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public int BuilderAnimationSpeed { get; set; } = 100;
 
     public string BuilderPerformanceMode { get; set; } = "Balanced";
-    public string BuilderHeaderItems { get; set; } = "sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|header:split|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar";
+    public string BuilderHeaderItems { get; set; } = "sakura:flower|header:split|jellyfin:favorites|sakura:anime|sakura:not-safe|header:split|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar";
     public string BuilderNavOrder { get; set; } = "Favourites|Anime|Not Safe";
 }
