@@ -16,8 +16,9 @@
  padding:1em .8em 3em!important;box-sizing:border-box
 }
 #SakuraTeaConfigPage *{box-sizing:border-box}
-#SakuraTeaConfigPage .content-primary{max-width:none!important}
-#SakuraTeaConfigPage .st-shell{max-width:1280px;margin:0 auto}
+#SakuraTeaConfigPage .content-primary{width:100%!important;max-width:none!important;margin:0!important;padding-left:0!important;padding-right:0!important}
+#SakuraTeaConfigPage form{width:100%!important;max-width:none!important}
+#SakuraTeaConfigPage .st-shell{width:100%;max-width:none;margin:0}
 #SakuraTeaConfigPage .st-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1em;margin-bottom:10px}
 #SakuraTeaConfigPage .st-title-wrap{display:flex;align-items:center;gap:12px}
 #SakuraTeaConfigPage .st-title-flower{width:42px;height:42px;flex:0 0 42px;background:var(--st-logo) center/contain no-repeat;filter:drop-shadow(0 4px 12px rgba(255,147,184,.22))}
@@ -39,7 +40,7 @@
 #SakuraTeaConfigPage .st-cardcopy{font-size:.78em;color:var(--st-muted);margin-top:2px}
 #SakuraTeaConfigPage .st-reset{font-size:.75em;padding:8px 11px;border:1px solid var(--st-border);border-radius:8px;color:#eee;background:#15161a;cursor:pointer}
 
-#SakuraTeaConfigPage .st-buildergrid{display:grid;grid-template-columns:minmax(0,1fr) 308px}
+#SakuraTeaConfigPage .st-buildergrid{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,25vw,360px)}
 #SakuraTeaConfigPage .st-leftpane{padding:10px 12px;border-right:1px solid rgba(255,255,255,.055);min-width:0}
 #SakuraTeaConfigPage .st-rightpane{padding:10px 14px}
 #SakuraTeaConfigPage .st-sectionlabel{font-size:.82em;font-weight:700;margin-bottom:6px}
@@ -75,7 +76,10 @@
 #SakuraTeaConfigPage .st-navtop strong{font-size:.82em}
 #SakuraTeaConfigPage .st-navtop span{font-size:.75em;color:var(--st-muted)}
 #SakuraTeaConfigPage .st-poollabel{font-size:.68em;color:#8f9095;margin:8px 0 5px}
-#SakuraTeaConfigPage .st-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:31px}
+#SakuraTeaConfigPage .st-chips{display:flex;flex-wrap:wrap;align-content:flex-start;gap:6px;min-height:39px;padding:4px;border:1px dashed transparent;border-radius:10px;transition:border-color .14s ease,background .14s ease,box-shadow .14s ease}
+#SakuraTeaConfigPage .st-chips.is-drop-target{border-color:rgba(255,147,184,.52);background:rgba(255,147,184,.045);box-shadow:inset 0 0 0 1px rgba(255,147,184,.08)}
+#SakuraTeaConfigPage #SakuraTeaHeaderAvailable.is-drop-target{border-color:rgba(189,167,255,.46);background:rgba(189,167,255,.04)}
+#SakuraTeaConfigPage .st-chip.is-placeholder{border-style:dashed;background:rgba(255,147,184,.10);opacity:.72}
 #SakuraTeaConfigPage .st-chip{height:31px;padding:0 10px;border:1px solid rgba(255,147,184,.30);border-radius:8px;background:rgba(255,255,255,.025);display:flex;align-items:center;gap:6px;font-size:.74em;cursor:grab;user-select:none}
 #SakuraTeaConfigPage .st-chip.selected{background:linear-gradient(180deg,rgba(255,147,184,.19),rgba(255,147,184,.07));border-color:rgba(255,147,184,.45)}
 #SakuraTeaConfigPage .st-chip.available{border-color:rgba(255,255,255,.11)}
@@ -168,7 +172,7 @@
   <div class="st-title-flower" aria-hidden="true"></div>
   <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
  </div>
- <div class="st-badge">0.1.0.8 coded preview</div>
+ <div class="st-badge">0.1.0.9 drag & drop preview</div>
 </div>
 
 <div class="st-toolbar">
@@ -225,7 +229,7 @@
      </div>
     </div>
     <div class="st-navbuilder">
-     <div class="st-navtop"><strong>Navigation Builder</strong><span>Drag your favorite things into the header bar</span></div>
+     <div class="st-navtop"><strong>Navigation Builder</strong><span>Drag items into the header, reorder them, or drag them back below to remove.</span></div>
      <div class="st-poollabel">Selected header items (drag to reorder)</div>
      <div id="SakuraTeaHeaderSelected" class="st-chips"></div>
      <div class="st-poollabel">Available items (drag or click to add)</div>
@@ -336,9 +340,17 @@
  function saveHeaderItemsFromDom(){q('BuilderHeaderItems').value=Array.from(q('SakuraTeaHeaderSelected').querySelectorAll('.st-chip.selected')).map(function(x){return x.dataset.label}).join('|')}
  function saveNavLabelsFromDom(){q('BuilderNavOrder').value=Array.from(q('SakuraTeaNavSort').querySelectorAll('.st-labelchip')).map(function(x){return x.dataset.label}).join('|')}
 
+ function selectedHeaderItemsForPreview(){
+  var selected=q('SakuraTeaHeaderSelected');
+  if(selected){
+   var nodes=Array.from(selected.querySelectorAll('.st-chip.selected'));
+   if(nodes.length)return nodes.map(function(x){return x.dataset.label}).filter(Boolean);
+  }
+  return headerItems();
+ }
  function renderHeaderPreview(){
   var host=q('SakuraTeaHeaderPreviewItems');host.replaceChildren();
-  headerItems().forEach(function(label){
+  selectedHeaderItemsForPreview().forEach(function(label){
    if(label==='Space'){var s=document.createElement('span');s.className='st-preview-space';host.appendChild(s);return}
    if(label==='Separator'){var sep=document.createElement('span');sep.className='st-preview-separator';host.appendChild(sep);return}
    if(label==='Profile'){var p=document.createElement('span');p.className='st-preview-profile';p.id='SakuraTeaPreviewAvatar';host.appendChild(p);return}
@@ -411,22 +423,176 @@
  q('SakuraTeaResetHeader').addEventListener('click',resetHeader);q('SakuraTeaResetHero').addEventListener('click',resetHero);q('SakuraTeaBuilderReset').addEventListener('click',resetAll);
  q('SakuraTeaPreviewOnly').addEventListener('click',function(){update();if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Preview updated. No live Home settings were changed.')});
 
- var headerDrag=null,selected=q('SakuraTeaHeaderSelected'),available=q('SakuraTeaHeaderAvailable');
- function beginHeaderDrag(e){var item=e.target.closest('.st-chip');if(!item)return;headerDrag={label:item.dataset.label,source:item.classList.contains('selected')?'selected':'available',node:item};item.classList.add('is-dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move'}
- selected.addEventListener('dragstart',beginHeaderDrag);available.addEventListener('dragstart',beginHeaderDrag);
- page.addEventListener('dragend',function(){page.querySelectorAll('.is-dragging').forEach(function(x){x.classList.remove('is-dragging')});headerDrag=null});
- selected.addEventListener('dragover',function(e){
-  e.preventDefault();if(!headerDrag)return;
-  var target=e.target.closest('.st-chip.selected');
-  if(headerDrag.source==='available'){
-   var chip=document.createElement('div');chip.className='st-chip selected';chip.draggable=true;chip.dataset.label=headerDrag.label;chip.innerHTML='<span class="st-ic"></span><span class="st-lbl"></span><span class="st-remove">×</span>';chip.querySelector('.st-ic').textContent=iconFor(headerDrag.label);chip.querySelector('.st-lbl').textContent=headerDrag.label;selected.appendChild(chip);headerDrag={label:headerDrag.label,source:'selected',node:chip};
+ var headerDrag=null,headerPlaceholder=null,selected=q('SakuraTeaHeaderSelected'),available=q('SakuraTeaHeaderAvailable');
+
+ function createSelectedChip(label,placeholder){
+  var chip=document.createElement('div');
+  chip.className='st-chip selected'+(placeholder?' is-placeholder':'');
+  chip.draggable=!placeholder;
+  chip.dataset.label=label;
+  chip.innerHTML='<span class="st-ic"></span><span class="st-lbl"></span><span class="st-remove">×</span>';
+  chip.querySelector('.st-ic').textContent=iconFor(label);
+  chip.querySelector('.st-lbl').textContent=label;
+  return chip;
+ }
+
+ function clearHeaderDropState(){
+  selected.classList.remove('is-drop-target');
+  available.classList.remove('is-drop-target');
+ }
+
+ function restoreDraggedSelectedItem(){
+  if(!headerDrag||headerDrag.source!=='selected'||headerDrag.dropped)return;
+  var parent=headerDrag.originalParent;
+  var next=headerDrag.originalNext;
+  if(parent&&headerDrag.node){
+   parent.insertBefore(headerDrag.node,next&&next.parentNode===parent?next:null);
   }
-  if(target&&target!==headerDrag.node){var r=target.getBoundingClientRect();selected.insertBefore(headerDrag.node,e.clientX>r.left+r.width/2?target.nextSibling:target)}
-  saveHeaderItemsFromDom();renderHeaderPreview();
+ }
+
+ function finishHeaderDrag(){
+  restoreDraggedSelectedItem();
+  if(headerPlaceholder&&headerPlaceholder.parentNode)headerPlaceholder.remove();
+  headerPlaceholder=null;
+  clearHeaderDropState();
+  page.querySelectorAll('.st-chip.is-dragging').forEach(function(x){x.classList.remove('is-dragging')});
+  if(headerDrag&&!headerDrag.dropped){
+   saveHeaderItemsFromDom();
+   renderHeaderPreview();
+  }
+  headerDrag=null;
+ }
+
+ function beginHeaderDrag(e){
+  var item=e.target.closest('.st-chip');
+  if(!item)return;
+  var source=item.classList.contains('selected')?'selected':'available';
+  headerDrag={
+   label:item.dataset.label,
+   source:source,
+   node:item,
+   originalParent:item.parentNode,
+   originalNext:item.nextSibling,
+   dropped:false
+  };
+  item.classList.add('is-dragging');
+  if(e.dataTransfer){
+   e.dataTransfer.effectAllowed=source==='available'?'copyMove':'move';
+   e.dataTransfer.setData('text/plain',item.dataset.label||'');
+  }
+ }
+
+ function insertDraggedNode(container,node,e){
+  var target=e.target.closest('.st-chip.selected');
+  if(target===node||target===headerPlaceholder)target=null;
+  if(!target){
+   if(node.parentNode!==container)container.appendChild(node);
+   return;
+  }
+  var r=target.getBoundingClientRect();
+  var sameRow=Math.abs(e.clientY-(r.top+r.height/2))<=Math.max(10,r.height*.55);
+  var after=sameRow?e.clientX>(r.left+r.width/2):e.clientY>(r.top+r.height/2);
+  container.insertBefore(node,after?target.nextSibling:target);
+ }
+
+ selected.addEventListener('dragstart',beginHeaderDrag);
+ available.addEventListener('dragstart',beginHeaderDrag);
+
+ selected.addEventListener('dragenter',function(e){
+  if(!headerDrag)return;
+  e.preventDefault();
+  selected.classList.add('is-drop-target');
  });
- selected.addEventListener('drop',function(e){e.preventDefault();saveHeaderItemsFromDom();renderHeaderBuilder();update()});
- selected.addEventListener('click',function(e){var r=e.target.closest('.st-remove');if(!r)return;var chip=r.closest('.st-chip.selected');if(chip){chip.remove();saveHeaderItemsFromDom();renderHeaderBuilder();update()}});
- available.addEventListener('click',function(e){var chip=e.target.closest('.st-chip.available');if(!chip)return;var vals=headerItems();vals.push(chip.dataset.label);q('BuilderHeaderItems').value=vals.join('|');renderHeaderBuilder();update()});
+
+ selected.addEventListener('dragover',function(e){
+  if(!headerDrag)return;
+  e.preventDefault();
+  selected.classList.add('is-drop-target');
+  if(e.dataTransfer)e.dataTransfer.dropEffect=headerDrag.source==='available'?'copy':'move';
+
+  var node=headerDrag.node;
+  if(headerDrag.source==='available'){
+   if(!headerPlaceholder){
+    headerPlaceholder=createSelectedChip(headerDrag.label,true);
+    selected.appendChild(headerPlaceholder);
+   }
+   node=headerPlaceholder;
+  }
+  insertDraggedNode(selected,node,e);
+  renderHeaderPreview();
+ });
+
+ selected.addEventListener('dragleave',function(e){
+  if(!selected.contains(e.relatedTarget))selected.classList.remove('is-drop-target');
+ });
+
+ selected.addEventListener('drop',function(e){
+  if(!headerDrag)return;
+  e.preventDefault();
+  if(headerDrag.source==='available'){
+   if(!headerPlaceholder)headerPlaceholder=createSelectedChip(headerDrag.label,true);
+   headerPlaceholder.classList.remove('is-placeholder');
+   headerPlaceholder.draggable=true;
+   headerPlaceholder=null;
+  }
+  headerDrag.dropped=true;
+  saveHeaderItemsFromDom();
+  clearHeaderDropState();
+  renderHeaderBuilder();
+  update();
+ });
+
+ available.addEventListener('dragenter',function(e){
+  if(!headerDrag||headerDrag.source!=='selected')return;
+  e.preventDefault();
+  available.classList.add('is-drop-target');
+ });
+
+ available.addEventListener('dragover',function(e){
+  if(!headerDrag||headerDrag.source!=='selected')return;
+  e.preventDefault();
+  available.classList.add('is-drop-target');
+  if(e.dataTransfer)e.dataTransfer.dropEffect='move';
+ });
+
+ available.addEventListener('dragleave',function(e){
+  if(!available.contains(e.relatedTarget))available.classList.remove('is-drop-target');
+ });
+
+ available.addEventListener('drop',function(e){
+  if(!headerDrag||headerDrag.source!=='selected')return;
+  e.preventDefault();
+  headerDrag.dropped=true;
+  if(headerDrag.node&&headerDrag.node.parentNode)headerDrag.node.remove();
+  saveHeaderItemsFromDom();
+  clearHeaderDropState();
+  renderHeaderBuilder();
+  update();
+ });
+
+ selected.addEventListener('click',function(e){
+  var remove=e.target.closest('.st-remove');
+  if(!remove)return;
+  var chip=remove.closest('.st-chip.selected');
+  if(chip){
+   chip.remove();
+   saveHeaderItemsFromDom();
+   renderHeaderBuilder();
+   update();
+  }
+ });
+
+ available.addEventListener('click',function(e){
+  var chip=e.target.closest('.st-chip.available');
+  if(!chip)return;
+  var vals=headerItems();
+  vals.push(chip.dataset.label);
+  q('BuilderHeaderItems').value=vals.join('|');
+  renderHeaderBuilder();
+  update();
+ });
+
+ page.addEventListener('dragend',finishHeaderDrag);
 
  var navDrag=null,nav=q('SakuraTeaNavSort');
  nav.addEventListener('dragstart',function(e){var item=e.target.closest('.st-labelchip[data-label]');if(!item)return;navDrag=item;item.classList.add('is-dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move'});
