@@ -189,7 +189,7 @@
   <div class="st-title-flower" aria-hidden="true"></div>
   <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
  </div>
- <div class="st-badge">0.1.0.11 cleaned builder foundation</div>
+ <div class="st-badge">0.1.0.12 header core hotfix</div>
 </div>
 
 <div class="st-toolbar">
@@ -346,26 +346,71 @@
  function syncDevice(){var d=currentDevice();page.querySelectorAll('.st-stage').forEach(function(s){s.dataset.device=d})}
 
  var HeaderCore=window.SakuraTeaHeaderCore||null;
+ var headerCorePromise=null;
  var catalog=[];
 
+ function syncHeaderCore(){
+  if(window.SakuraTeaHeaderCore)HeaderCore=window.SakuraTeaHeaderCore;
+  return HeaderCore;
+ }
+
+ function headerCoreAssetUrl(){
+  try{
+   if(window.ApiClient&&typeof ApiClient.getUrl==='function'){
+    return ApiClient.getUrl('SakuraTea/sakura-tea-header-core.js');
+   }
+  }catch(e){}
+  return new URL('../SakuraTea/sakura-tea-header-core.js',document.baseURI).href;
+ }
+
+ function ensureHeaderCore(){
+  var ready=syncHeaderCore();
+  if(ready)return Promise.resolve(ready);
+  if(headerCorePromise)return headerCorePromise;
+
+  headerCorePromise=new Promise(function(resolve,reject){
+   var script=document.createElement('script');
+   var url=headerCoreAssetUrl();
+   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=0.1.0.12';
+   script.async=true;
+   script.dataset.sakuraTeaConfigCore='true';
+   script.onload=function(){
+    var core=syncHeaderCore();
+    if(core)resolve(core);
+    else reject(new Error('Sakura Tea header core loaded without registering.'));
+   };
+   script.onerror=function(){reject(new Error('Could not load Sakura Tea header core.'))};
+   document.head.appendChild(script);
+  }).catch(function(error){
+   console.error('[Sakura Tea] Header builder core unavailable.',error);
+   headerCorePromise=null;
+   throw error;
+  });
+
+  return headerCorePromise;
+ }
+
  function catalogItem(id){
-  return HeaderCore
-   ? HeaderCore.itemById(catalog,id)
+  var core=syncHeaderCore();
+  return core
+   ? core.itemById(catalog,id)
    : {id:id,label:id,icon:'•',shape:'text'};
  }
 
  function refreshCatalog(){
-  if(!HeaderCore){
+  var core=syncHeaderCore();
+  if(!core){
    catalog=[];
    return;
   }
-  var published=HeaderCore.readPublishedCatalog();
-  catalog=HeaderCore.mergeCatalog(published.items);
+  var published=core.readPublishedCatalog();
+  catalog=core.mergeCatalog(published.items);
  }
 
  function setVisual(target,item,withLabel){
-  if(HeaderCore){
-   HeaderCore.renderVisual(target,item,withLabel);
+  var core=syncHeaderCore();
+  if(core){
+   core.renderVisual(target,item,withLabel);
    return;
   }
   target.replaceChildren();
@@ -376,14 +421,16 @@
  function headerItems(){
   var input=q('BuilderHeaderItems');
   var source=input.value||'jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more';
-  var normalized=HeaderCore?HeaderCore.normalizeOrder(source):String(source).split('|').filter(Boolean);
+  var core=syncHeaderCore();
+  var normalized=core?core.normalizeOrder(source):String(source).split('|').filter(Boolean);
   var joined=normalized.join('|');
   if(input.value!==joined)input.value=joined;
   return normalized;
  }
 
  function setHeaderItems(items){
-  var normalized=HeaderCore?HeaderCore.normalizeOrder(items):items.filter(Boolean);
+  var core=syncHeaderCore();
+  var normalized=core?core.normalizeOrder(items):items.filter(Boolean);
   q('BuilderHeaderItems').value=normalized.join('|');
  }
 
@@ -491,7 +538,8 @@
  function renderNavLabels(){
   var host=q('SakuraTeaNavSort');
   host.replaceChildren();
-  var baseCatalog=HeaderCore?HeaderCore.STATIC_CATALOG:[];
+  var core=syncHeaderCore();
+  var baseCatalog=core?core.STATIC_CATALOG:[];
 
   navLabels().forEach(function(label){
    var item=baseCatalog.find(function(x){return x.label===label||x.label.replace('Favourites','Favorites')===label})||{icon:'•'};
@@ -527,7 +575,9 @@
 
  function load(){
   Dashboard.showLoadingMsg();
-  ApiClient.getPluginConfiguration(pluginId).then(function(c){
+  ensureHeaderCore().then(function(){
+   return ApiClient.getPluginConfiguration(pluginId);
+  }).then(function(c){
    q('ThemeEnabled').checked=c.ThemeEnabled!==false;q('HeroEnabled').checked=c.HeroEnabled!==false;q('PetalsEnabled').checked=c.PetalsEnabled!==false;
    q('AnimeLibraryName').value=c.AnimeLibraryName||'Anime';q('HeroSlides').value=c.HeroSlides||10;q('HeroRotationSeconds').value=c.HeroRotationSeconds||9;
    setVal('BuilderHeaderHeight',c.BuilderHeaderHeight||44);setVal('BuilderHeaderButtonSize',c.BuilderHeaderButtonSize||34);setVal('BuilderHeaderIconSize',c.BuilderHeaderIconSize||17);setVal('BuilderHeaderAvatarSize',c.BuilderHeaderAvatarSize||30);setVal('BuilderHeaderSpacing',typeof c.BuilderHeaderSpacing==='number'?c.BuilderHeaderSpacing:7);setVal('BuilderHeaderOpacity',c.BuilderHeaderOpacity||68);setVal('BuilderHeaderPosition',c.BuilderHeaderPosition||'Left');
@@ -535,7 +585,11 @@
    setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);
    setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
    refreshCatalog();renderHeaderBuilder();renderNavLabels();update();Dashboard.hideLoadingMsg();
-  }).catch(function(){Dashboard.hideLoadingMsg()});
+  }).catch(function(error){
+   console.error('[Sakura Tea] Could not initialize configuration page.',error);
+   Dashboard.hideLoadingMsg();
+   if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Sakura Tea could not load the header builder core. Reload the page after restarting Jellyfin.');
+  });
  }
 
  page.querySelectorAll('.st-tabs .st-pillbtn').forEach(function(b){b.addEventListener('click',function(){var name=b.dataset.panel;page.querySelectorAll('.st-tabs .st-pillbtn').forEach(function(x){x.classList.toggle('is-active',x===b)});page.querySelectorAll('.st-panel').forEach(function(p){p.hidden=p.dataset.panel!==name});q('SakuraTeaDeviceSwitcher').style.display=name==='builder'?'flex':'none'})});
@@ -767,7 +821,7 @@
 
  function handleHeaderCatalogChanged(){
   if(!page.isConnected)return;
-  refreshCatalog();renderHeaderBuilder();renderHeaderPreview();
+  syncHeaderCore();refreshCatalog();renderHeaderBuilder();renderHeaderPreview();
  }
  function cleanupBuilder(){
   window.removeEventListener('sakura-tea:header-catalog-changed',handleHeaderCatalogChanged);
