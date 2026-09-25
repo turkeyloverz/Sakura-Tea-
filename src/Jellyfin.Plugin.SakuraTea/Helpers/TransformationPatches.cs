@@ -28,7 +28,10 @@ public static class TransformationPatches
         contents = InjectedScripts.Replace(contents, string.Empty);
 
         PluginConfiguration config = SakuraTeaPlugin.Instance.Configuration;
-        string cacheQuery = $"?v={typeof(SakuraTeaPlugin).Assembly.GetName().Version}";
+        var assembly = typeof(SakuraTeaPlugin).Assembly;
+        string version = assembly.GetName().Version?.ToString() ?? "0.1.0.0";
+        string buildId = assembly.ManifestModule.ModuleVersionId.ToString("N");
+        string cacheQuery = $"?v={version}&b={buildId}";
 
         foreach (FrontendAssets.Asset asset in FrontendAssets.Ordered)
         {
