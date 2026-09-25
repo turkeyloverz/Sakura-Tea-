@@ -199,6 +199,15 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
     border-radius: 50%;
 }
 
+#sakuraTeaFloatingHeader .sakuraTeaHeaderFallbackIcon {
+    display: inline-grid;
+    place-items: center;
+    width: var(--sakura-tea-icon-size);
+    height: var(--sakura-tea-icon-size);
+    font-size: var(--sakura-tea-icon-size);
+    line-height: 1;
+}
+
 #sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar {
     width: calc(var(--sakura-tea-avatar-size) + 6px);
     min-width: calc(var(--sakura-tea-avatar-size) + 6px);
