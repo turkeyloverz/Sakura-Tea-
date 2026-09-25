@@ -421,9 +421,9 @@
         const sourceMap = buildSourceMap(sources);
         const published = Core.readPublishedCatalog();
         const catalog = Core.mergeCatalog(published.items);
-        const layout = Core.splitOrder(
-            (config && config.BuilderHeaderItems) || Core.DEFAULT_HEADER_ITEMS
-        );
+        const rawOrder = (config && config.BuilderHeaderItems) || Core.DEFAULT_HEADER_ITEMS;
+        const migratedOrder = Core.upgradeLegacyOrder(rawOrder);
+        const layout = Core.splitOrder(migratedOrder);
 
         STATE.sourceBindings = [];
 
