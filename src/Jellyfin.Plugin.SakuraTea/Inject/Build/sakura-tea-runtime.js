@@ -369,6 +369,13 @@
             button.classList.add('icon-only');
         }
 
+        if (
+            source.matches('.headerUserButton, [aria-controls="app-user-menu"]') ||
+            source.querySelector('.MuiAvatar-root, .headerUserButtonRound')
+        ) {
+            button.classList.add('has-avatar');
+        }
+
         const title = source.getAttribute('aria-label') || source.getAttribute('title') || label;
         if (title) {
             button.setAttribute('aria-label', title);
