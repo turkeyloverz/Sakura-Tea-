@@ -92,7 +92,7 @@ jobs:
             --arg targetAbi "$TARGET_ABI" \
             '{
               category: "General",
-              changelog: "Initial Sakura Tea alpha test release.",
+              changelog: "Sakura Tea alpha test build.",
               description: "A Sakura-inspired cinematic Jellyfin Web experience.",
               guid: "3bf6515b-c10a-4307-a3e8-942eaffe900d",
               name: "Sakura Tea",
@@ -132,7 +132,7 @@ jobs:
             '.[0].versions = (
               [{
                 version: $version,
-                changelog: "Initial Sakura Tea alpha test release.",
+                changelog: "Sakura Tea alpha test build.",
                 targetAbi: $targetAbi,
                 sourceUrl: $sourceUrl,
                 checksum: $checksum,
