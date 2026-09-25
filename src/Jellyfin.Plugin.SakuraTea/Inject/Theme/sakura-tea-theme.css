@@ -79,8 +79,8 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
     justify-content: flex-end;
 }
 
-#sakuraTeaFloatingHeader.has-split {
-    justify-content: space-between;
+#sakuraTeaFloatingHeader[data-group-count]:not([data-group-count="1"]) .sakuraTeaHeaderPill:last-child {
+    margin-left: auto;
 }
 
 #sakuraTeaFloatingHeader .sakuraTeaHeaderPill {
@@ -111,8 +111,12 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
     backdrop-filter: blur(20px) saturate(145%);
 }
 
-#sakuraTeaFloatingHeader.has-split .sakuraTeaHeaderPill {
-    max-width: calc(50vw - 34px);
+#sakuraTeaFloatingHeader[data-group-count]:not([data-group-count="1"]) .sakuraTeaHeaderPill {
+    max-width: min(62vw, 780px);
+}
+
+#sakuraTeaFloatingHeader[data-group-count]:not([data-group-count="1"]) .sakuraTeaHeaderPill:last-child {
+    max-width: min(42vw, 520px);
 }
 
 #sakuraTeaFloatingHeader .sakuraTeaHeaderFlower {
@@ -209,9 +213,19 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
 }
 
 #sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar {
-    width: calc(var(--sakura-tea-avatar-size) + 6px);
-    min-width: calc(var(--sakura-tea-avatar-size) + 6px);
-    padding: 0 3px;
+    width: var(--sakura-tea-avatar-size);
+    min-width: var(--sakura-tea-avatar-size);
+    height: var(--sakura-tea-avatar-size);
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
+}
+
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar:hover {
+    background: rgba(255, 239, 245, .16);
+    transform: none;
 }
 
 #sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar :is(.MuiAvatar-root, .headerUserButtonRound),
@@ -278,12 +292,16 @@ html.sakura-tea-runtime.sakura-tea-home #indexPage .card:hover {
         max-width: calc(100vw - 24px);
     }
 
-    #sakuraTeaFloatingHeader.has-split {
-        gap: 8px;
+    #sakuraTeaFloatingHeader[data-group-count]:not([data-group-count="1"]) {
+        gap: 7px;
     }
 
-    #sakuraTeaFloatingHeader.has-split .sakuraTeaHeaderPill {
-        max-width: calc(50vw - 16px);
+    #sakuraTeaFloatingHeader[data-group-count]:not([data-group-count="1"]) .sakuraTeaHeaderPill {
+        max-width: calc(58vw - 14px);
+    }
+
+    #sakuraTeaFloatingHeader[data-group-count]:not([data-group-count="1"]) .sakuraTeaHeaderPill:last-child {
+        max-width: calc(42vw - 14px);
     }
 
     #sakuraTeaFloatingHeader .sakuraTeaHeaderButton {
