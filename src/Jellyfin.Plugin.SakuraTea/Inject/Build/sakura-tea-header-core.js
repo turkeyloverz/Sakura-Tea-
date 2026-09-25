@@ -7,6 +7,7 @@
 
     const DEFAULT_HEADER_ITEMS = Object.freeze([
         'sakura:flower',
+        'header:split',
         'jellyfin:favorites',
         'sakura:anime',
         'sakura:not-safe',
@@ -18,7 +19,7 @@
 
     const STATIC_CATALOG = Object.freeze([
         { id: 'sakura:flower', label: 'Sakura Flower', icon: '🌸', shape: 'flower' },
-        { id: 'header:split', label: 'Split', icon: '↔', shape: 'split' },
+        { id: 'header:split', label: 'Pill Split', icon: '↔', shape: 'split', repeatable: true },
         { id: 'space', label: 'Space', icon: '□', shape: 'space', repeatable: true },
         { id: 'separator', label: 'Separator', icon: '│', shape: 'separator', repeatable: true },
         { id: 'jellyfin:favorites', label: 'Favourites', icon: '♥', shape: 'text' },
@@ -70,7 +71,7 @@
         'Audio Player': 'jellyfin:audio-player'
     });
 
-    const REPEATABLE = new Set(['space', 'separator']);
+    const REPEATABLE = new Set(['space', 'separator', 'header:split']);
     const STORAGE_KEY = 'sakuraTeaHeaderCatalog';
 
     function normalizeItemId(value) {
@@ -149,6 +150,29 @@
             hasSplit: true,
             left: order.slice(0, splitIndex),
             right: order.slice(splitIndex + 1)
+        };
+    }
+
+    function groupOrder(value) {
+        const order = normalizeOrder(value);
+        const groups = [[]];
+        const splitIndices = [];
+
+        order.forEach((id, index) => {
+            if (id === 'header:split') {
+                splitIndices.push(index);
+                groups.push([]);
+                return;
+            }
+
+            groups[groups.length - 1].push({ id, index });
+        });
+
+        return {
+            order,
+            hasSplit: splitIndices.length > 0,
+            groups,
+            splitIndices
         };
     }
 
@@ -274,6 +298,7 @@
         normalizeOrder,
         upgradeLegacyOrder,
         splitOrder,
+        groupOrder,
         mergeCatalog,
         itemById,
         renderVisual,
