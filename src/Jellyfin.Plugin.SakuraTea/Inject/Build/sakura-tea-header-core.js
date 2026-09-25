@@ -6,18 +6,19 @@
     }
 
     const DEFAULT_HEADER_ITEMS = Object.freeze([
+        'sakura:flower',
         'jellyfin:favorites',
         'sakura:anime',
         'sakura:not-safe',
-        'jellyfin:search',
-        'jellyfin:cast',
+        'header:split',
         'jellyfin:user-menu',
-        'jellyfin:profile',
-        'jellyfin:home',
-        'jellyfin:more'
+        'jellyfin:cast',
+        'jellyfin:profile-avatar'
     ]);
 
     const STATIC_CATALOG = Object.freeze([
+        { id: 'sakura:flower', label: 'Sakura Flower', icon: '🌸', shape: 'flower' },
+        { id: 'header:split', label: 'Split', icon: '↔', shape: 'split' },
         { id: 'space', label: 'Space', icon: '□', shape: 'space', repeatable: true },
         { id: 'separator', label: 'Separator', icon: '│', shape: 'separator', repeatable: true },
         { id: 'jellyfin:favorites', label: 'Favourites', icon: '♥', shape: 'text' },
@@ -27,7 +28,7 @@
         { id: 'jellyfin:cast', label: 'Cast', icon: '▣', shape: 'icon' },
         { id: 'jellyfin:syncplay', label: 'SyncPlay', icon: '↻', shape: 'icon' },
         { id: 'jellyfin:user-menu', label: 'User Menu', icon: '▦', shape: 'icon' },
-        { id: 'jellyfin:profile', label: 'Profile', icon: '●', shape: 'avatar' },
+        { id: 'jellyfin:profile-avatar', label: 'Profile Avatar', icon: '●', shape: 'avatar' },
         { id: 'jellyfin:home', label: 'Home', icon: '⌂', shape: 'icon' },
         { id: 'jellyfin:more', label: 'More', icon: '•••', shape: 'icon' },
         { id: 'je:random', label: 'Random', icon: '⤨', shape: 'icon' },
@@ -41,6 +42,9 @@
     ]);
 
     const LEGACY_IDS = Object.freeze({
+        'Sakura Flower': 'sakura:flower',
+        'Flower': 'sakura:flower',
+        'Split': 'header:split',
         'Space': 'space',
         'Separator': 'separator',
         'Favourites': 'jellyfin:favorites',
@@ -51,7 +55,9 @@
         'Cast': 'jellyfin:cast',
         'SyncPlay': 'jellyfin:syncplay',
         'User Menu': 'jellyfin:user-menu',
-        'Profile': 'jellyfin:profile',
+        'Profile': 'jellyfin:profile-avatar',
+        'Profile Avatar': 'jellyfin:profile-avatar',
+        'jellyfin:profile': 'jellyfin:profile-avatar',
         'Home': 'jellyfin:home',
         'More': 'jellyfin:more',
         'Random': 'je:random',
@@ -93,7 +99,46 @@
             result.push(id);
         });
 
+        // One-time migration from the pre-modular header layout.
+        if (!result.includes('sakura:flower')) {
+            result.unshift('sakura:flower');
+        }
+
+        if (!result.includes('header:split')) {
+            const utilityIds = new Set([
+                'jellyfin:search',
+                'jellyfin:cast',
+                'jellyfin:syncplay',
+                'jellyfin:user-menu',
+                'jellyfin:profile-avatar',
+                'jellyfin:home',
+                'jellyfin:more',
+                'jellyfin:audio-player'
+            ]);
+            let splitIndex = result.findIndex((id) => utilityIds.has(id));
+            if (splitIndex < 0) {
+                splitIndex = result.length;
+            }
+            result.splice(splitIndex, 0, 'header:split');
+        }
+
         return result;
+    }
+
+    function splitOrder(value) {
+        const order = normalizeOrder(value);
+        const splitIndex = order.indexOf('header:split');
+
+        if (splitIndex < 0) {
+            return { order, hasSplit: false, left: order.slice(), right: [] };
+        }
+
+        return {
+            order,
+            hasSplit: true,
+            left: order.slice(0, splitIndex),
+            right: order.slice(splitIndex + 1)
+        };
     }
 
     function mergeCatalog(runtimeItems) {
@@ -216,6 +261,7 @@
         STATIC_CATALOG,
         normalizeItemId,
         normalizeOrder,
+        splitOrder,
         mergeCatalog,
         itemById,
         renderVisual,
