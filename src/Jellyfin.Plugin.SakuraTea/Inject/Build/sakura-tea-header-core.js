@@ -99,27 +99,28 @@
             result.push(id);
         });
 
-        // One-time migration from the pre-modular header layout.
+        // One-time migration from the pre-modular header layout. Once the
+        // flower exists, an intentionally removed split stays removed.
         if (!result.includes('sakura:flower')) {
             result.unshift('sakura:flower');
-        }
 
-        if (!result.includes('header:split')) {
-            const utilityIds = new Set([
-                'jellyfin:search',
-                'jellyfin:cast',
-                'jellyfin:syncplay',
-                'jellyfin:user-menu',
-                'jellyfin:profile-avatar',
-                'jellyfin:home',
-                'jellyfin:more',
-                'jellyfin:audio-player'
-            ]);
-            let splitIndex = result.findIndex((id) => utilityIds.has(id));
-            if (splitIndex < 0) {
-                splitIndex = result.length;
+            if (!result.includes('header:split')) {
+                const utilityIds = new Set([
+                    'jellyfin:search',
+                    'jellyfin:cast',
+                    'jellyfin:syncplay',
+                    'jellyfin:user-menu',
+                    'jellyfin:profile-avatar',
+                    'jellyfin:home',
+                    'jellyfin:more',
+                    'jellyfin:audio-player'
+                ]);
+                let splitIndex = result.findIndex((id) => utilityIds.has(id));
+                if (splitIndex < 0) {
+                    splitIndex = result.length;
+                }
+                result.splice(splitIndex, 0, 'header:split');
             }
-            result.splice(splitIndex, 0, 'header:split');
         }
 
         return result;
