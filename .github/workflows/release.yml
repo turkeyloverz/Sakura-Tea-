@@ -43,6 +43,25 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate frontend JavaScript
+        shell: bash
+        run: |
+          find src/Jellyfin.Plugin.SakuraTea/Inject -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("src/Jellyfin.Plugin.SakuraTea/Configuration/config.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script>([\s\S]*?)</script>", html, flags=re.I)
+          if not scripts:
+              raise SystemExit("No inline configuration script found")
+          Path("/tmp/sakura-config.js").write_text("\n".join(scripts), encoding="utf-8")
+          PY
+          node --check /tmp/sakura-config.js
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
