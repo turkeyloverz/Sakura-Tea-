@@ -9,6 +9,15 @@
     "repositoryUrl": "https://github.com/turkeyloverz/Sakura-Tea-",
     "versions": [
       {
+        "version": "0.1.0.7",
+        "changelog": "Initial Sakura Tea alpha test release.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/turkeyloverz/Sakura-Tea-/releases/download/0.1.0.7/Jellyfin.Plugin.SakuraTea_12.0.0.zip",
+        "checksum": "2EAD827A43FB1CF65C7149BADD1B263D",
+        "timestamp": "2026-09-25T21:09:47.0000000Z",
+        "dependencies": []
+      },
+      {
         "version": "0.1.0.6",
         "changelog": "Initial Sakura Tea alpha test release.",
         "targetAbi": "12.0.0.0",
