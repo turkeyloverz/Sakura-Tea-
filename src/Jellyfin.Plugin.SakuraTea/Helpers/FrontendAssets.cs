@@ -16,6 +16,8 @@ public static class FrontendAssets
         new("sakura-tea-theme.css", "Theme", Feature.Theme),
         new("sakura-tea-hero.css", "Hero", Feature.Hero),
         new("sakura-tea-petals.css", "Petals", Feature.Petals),
+        new("sakura-tea-header-core.js", "Build"),
+        new("sakura-tea-header-runtime.js", "Build"),
         new("sakura-tea-runtime.js", "Build")
     ];
 
