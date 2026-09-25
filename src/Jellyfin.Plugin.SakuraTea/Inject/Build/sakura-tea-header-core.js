@@ -99,28 +99,38 @@
             result.push(id);
         });
 
-        // One-time migration from the pre-modular header layout. Once the
-        // flower exists, an intentionally removed split stays removed.
+        return result;
+    }
+
+    function upgradeLegacyOrder(value) {
+        const raw = Array.isArray(value) ? value.slice() : String(value || '').split('|');
+        const wasLegacy = raw.some((entry) => String(entry || '').trim() === 'jellyfin:profile');
+        const result = normalizeOrder(raw);
+
+        if (!wasLegacy) {
+            return result;
+        }
+
         if (!result.includes('sakura:flower')) {
             result.unshift('sakura:flower');
+        }
 
-            if (!result.includes('header:split')) {
-                const utilityIds = new Set([
-                    'jellyfin:search',
-                    'jellyfin:cast',
-                    'jellyfin:syncplay',
-                    'jellyfin:user-menu',
-                    'jellyfin:profile-avatar',
-                    'jellyfin:home',
-                    'jellyfin:more',
-                    'jellyfin:audio-player'
-                ]);
-                let splitIndex = result.findIndex((id) => utilityIds.has(id));
-                if (splitIndex < 0) {
-                    splitIndex = result.length;
-                }
-                result.splice(splitIndex, 0, 'header:split');
+        if (!result.includes('header:split')) {
+            const utilityIds = new Set([
+                'jellyfin:search',
+                'jellyfin:cast',
+                'jellyfin:syncplay',
+                'jellyfin:user-menu',
+                'jellyfin:profile-avatar',
+                'jellyfin:home',
+                'jellyfin:more',
+                'jellyfin:audio-player'
+            ]);
+            let splitIndex = result.findIndex((id) => utilityIds.has(id));
+            if (splitIndex < 0) {
+                splitIndex = result.length;
             }
+            result.splice(splitIndex, 0, 'header:split');
         }
 
         return result;
@@ -262,6 +272,7 @@
         STATIC_CATALOG,
         normalizeItemId,
         normalizeOrder,
+        upgradeLegacyOrder,
         splitOrder,
         mergeCatalog,
         itemById,
