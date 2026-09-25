@@ -156,6 +156,24 @@ html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) 
     border-radius: 50%;
 }
 
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar {
+    width: 34px;
+    min-width: 34px;
+}
+
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar :is(.MuiAvatar-root, .headerUserButtonRound),
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar :is(.MuiAvatar-root, .headerUserButtonRound) img,
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.has-avatar > img {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+}
+
 #sakuraTeaFloatingHeader .sakuraTeaActionPill {
     background:
         linear-gradient(180deg, rgba(255, 224, 236, .40), rgba(255, 174, 204, .26)),
