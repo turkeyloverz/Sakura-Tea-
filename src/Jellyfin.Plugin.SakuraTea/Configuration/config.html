@@ -345,100 +345,46 @@
  function currentDevice(){var a=page.querySelector('.st-devices .st-pillbtn.is-active');return a?a.dataset.device:'desktop'}
  function syncDevice(){var d=currentDevice();page.querySelectorAll('.st-stage').forEach(function(s){s.dataset.device=d})}
 
- var staticCatalog=[
-  {id:'space',label:'Space',icon:'□',shape:'space',repeatable:true},
-  {id:'separator',label:'Separator',icon:'│',shape:'separator',repeatable:true},
-  {id:'jellyfin:favorites',label:'Favourites',icon:'♥',shape:'text'},
-  {id:'sakura:anime',label:'Anime',icon:'▶',shape:'text'},
-  {id:'sakura:not-safe',label:'Not Safe',icon:'◈',shape:'text'},
-  {id:'jellyfin:search',label:'Search',icon:'⌕',shape:'icon'},
-  {id:'jellyfin:cast',label:'Cast',icon:'▣',shape:'icon'},
-  {id:'jellyfin:syncplay',label:'SyncPlay',icon:'↻',shape:'icon'},
-  {id:'jellyfin:user-menu',label:'User Menu',icon:'▦',shape:'icon'},
-  {id:'jellyfin:profile',label:'Profile',icon:'●',shape:'avatar'},
-  {id:'jellyfin:home',label:'Home',icon:'⌂',shape:'icon'},
-  {id:'jellyfin:more',label:'More',icon:'•••',shape:'icon'},
-  {id:'je:random',label:'Random',icon:'⤨',shape:'icon'},
-  {id:'je:activity',label:'Activity',icon:'▥',shape:'icon'},
-  {id:'je:requests',label:'Requests',icon:'☷',shape:'icon'},
-  {id:'je:calendar',label:'Calendar',icon:'▣',shape:'icon'},
-  {id:'sf:movies',label:'Movies',icon:'▤',shape:'text'},
-  {id:'sf:tv',label:'TV Shows',icon:'▭',shape:'text'},
-  {id:'je:recommendations',label:'Recommendations',icon:'★',shape:'text'},
-  {id:'jellyfin:audio-player',label:'Audio Player',icon:'♫',shape:'icon'}
- ];
- var catalog=staticCatalog.slice();
-
- var legacyHeaderIds={
-  'Space':'space','Separator':'separator','Favourites':'jellyfin:favorites','Favorites':'jellyfin:favorites','Anime':'sakura:anime','Not Safe':'sakura:not-safe',
-  'Search':'jellyfin:search','Cast':'jellyfin:cast','SyncPlay':'jellyfin:syncplay','User Menu':'jellyfin:user-menu','Profile':'jellyfin:profile',
-  'Home':'jellyfin:home','More':'jellyfin:more','Random':'je:random','Activity':'je:activity','Requests':'je:requests','Calendar':'je:calendar',
-  'Movies':'sf:movies','TV Shows':'sf:tv','Recommendations':'je:recommendations','Audio Player':'jellyfin:audio-player'
- };
+ var HeaderCore=window.SakuraTeaHeaderCore||null;
+ var catalog=[];
 
  function catalogItem(id){
-  return catalog.find(function(item){return item.id===id})||{id:id,label:id,icon:'•',shape:'text'};
- }
-
- function migrateHeaderItems(value){
-  var items=String(value||'').split('|').filter(Boolean);
-  return items.map(function(item){return legacyHeaderIds[item]||item});
- }
-
- function readRuntimeCatalog(){
-  var payload=window.__sakuraTeaHeaderCatalog||null;
-  if(!payload){
-   try{payload=JSON.parse(window.sessionStorage.getItem('sakuraTeaHeaderCatalog')||'null')}catch(e){}
-  }
-  return payload&&Array.isArray(payload.items)?payload.items:[];
+  return HeaderCore
+   ? HeaderCore.itemById(catalog,id)
+   : {id:id,label:id,icon:'•',shape:'text'};
  }
 
  function refreshCatalog(){
-  var map=new Map();
-  staticCatalog.forEach(function(item){map.set(item.id,Object.assign({},item))});
-  readRuntimeCatalog().forEach(function(item){
-   if(!item||!item.id)return;
-   var old=map.get(item.id)||{};
-   map.set(item.id,Object.assign({},old,item,{repeatable:old.repeatable===true}));
-  });
-  catalog=Array.from(map.values());
+  if(!HeaderCore){
+   catalog=[];
+   return;
+  }
+  var published=HeaderCore.readPublishedCatalog();
+  catalog=HeaderCore.mergeCatalog(published.items);
  }
 
  function setVisual(target,item,withLabel){
+  if(HeaderCore){
+   HeaderCore.renderVisual(target,item,withLabel);
+   return;
+  }
   target.replaceChildren();
-  if(item.iconHtml){
-   try{
-    var template=document.createElement('template');
-    template.innerHTML=item.iconHtml;
-    var visual=template.content.firstElementChild;
-    if(visual){
-     visual.removeAttribute('id');
-     target.appendChild(visual);
-    }
-   }catch(e){}
-  }
-  if(!target.childNodes.length&&item.icon){
-   var fallback=document.createElement('span');
-   fallback.textContent=item.icon;
-   target.appendChild(fallback);
-  }
-  if(withLabel&&item.label){
-   var label=document.createElement('span');
-   label.textContent=item.label;
-   target.appendChild(label);
-  }
+  var fallback=document.createElement('span');fallback.textContent=(item&&item.icon)||'•';target.appendChild(fallback);
+  if(withLabel&&item&&item.label){var label=document.createElement('span');label.textContent=item.label;target.appendChild(label)}
  }
 
  function headerItems(){
   var input=q('BuilderHeaderItems');
-  var migrated=migrateHeaderItems(input.value||'jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more');
-  var joined=migrated.join('|');
+  var source=input.value||'jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more';
+  var normalized=HeaderCore?HeaderCore.normalizeOrder(source):String(source).split('|').filter(Boolean);
+  var joined=normalized.join('|');
   if(input.value!==joined)input.value=joined;
-  return migrated;
+  return normalized;
  }
 
  function setHeaderItems(items){
-  q('BuilderHeaderItems').value=items.filter(Boolean).join('|');
+  var normalized=HeaderCore?HeaderCore.normalizeOrder(items):items.filter(Boolean);
+  q('BuilderHeaderItems').value=normalized.join('|');
  }
 
  function navLabels(){return (q('BuilderNavOrder').value||'Favourites|Anime|Not Safe').split('|').filter(Boolean)}
@@ -464,6 +410,7 @@
    setVisual(chip,item,item.shape==='text');
    element.appendChild(chip);
   }
+
   return element;
  }
 
@@ -475,17 +422,16 @@
   var drawer=q('SakuraTeaHeaderOverflowDrawer');
   var hidden=Array.from(q('SakuraTeaHeaderPreviewItems').querySelectorAll('.st-preview-item.is-overflowed'));
   drawer.replaceChildren();
+
   hidden.forEach(function(el){
    var item=catalogItem(el.dataset.itemId);
-   var row=document.createElement('div');
-   row.className='st-overflow-row';
-   var visual=document.createElement('span');
-   visual.className='st-real-icon';
-   setVisual(visual,item,false);
+   var row=document.createElement('div');row.className='st-overflow-row';
+   var visual=document.createElement('span');visual.className='st-real-icon';setVisual(visual,item,false);
    row.appendChild(visual);
    var text=document.createElement('span');text.textContent=item.label;row.appendChild(text);
    drawer.appendChild(row);
   });
+
   if(!hidden.length)drawer.hidden=true;
  }
 
@@ -500,9 +446,7 @@
    if(!bar||!bar.isConnected)return;
    if(bar.scrollWidth<=bar.clientWidth+1){renderOverflowDrawer();return}
    toggle.hidden=false;
-   for(var i=items.length-1;i>=0&&bar.scrollWidth>bar.clientWidth+1;i--){
-    items[i].classList.add('is-overflowed');
-   }
+   for(var i=items.length-1;i>=0&&bar.scrollWidth>bar.clientWidth+1;i--)items[i].classList.add('is-overflowed');
    renderOverflowDrawer();
   });
  }
@@ -529,6 +473,7 @@
   var avail=q('SakuraTeaHeaderAvailable');
   var selectedIds=headerItems();
   avail.replaceChildren();
+
   catalog.forEach(function(item){
    var chip=document.createElement('div');
    chip.className='st-chip available';
@@ -536,6 +481,7 @@
    chip.dataset.itemId=item.id;
    chip.dataset.repeatable=item.repeatable?'true':'false';
    if(!item.repeatable&&selectedIds.indexOf(item.id)>=0)chip.classList.add('is-selected');
+
    var icon=document.createElement('span');icon.className='st-ic st-real-icon';setVisual(icon,item,false);
    var label=document.createElement('span');label.className='st-lbl';label.textContent=item.label;
    chip.appendChild(icon);chip.appendChild(label);avail.appendChild(chip);
@@ -543,11 +489,18 @@
  }
 
  function renderNavLabels(){
-  var host=q('SakuraTeaNavSort');host.replaceChildren();
+  var host=q('SakuraTeaNavSort');
+  host.replaceChildren();
+  var baseCatalog=HeaderCore?HeaderCore.STATIC_CATALOG:[];
+
   navLabels().forEach(function(label){
-   var item=staticCatalog.find(function(x){return x.label===label||x.label.replace('Favourites','Favorites')===label})||{icon:'•'};
-   var chip=document.createElement('div');chip.className='st-labelchip'+(label==='Anime'?' is-active':'');chip.draggable=true;chip.dataset.label=label;chip.textContent=(item.icon||'•')+' '+label;host.appendChild(chip);
+   var item=baseCatalog.find(function(x){return x.label===label||x.label.replace('Favourites','Favorites')===label})||{icon:'•'};
+   var chip=document.createElement('div');
+   chip.className='st-labelchip'+(label==='Anime'?' is-active':'');
+   chip.draggable=true;chip.dataset.label=label;chip.textContent=(item.icon||'•')+' '+label;
+   host.appendChild(chip);
   });
+
   var add=document.createElement('div');add.className='st-labelchip';add.textContent='＋ Add';host.appendChild(add);
  }
 
