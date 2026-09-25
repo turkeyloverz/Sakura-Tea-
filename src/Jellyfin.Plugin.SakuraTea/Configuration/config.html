@@ -1,64 +1,665 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Sakura Tea</title></head>
+<head>
+<meta charset="utf-8">
+<title>Sakura Tea</title>
+</head>
 <body>
-<div id="SakuraTeaConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
-<div data-role="content"><div class="content-primary">
+<div id="SakuraTeaConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox,emby-select">
+<style>
+#SakuraTeaConfigPage {
+    --st-pink: #ff9fbd;
+    --st-pink-deep: #f38eae;
+    --st-pink-light: #ffd6e3;
+    --st-lavender: #c8b6ff;
+    --st-cream: #fff8f2;
+    --st-panel: rgba(255,255,255,.045);
+    --st-border: rgba(255,255,255,.09);
+}
+#SakuraTeaConfigPage .st-shell {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 1.2em 1em 4em;
+}
+#SakuraTeaConfigPage .st-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 1.1em;
+}
+#SakuraTeaConfigPage .st-title-row h2 {
+    margin: 0;
+    font-size: 2em;
+}
+#SakuraTeaConfigPage .st-kicker {
+    margin: .35em 0 0;
+    opacity: .66;
+}
+#SakuraTeaConfigPage .st-badge {
+    flex: 0 0 auto;
+    padding: .45em .75em;
+    border: 1px solid rgba(255,159,189,.28);
+    border-radius: 999px;
+    background: rgba(255,159,189,.11);
+    color: var(--st-pink-light);
+    font-size: .82em;
+}
+#SakuraTeaConfigPage .st-tabs {
+    display: inline-flex;
+    gap: .25em;
+    padding: .28em;
+    margin-bottom: 1.35em;
+    border: 1px solid var(--st-border);
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+}
+#SakuraTeaConfigPage .st-tab {
+    min-width: 0;
+    padding: .68em 1.05em;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+#SakuraTeaConfigPage .st-tab.is-active {
+    background: linear-gradient(180deg, rgba(255,190,214,.28), rgba(243,142,174,.18));
+    color: #fff;
+    box-shadow: inset 0 1px rgba(255,255,255,.09);
+}
+#SakuraTeaConfigPage .st-panel[hidden] {
+    display: none !important;
+}
+#SakuraTeaConfigPage .st-card {
+    margin-bottom: 1em;
+    padding: 1.05em 1.15em;
+    border: 1px solid var(--st-border);
+    border-radius: 16px;
+    background: var(--st-panel);
+}
+#SakuraTeaConfigPage .st-card h3 {
+    margin: 0 0 .35em;
+}
+#SakuraTeaConfigPage .st-muted {
+    margin: 0 0 1em;
+    opacity: .65;
+    line-height: 1.45;
+}
+#SakuraTeaConfigPage .st-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 1em;
+}
+#SakuraTeaConfigPage .st-builder-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1.35fr) minmax(270px,.65fr);
+    gap: 1em;
+    align-items: start;
+}
+#SakuraTeaConfigPage .st-preview-card {
+    position: sticky;
+    top: 1em;
+    padding: .75em;
+    border: 1px solid var(--st-border);
+    border-radius: 18px;
+    background: rgba(255,255,255,.035);
+}
+#SakuraTeaConfigPage .st-preview-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    padding: .25em .3em .7em;
+    font-size: .9em;
+    opacity: .72;
+}
+#SakuraTeaConfigPage .st-preview {
+    --st-preview-header-scale: .86;
+    --st-preview-header-alpha: .58;
+    --st-preview-hero-height: 76%;
+    --st-preview-button-scale: .88;
+    --st-preview-darkness: .48;
+    --st-preview-petals: .55;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    min-height: 360px;
+    overflow: hidden;
+    border-radius: 14px;
+    background:
+        linear-gradient(90deg, rgba(11,7,14,.86), rgba(11,7,14,.30) 43%, rgba(11,7,14,.04) 72%),
+        linear-gradient(180deg, rgba(8,5,11,.02), rgba(8,5,11,var(--st-preview-darkness))),
+        url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg") center / cover no-repeat;
+    isolation: isolate;
+}
+#SakuraTeaConfigPage .st-preview::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 25%;
+    background: linear-gradient(to bottom, transparent, rgba(13,8,17,.72));
+    pointer-events: none;
+}
+#SakuraTeaConfigPage .st-preview-nav-wrap {
+    position: absolute;
+    z-index: 5;
+    top: 4%;
+    left: 4%;
+    right: 4%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+}
+#SakuraTeaConfigPage .st-preview[data-header-position="Center"] .st-preview-nav-wrap {
+    justify-content: center;
+}
+#SakuraTeaConfigPage .st-preview[data-header-position="Right"] .st-preview-nav-wrap {
+    justify-content: flex-end;
+}
+#SakuraTeaConfigPage .st-preview-pill {
+    transform: scale(var(--st-preview-header-scale));
+    transform-origin: left top;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 5px;
+    border: 1px solid rgba(255,242,247,.34);
+    border-radius: 16px;
+    background:
+        linear-gradient(180deg, rgba(255,224,236,var(--st-preview-header-alpha)), rgba(255,174,204,calc(var(--st-preview-header-alpha) * .74))),
+        rgba(73,40,62,.27);
+    box-shadow: inset 0 1px rgba(255,255,255,.24), 0 10px 28px rgba(7,4,10,.24);
+    backdrop-filter: blur(16px);
+    pointer-events: auto;
+}
+#SakuraTeaConfigPage .st-preview-flower {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    background: url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/pngwing.com.png") center / contain no-repeat;
+}
+#SakuraTeaConfigPage .st-preview-nav-item {
+    padding: 0 11px;
+    height: 33px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 10px;
+    color: rgba(255,255,255,.90);
+    font-size: 12px;
+    user-select: none;
+    cursor: grab;
+}
+#SakuraTeaConfigPage .st-preview-nav-item.is-active {
+    background: linear-gradient(180deg, rgba(255,190,214,.67), rgba(241,142,176,.50));
+    box-shadow: inset 0 1px rgba(255,255,255,.22);
+}
+#SakuraTeaConfigPage .st-preview-nav-item.is-dragging {
+    opacity: .42;
+}
+#SakuraTeaConfigPage .st-preview-hero {
+    position: absolute;
+    z-index: 3;
+    left: 5%;
+    bottom: calc(100% - var(--st-preview-hero-height));
+    width: min(47%, 460px);
+    color: #fff;
+}
+#SakuraTeaConfigPage .st-preview-hero .st-sample-logo {
+    font-size: clamp(30px,4.1vw,60px);
+    line-height: .93;
+    font-weight: 800;
+    letter-spacing: -.04em;
+    text-shadow: 0 4px 18px rgba(0,0,0,.58);
+}
+#SakuraTeaConfigPage .st-preview-meta {
+    margin-top: .65em;
+    display: flex;
+    gap: .65em;
+    font-size: 11px;
+    opacity: .83;
+}
+#SakuraTeaConfigPage .st-preview-copy {
+    margin: .7em 0 0;
+    max-width: 420px;
+    font-size: 11px;
+    line-height: 1.42;
+    opacity: .74;
+}
+#SakuraTeaConfigPage .st-preview-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: .9em;
+    transform: scale(var(--st-preview-button-scale));
+    transform-origin: left center;
+}
+#SakuraTeaConfigPage .st-preview-action {
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+}
+#SakuraTeaConfigPage .st-preview-action.primary {
+    background: rgba(255,250,252,.97);
+    color: #111;
+}
+#SakuraTeaConfigPage .st-preview-action.secondary {
+    background: rgba(30,22,37,.70);
+    border: 1px solid rgba(255,255,255,.10);
+}
+#SakuraTeaConfigPage .st-preview-divider {
+    position: absolute;
+    z-index: 4;
+    left: 5%;
+    right: 5%;
+    bottom: 6%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--st-pink) 22%, #fff1f6 50%, var(--st-lavender) 78%, transparent);
+    box-shadow: 0 0 5px rgba(255,190,215,.9), 0 0 14px rgba(255,159,189,.48);
+}
+#SakuraTeaConfigPage .st-preview-petals {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: var(--st-preview-petals);
+}
+#SakuraTeaConfigPage .st-preview-petal {
+    position: absolute;
+    width: 7px;
+    height: 11px;
+    border-radius: 80% 20% 75% 25%;
+    background: linear-gradient(145deg,#fff4f8,#ffd3e0 42%,#ff9fbd);
+    transform: rotate(var(--r));
+}
+#SakuraTeaConfigPage .st-controls {
+    display: grid;
+    gap: .8em;
+}
+#SakuraTeaConfigPage .st-control {
+    padding: .9em;
+    border: 1px solid var(--st-border);
+    border-radius: 14px;
+    background: rgba(255,255,255,.03);
+}
+#SakuraTeaConfigPage .st-control-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: .55em;
+    font-size: .9em;
+}
+#SakuraTeaConfigPage .st-value {
+    color: var(--st-pink-light);
+    font-variant-numeric: tabular-nums;
+}
+#SakuraTeaConfigPage .st-range {
+    width: 100%;
+    accent-color: var(--st-pink);
+}
+#SakuraTeaConfigPage .st-note {
+    padding: .85em 1em;
+    border: 1px solid rgba(200,182,255,.18);
+    border-radius: 12px;
+    background: rgba(200,182,255,.07);
+    line-height: 1.45;
+    font-size: .9em;
+}
+#SakuraTeaConfigPage .st-builder-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: .7em;
+    margin-top: .9em;
+}
+#SakuraTeaConfigPage .st-small-button {
+    min-width: 0 !important;
+    width: auto !important;
+    padding: .65em .9em !important;
+}
+@media (max-width: 850px) {
+    #SakuraTeaConfigPage .st-builder-grid,
+    #SakuraTeaConfigPage .st-grid {
+        grid-template-columns: 1fr;
+    }
+    #SakuraTeaConfigPage .st-preview-card {
+        position: static;
+    }
+    #SakuraTeaConfigPage .st-preview {
+        min-height: 300px;
+    }
+}
+</style>
+
+<div data-role="content">
+<div class="content-primary st-shell">
 <form id="SakuraTeaConfigForm">
-<h2>Sakura Tea</h2>
-<p>Early settings for Sakura Tea 0.1 alpha.</p>
 
-<label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label>
-<br>
-<label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label>
-<br>
-<label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable petals and flowers</span></label>
-
-<div class="inputContainer">
-<label class="inputLabel inputLabelUnfocused" for="AnimeLibraryName">Anime library name</label>
-<input id="AnimeLibraryName" type="text" is="emby-input">
+<div class="st-title-row">
+    <div>
+        <h2>Sakura Tea</h2>
+        <p class="st-kicker">Sakura-inspired Jellyfin interface</p>
+    </div>
+    <div class="st-badge">UI Builder test</div>
 </div>
 
-<div class="inputContainer">
-<label class="inputLabel inputLabelUnfocused" for="HeroSlides">Hero slides</label>
-<input id="HeroSlides" type="number" min="1" max="20" is="emby-input">
-</div>
+<nav class="st-tabs" aria-label="Sakura Tea settings">
+    <button type="button" class="st-tab is-active" data-st-panel="overview">Overview</button>
+    <button type="button" class="st-tab" data-st-panel="builder">UI Builder</button>
+</nav>
 
-<div class="inputContainer">
-<label class="inputLabel inputLabelUnfocused" for="HeroRotationSeconds">Rotation interval (seconds)</label>
-<input id="HeroRotationSeconds" type="number" min="3" max="60" is="emby-input">
-</div>
+<section class="st-panel" data-st-panel="overview">
+    <div class="st-card">
+        <h3>Core features</h3>
+        <p class="st-muted">These are the settings currently connected to the live Sakura Tea Home experience.</p>
+        <label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label>
+        <br>
+        <label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label>
+        <br>
+        <label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable petals and flowers</span></label>
+    </div>
 
-<button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Save</span></button>
-</form></div></div>
+    <div class="st-grid">
+        <div class="st-card">
+            <h3>Anime source</h3>
+            <div class="inputContainer">
+                <label class="inputLabel inputLabelUnfocused" for="AnimeLibraryName">Anime library name</label>
+                <input id="AnimeLibraryName" type="text" is="emby-input">
+            </div>
+        </div>
+
+        <div class="st-card">
+            <h3>Hero rotation</h3>
+            <div class="inputContainer">
+                <label class="inputLabel inputLabelUnfocused" for="HeroSlides">Hero slides</label>
+                <input id="HeroSlides" type="number" min="1" max="20" is="emby-input">
+            </div>
+            <div class="inputContainer">
+                <label class="inputLabel inputLabelUnfocused" for="HeroRotationSeconds">Rotation interval (seconds)</label>
+                <input id="HeroRotationSeconds" type="number" min="3" max="60" is="emby-input">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="st-panel" data-st-panel="builder" hidden>
+    <div class="st-note">
+        <strong>Test build:</strong> this builder is for preview and interaction testing. The values below are saved to Sakura Tea now, but they do not change the live Home layout yet. That wiring comes after we approve the builder design.
+    </div>
+
+    <div class="st-builder-grid" style="margin-top:1em;">
+        <div class="st-preview-card">
+            <div class="st-preview-label">
+                <span>Live preview</span>
+                <span>Drag the nav labels to reorder them</span>
+            </div>
+
+            <div id="SakuraTeaBuilderPreview" class="st-preview" data-header-position="Left">
+                <div class="st-preview-nav-wrap">
+                    <div id="SakuraTeaPreviewNav" class="st-preview-pill">
+                        <span class="st-preview-flower" aria-hidden="true"></span>
+                        <span class="st-preview-nav-item" draggable="true">Favorites</span>
+                        <span class="st-preview-nav-item is-active" draggable="true">Anime</span>
+                        <span class="st-preview-nav-item" draggable="true">Not Safe</span>
+                    </div>
+                </div>
+
+                <div class="st-preview-hero">
+                    <div class="st-sample-logo">SAKURA<br>FEATURED</div>
+                    <div class="st-preview-meta"><span>★ 8.4</span><span>2026</span><span>TV Show</span><span>Anime</span></div>
+                    <p class="st-preview-copy">A compact preview of the Sakura Tea hero, floating navigation, buttons, and petal divider.</p>
+                    <div class="st-preview-actions">
+                        <span class="st-preview-action primary">▶ Play</span>
+                        <span class="st-preview-action secondary">ⓘ More info</span>
+                    </div>
+                </div>
+
+                <div class="st-preview-divider"></div>
+                <div class="st-preview-petals" aria-hidden="true">
+                    <i class="st-preview-petal" style="left:7%;top:25%;--r:24deg"></i>
+                    <i class="st-preview-petal" style="left:17%;top:60%;--r:-36deg"></i>
+                    <i class="st-preview-petal" style="left:28%;top:18%;--r:70deg"></i>
+                    <i class="st-preview-petal" style="left:39%;top:71%;--r:-18deg"></i>
+                    <i class="st-preview-petal" style="left:51%;top:30%;--r:44deg"></i>
+                    <i class="st-preview-petal" style="left:63%;top:65%;--r:-52deg"></i>
+                    <i class="st-preview-petal" style="left:74%;top:22%;--r:18deg"></i>
+                    <i class="st-preview-petal" style="left:85%;top:57%;--r:73deg"></i>
+                    <i class="st-preview-petal" style="left:92%;top:31%;--r:-28deg"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="st-controls">
+            <div class="st-control">
+                <div class="st-control-head"><span>Floating header size</span><span id="BuilderHeaderScaleValue" class="st-value"></span></div>
+                <input id="BuilderHeaderScale" class="st-range" type="range" min="70" max="115" step="1">
+            </div>
+
+            <div class="st-control">
+                <div class="st-control-head"><span>Pink glass opacity</span><span id="BuilderHeaderOpacityValue" class="st-value"></span></div>
+                <input id="BuilderHeaderOpacity" class="st-range" type="range" min="25" max="90" step="1">
+            </div>
+
+            <div class="st-control">
+                <label class="inputLabel inputLabelUnfocused" for="BuilderHeaderPosition">Header position</label>
+                <select id="BuilderHeaderPosition" is="emby-select">
+                    <option value="Left">Left</option>
+                    <option value="Center">Center</option>
+                    <option value="Right">Right</option>
+                </select>
+            </div>
+
+            <div class="st-control">
+                <div class="st-control-head"><span>Hero content height</span><span id="BuilderHeroHeightValue" class="st-value"></span></div>
+                <input id="BuilderHeroHeight" class="st-range" type="range" min="58" max="88" step="1">
+            </div>
+
+            <div class="st-control">
+                <div class="st-control-head"><span>Hero button size</span><span id="BuilderHeroButtonScaleValue" class="st-value"></span></div>
+                <input id="BuilderHeroButtonScale" class="st-range" type="range" min="70" max="115" step="1">
+            </div>
+
+            <div class="st-control">
+                <div class="st-control-head"><span>Backdrop darkness</span><span id="BuilderBackdropDarknessValue" class="st-value"></span></div>
+                <input id="BuilderBackdropDarkness" class="st-range" type="range" min="15" max="80" step="1">
+            </div>
+
+            <div class="st-control">
+                <div class="st-control-head"><span>Petal density</span><span id="BuilderPetalDensityValue" class="st-value"></span></div>
+                <input id="BuilderPetalDensity" class="st-range" type="range" min="0" max="100" step="1">
+            </div>
+
+            <div class="st-control">
+                <label class="inputLabel inputLabelUnfocused" for="BuilderPerformanceMode">Performance preset</label>
+                <select id="BuilderPerformanceMode" is="emby-select">
+                    <option value="Performance">Performance</option>
+                    <option value="Balanced">Balanced</option>
+                    <option value="Full Effects">Full Effects</option>
+                </select>
+            </div>
+
+            <div class="st-builder-actions">
+                <button id="SakuraTeaBuilderReset" is="emby-button" type="button" class="raised st-small-button"><span>Reset preview</span></button>
+                <span style="opacity:.55;font-size:.82em;align-self:center;">Save button below stores test values</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<button is="emby-button" type="submit" class="raised button-submit block emby-button"><span>Save Sakura Tea settings</span></button>
+</form>
+</div>
+</div>
 
 <script>
-var SakuraTeaConfig={pluginUniqueId:'3bf6515b-c10a-4307-a3e8-942eaffe900d'};
-document.querySelector('#SakuraTeaConfigPage').addEventListener('pageshow',function(){
- Dashboard.showLoadingMsg();
- ApiClient.getPluginConfiguration(SakuraTeaConfig.pluginUniqueId).then(function(c){
-  document.querySelector('#ThemeEnabled').checked=c.ThemeEnabled;
-  document.querySelector('#HeroEnabled').checked=c.HeroEnabled;
-  document.querySelector('#PetalsEnabled').checked=c.PetalsEnabled;
-  document.querySelector('#AnimeLibraryName').value=c.AnimeLibraryName||'Anime';
-  document.querySelector('#HeroSlides').value=c.HeroSlides||10;
-  document.querySelector('#HeroRotationSeconds').value=c.HeroRotationSeconds||9;
-  Dashboard.hideLoadingMsg();
- });
-});
-document.querySelector('#SakuraTeaConfigForm').addEventListener('submit',function(e){
- Dashboard.showLoadingMsg();
- ApiClient.getPluginConfiguration(SakuraTeaConfig.pluginUniqueId).then(function(c){
-  c.ThemeEnabled=document.querySelector('#ThemeEnabled').checked;
-  c.HeroEnabled=document.querySelector('#HeroEnabled').checked;
-  c.PetalsEnabled=document.querySelector('#PetalsEnabled').checked;
-  c.AnimeLibraryName=document.querySelector('#AnimeLibraryName').value.trim()||'Anime';
-  c.HeroSlides=parseInt(document.querySelector('#HeroSlides').value,10)||10;
-  c.HeroRotationSeconds=parseInt(document.querySelector('#HeroRotationSeconds').value,10)||9;
-  ApiClient.updatePluginConfiguration(SakuraTeaConfig.pluginUniqueId,c).then(Dashboard.processPluginConfigurationUpdateResult);
- });
- e.preventDefault(); return false;
-});
+(function () {
+    var pluginId = '3bf6515b-c10a-4307-a3e8-942eaffe900d';
+    var page = document.querySelector('#SakuraTeaConfigPage');
+    var form = document.querySelector('#SakuraTeaConfigForm');
+    var preview = document.querySelector('#SakuraTeaBuilderPreview');
+
+    function byId(id) { return document.querySelector('#' + id); }
+
+    function numberValue(id, fallback) {
+        var value = parseInt(byId(id).value, 10);
+        return isNaN(value) ? fallback : value;
+    }
+
+    function setBuilderDefaults() {
+        byId('BuilderHeaderScale').value = 86;
+        byId('BuilderHeaderOpacity').value = 58;
+        byId('BuilderHeaderPosition').value = 'Left';
+        byId('BuilderHeroHeight').value = 76;
+        byId('BuilderHeroButtonScale').value = 88;
+        byId('BuilderBackdropDarkness').value = 48;
+        byId('BuilderPetalDensity').value = 55;
+        byId('BuilderPerformanceMode').value = 'Balanced';
+        updateBuilderPreview();
+    }
+
+    function updateBuilderPreview() {
+        if (!preview) return;
+
+        var headerScale = numberValue('BuilderHeaderScale', 86);
+        var headerOpacity = numberValue('BuilderHeaderOpacity', 58);
+        var heroHeight = numberValue('BuilderHeroHeight', 76);
+        var buttonScale = numberValue('BuilderHeroButtonScale', 88);
+        var darkness = numberValue('BuilderBackdropDarkness', 48);
+        var petals = numberValue('BuilderPetalDensity', 55);
+        var performance = byId('BuilderPerformanceMode').value || 'Balanced';
+
+        if (performance === 'Performance') {
+            petals = Math.min(petals, 28);
+            headerOpacity = Math.min(headerOpacity, 52);
+        } else if (performance === 'Full Effects') {
+            petals = Math.max(petals, 68);
+        }
+
+        preview.style.setProperty('--st-preview-header-scale', (headerScale / 100).toFixed(2));
+        preview.style.setProperty('--st-preview-header-alpha', (headerOpacity / 100).toFixed(2));
+        preview.style.setProperty('--st-preview-hero-height', heroHeight + '%');
+        preview.style.setProperty('--st-preview-button-scale', (buttonScale / 100).toFixed(2));
+        preview.style.setProperty('--st-preview-darkness', (darkness / 100).toFixed(2));
+        preview.style.setProperty('--st-preview-petals', (petals / 100).toFixed(2));
+        preview.setAttribute('data-header-position', byId('BuilderHeaderPosition').value || 'Left');
+
+        byId('BuilderHeaderScaleValue').textContent = headerScale + '%';
+        byId('BuilderHeaderOpacityValue').textContent = headerOpacity + '%';
+        byId('BuilderHeroHeightValue').textContent = heroHeight + '%';
+        byId('BuilderHeroButtonScaleValue').textContent = buttonScale + '%';
+        byId('BuilderBackdropDarknessValue').textContent = darkness + '%';
+        byId('BuilderPetalDensityValue').textContent = petals + '%';
+    }
+
+    function loadConfiguration() {
+        Dashboard.showLoadingMsg();
+        ApiClient.getPluginConfiguration(pluginId).then(function (c) {
+            byId('ThemeEnabled').checked = c.ThemeEnabled !== false;
+            byId('HeroEnabled').checked = c.HeroEnabled !== false;
+            byId('PetalsEnabled').checked = c.PetalsEnabled !== false;
+            byId('AnimeLibraryName').value = c.AnimeLibraryName || 'Anime';
+            byId('HeroSlides').value = c.HeroSlides || 10;
+            byId('HeroRotationSeconds').value = c.HeroRotationSeconds || 9;
+
+            byId('BuilderHeaderScale').value = c.BuilderHeaderScale || 86;
+            byId('BuilderHeaderOpacity').value = c.BuilderHeaderOpacity || 58;
+            byId('BuilderHeaderPosition').value = c.BuilderHeaderPosition || 'Left';
+            byId('BuilderHeroHeight').value = c.BuilderHeroHeight || 76;
+            byId('BuilderHeroButtonScale').value = c.BuilderHeroButtonScale || 88;
+            byId('BuilderBackdropDarkness').value = c.BuilderBackdropDarkness || 48;
+            byId('BuilderPetalDensity').value = (typeof c.BuilderPetalDensity === 'number') ? c.BuilderPetalDensity : 55;
+            byId('BuilderPerformanceMode').value = c.BuilderPerformanceMode || 'Balanced';
+
+            updateBuilderPreview();
+            Dashboard.hideLoadingMsg();
+        }).catch(function () {
+            Dashboard.hideLoadingMsg();
+        });
+    }
+
+    page.querySelectorAll('.st-tab').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var panelName = button.getAttribute('data-st-panel');
+            page.querySelectorAll('.st-tab').forEach(function (tab) {
+                tab.classList.toggle('is-active', tab === button);
+            });
+            page.querySelectorAll('.st-panel').forEach(function (panel) {
+                panel.hidden = panel.getAttribute('data-st-panel') !== panelName;
+            });
+            if (panelName === 'builder') updateBuilderPreview();
+        });
+    });
+
+    [
+        'BuilderHeaderScale',
+        'BuilderHeaderOpacity',
+        'BuilderHeaderPosition',
+        'BuilderHeroHeight',
+        'BuilderHeroButtonScale',
+        'BuilderBackdropDarkness',
+        'BuilderPetalDensity',
+        'BuilderPerformanceMode'
+    ].forEach(function (id) {
+        byId(id).addEventListener('input', updateBuilderPreview);
+        byId(id).addEventListener('change', updateBuilderPreview);
+    });
+
+    byId('SakuraTeaBuilderReset').addEventListener('click', setBuilderDefaults);
+
+    var dragItem = null;
+    var nav = byId('SakuraTeaPreviewNav');
+    nav.addEventListener('dragstart', function (event) {
+        var item = event.target.closest('.st-preview-nav-item');
+        if (!item) return;
+        dragItem = item;
+        item.classList.add('is-dragging');
+        if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+    });
+    nav.addEventListener('dragend', function () {
+        if (dragItem) dragItem.classList.remove('is-dragging');
+        dragItem = null;
+    });
+    nav.addEventListener('dragover', function (event) {
+        event.preventDefault();
+        if (!dragItem) return;
+        var target = event.target.closest('.st-preview-nav-item');
+        if (!target || target === dragItem) return;
+        var box = target.getBoundingClientRect();
+        var after = event.clientX > box.left + box.width / 2;
+        nav.insertBefore(dragItem, after ? target.nextSibling : target);
+    });
+
+    page.addEventListener('pageshow', loadConfiguration);
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        Dashboard.showLoadingMsg();
+
+        ApiClient.getPluginConfiguration(pluginId).then(function (c) {
+            c.ThemeEnabled = byId('ThemeEnabled').checked;
+            c.HeroEnabled = byId('HeroEnabled').checked;
+            c.PetalsEnabled = byId('PetalsEnabled').checked;
+            c.AnimeLibraryName = byId('AnimeLibraryName').value.trim() || 'Anime';
+            c.HeroSlides = numberValue('HeroSlides', 10);
+            c.HeroRotationSeconds = numberValue('HeroRotationSeconds', 9);
+
+            c.BuilderHeaderScale = numberValue('BuilderHeaderScale', 86);
+            c.BuilderHeaderOpacity = numberValue('BuilderHeaderOpacity', 58);
+            c.BuilderHeaderPosition = byId('BuilderHeaderPosition').value || 'Left';
+            c.BuilderHeroHeight = numberValue('BuilderHeroHeight', 76);
+            c.BuilderHeroButtonScale = numberValue('BuilderHeroButtonScale', 88);
+            c.BuilderBackdropDarkness = numberValue('BuilderBackdropDarkness', 48);
+            c.BuilderPetalDensity = numberValue('BuilderPetalDensity', 55);
+            c.BuilderPerformanceMode = byId('BuilderPerformanceMode').value || 'Balanced';
+
+            return ApiClient.updatePluginConfiguration(pluginId, c);
+        }).then(Dashboard.processPluginConfigurationUpdateResult);
+        return false;
+    });
+})();
 </script>
 </div>
 </body>
