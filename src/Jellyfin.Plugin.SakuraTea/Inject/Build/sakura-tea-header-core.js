@@ -1,7 +1,8 @@
 (() => {
     'use strict';
 
-    if (window.SakuraTeaHeaderCore) {
+    const CORE_VERSION = 3;
+    if (window.SakuraTeaHeaderCore && Number(window.SakuraTeaHeaderCore.version || 0) >= CORE_VERSION) {
         return;
     }
 
@@ -292,6 +293,7 @@
     }
 
     window.SakuraTeaHeaderCore = Object.freeze({
+        version: CORE_VERSION,
         DEFAULT_HEADER_ITEMS,
         STATIC_CATALOG,
         normalizeItemId,
