@@ -29,5 +29,6 @@ public sealed class PluginConfiguration : BasePluginConfiguration
     public int BuilderAnimationSpeed { get; set; } = 100;
 
     public string BuilderPerformanceMode { get; set; } = "Balanced";
+    public string BuilderHeaderItems { get; set; } = "Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More";
     public string BuilderNavOrder { get; set; } = "Favourites|Anime|Not Safe";
 }
