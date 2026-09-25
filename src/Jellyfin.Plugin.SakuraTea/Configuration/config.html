@@ -52,23 +52,38 @@
 
 #SakuraTeaConfigPage .st-header-preview{
  --hp-h:44px;--hp-b:34px;--hp-i:17px;--hp-a:30px;--hp-gap:7px;--hp-alpha:.68;
- height:112px;border-radius:9px;position:relative;overflow:hidden;
+ height:156px;border-radius:9px;position:relative;overflow:hidden;
  background:linear-gradient(rgba(10,6,12,.15),rgba(10,6,12,.32)),var(--st-wallpaper) center 42%/cover no-repeat
 }
-#SakuraTeaConfigPage .st-header-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,10,22,.13),rgba(20,10,22,.02) 70%,rgba(20,10,22,.18))}
-#SakuraTeaConfigPage .st-floatbar{position:absolute;z-index:2;left:56px;right:56px;top:26px;height:var(--hp-h);border-radius:18px;background:linear-gradient(180deg,rgba(255,220,233,var(--hp-alpha)),rgba(207,129,163,calc(var(--hp-alpha)*.78))),rgba(55,35,48,.35);border:1px solid rgba(255,243,248,.33);backdrop-filter:blur(16px);display:flex;align-items:center;padding:5px 7px;gap:var(--hp-gap);box-shadow:inset 0 1px rgba(255,255,255,.28),0 8px 26px rgba(0,0,0,.28)}
-#SakuraTeaConfigPage .st-header-preview[data-position="Center"] .st-floatbar{left:50%;right:auto;transform:translateX(-50%);width:max-content;max-width:calc(100% - 40px)}
-#SakuraTeaConfigPage .st-header-preview[data-position="Right"] .st-floatbar{left:auto;right:28px;width:max-content;max-width:calc(100% - 40px)}
+#SakuraTeaConfigPage .st-header-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,10,22,.13),rgba(20,10,22,.02) 70%,rgba(20,10,22,.18));pointer-events:none}
+#SakuraTeaConfigPage .st-floatbar{position:absolute;z-index:3;left:28px;right:auto;top:26px;width:max-content;max-width:calc(100% - 56px);min-width:0;height:var(--hp-h);border-radius:18px;background:linear-gradient(180deg,rgba(255,220,233,var(--hp-alpha)),rgba(207,129,163,calc(var(--hp-alpha)*.78))),rgba(55,35,48,.35);border:1px solid rgba(255,243,248,.33);backdrop-filter:blur(16px);display:flex;align-items:center;padding:5px 7px;gap:var(--hp-gap);box-shadow:inset 0 1px rgba(255,255,255,.28),0 8px 26px rgba(0,0,0,.28);overflow:hidden}
+#SakuraTeaConfigPage .st-header-preview[data-position="Center"] .st-floatbar{left:50%;right:auto;transform:translateX(-50%)}
+#SakuraTeaConfigPage .st-header-preview[data-position="Right"] .st-floatbar{left:auto;right:28px;transform:none}
 #SakuraTeaConfigPage .st-flowericon{width:calc(var(--hp-b) + 8px);height:calc(var(--hp-b) + 8px);flex:0 0 calc(var(--hp-b) + 8px);background:var(--st-logo) center/contain no-repeat}
-#SakuraTeaConfigPage .st-preview-items{display:flex;align-items:center;gap:var(--hp-gap);min-width:0}
+#SakuraTeaConfigPage .st-preview-items{display:flex;align-items:center;gap:var(--hp-gap);flex:0 1 auto;min-width:0;overflow:hidden}
+#SakuraTeaConfigPage .st-preview-item{position:relative;display:inline-flex;align-items:center;flex:0 0 auto;touch-action:none;user-select:none;cursor:grab}
+#SakuraTeaConfigPage .st-preview-item.is-being-dragged{opacity:.25}
+#SakuraTeaConfigPage .st-preview-item.is-removing{opacity:.18;filter:saturate(.3)}
+#SakuraTeaConfigPage .st-preview-item.is-overflowed{display:none}
 #SakuraTeaConfigPage .st-preview-chip{height:var(--hp-b);padding:0 12px;display:flex;align-items:center;gap:7px;border-radius:12px;font-size:.76em;white-space:nowrap;color:#fff}
-#SakuraTeaConfigPage .st-preview-chip.is-active{background:linear-gradient(180deg,#ffa4c4,#e986aa);color:#311723;font-weight:700}
+#SakuraTeaConfigPage .st-preview-item.is-active .st-preview-chip{background:linear-gradient(180deg,#ffa4c4,#e986aa);color:#311723;font-weight:700}
 #SakuraTeaConfigPage .st-preview-chip.icon-only{width:var(--hp-b);padding:0;justify-content:center;font-size:var(--hp-i)}
-#SakuraTeaConfigPage .st-preview-separator{width:1px;height:22px;background:rgba(255,255,255,.28)}
-#SakuraTeaConfigPage .st-preview-space{width:22px;height:1px;flex:0 0 22px}
-#SakuraTeaConfigPage .st-preview-profile{width:var(--hp-a);height:var(--hp-a);border-radius:50%;background:radial-gradient(circle at 60% 35%,#ffc8df 0 15%,#6b3769 16% 58%,#1e1722 59%);border:1px solid rgba(255,255,255,.2);background-size:cover;background-position:center;flex:0 0 var(--hp-a)}
+#SakuraTeaConfigPage .st-preview-chip :is(svg,img,.material-icons,.MuiSvgIcon-root){width:var(--hp-i)!important;height:var(--hp-i)!important;max-width:var(--hp-i)!important;max-height:var(--hp-i)!important;font-size:var(--hp-i)!important;line-height:var(--hp-i)!important;object-fit:contain}
+#SakuraTeaConfigPage .st-preview-chip.avatar-only{width:var(--hp-a);height:var(--hp-a);padding:0;border-radius:50%;overflow:hidden}
+#SakuraTeaConfigPage .st-preview-chip.avatar-only :is(svg,img,.MuiAvatar-root){width:100%!important;height:100%!important;border-radius:50%;object-fit:cover}
+#SakuraTeaConfigPage .st-preview-separator{width:1px;height:22px;background:rgba(255,255,255,.28);margin:0 3px}
+#SakuraTeaConfigPage .st-preview-space{width:var(--hp-b);height:1px;flex:0 0 var(--hp-b)}
+#SakuraTeaConfigPage .st-overflow-toggle{display:grid;place-items:center;flex:0 0 var(--hp-b);width:var(--hp-b);height:var(--hp-b);padding:0;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:18px;cursor:pointer}
+#SakuraTeaConfigPage .st-overflow-toggle[hidden],#SakuraTeaConfigPage .st-overflow-drawer[hidden]{display:none!important}
+#SakuraTeaConfigPage .st-overflow-drawer{position:absolute;z-index:5;top:78px;left:28px;width:min(240px,calc(100% - 56px));max-height:66px;overflow:auto;padding:5px;border:1px solid rgba(255,240,247,.22);border-radius:11px;background:rgba(42,28,39,.94);backdrop-filter:blur(16px);box-shadow:0 10px 26px rgba(0,0,0,.32);display:flex;flex-direction:column;gap:3px}
+#SakuraTeaConfigPage .st-header-preview[data-position="Center"] .st-overflow-drawer{left:50%;transform:translateX(-50%)}
+#SakuraTeaConfigPage .st-header-preview[data-position="Right"] .st-overflow-drawer{left:auto;right:28px}
+#SakuraTeaConfigPage .st-overflow-row{display:flex;align-items:center;gap:8px;min-height:28px;padding:0 8px;border-radius:7px;font-size:.72em;background:transparent;color:#fff}
+#SakuraTeaConfigPage .st-overflow-row:hover{background:rgba(255,255,255,.08)}
+#SakuraTeaConfigPage .st-drag-ghost{position:fixed;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);opacity:.96;padding:5px 9px;border:1px solid rgba(255,147,184,.55);border-radius:9px;background:rgba(42,28,39,.94);box-shadow:0 10px 28px rgba(0,0,0,.4);color:#fff;font-size:12px}
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-preview{height:220px}
-#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-floatbar{top:auto;bottom:16px;left:12px!important;right:12px!important;transform:none!important;width:auto!important;max-width:none!important;justify-content:center;overflow:hidden}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-floatbar{top:auto;bottom:16px;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:max-content!important;max-width:calc(100% - 24px)!important}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-overflow-drawer{top:auto;bottom:68px;left:50%!important;right:auto!important;transform:translateX(-50%)!important}
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-preview-chip{padding:0 8px;font-size:.7em}
 
 #SakuraTeaConfigPage .st-navbuilder{padding-top:9px}
@@ -80,7 +95,9 @@
 #SakuraTeaConfigPage .st-chips.is-drop-target{border-color:rgba(255,147,184,.52);background:rgba(255,147,184,.045);box-shadow:inset 0 0 0 1px rgba(255,147,184,.08)}
 #SakuraTeaConfigPage #SakuraTeaHeaderAvailable.is-drop-target{border-color:rgba(189,167,255,.46);background:rgba(189,167,255,.04)}
 #SakuraTeaConfigPage .st-chip.is-placeholder{border-style:dashed;background:rgba(255,147,184,.10);opacity:.72}
-#SakuraTeaConfigPage .st-chip{height:31px;padding:0 10px;border:1px solid rgba(255,147,184,.30);border-radius:8px;background:rgba(255,255,255,.025);display:flex;align-items:center;gap:6px;font-size:.74em;cursor:grab;user-select:none}
+#SakuraTeaConfigPage .st-chip{height:31px;padding:0 10px;border:1px solid rgba(255,147,184,.30);border-radius:8px;background:rgba(255,255,255,.025);display:flex;align-items:center;gap:6px;font-size:.74em;cursor:grab;user-select:none;touch-action:none}
+#SakuraTeaConfigPage .st-chip.is-selected:not([data-repeatable="true"]){opacity:.52}
+#SakuraTeaConfigPage .st-chip .st-real-icon :is(svg,img,.material-icons,.MuiSvgIcon-root){width:15px!important;height:15px!important;max-width:15px!important;max-height:15px!important;font-size:15px!important;line-height:15px!important;object-fit:contain}
 #SakuraTeaConfigPage .st-chip.selected{background:linear-gradient(180deg,rgba(255,147,184,.19),rgba(255,147,184,.07));border-color:rgba(255,147,184,.45)}
 #SakuraTeaConfigPage .st-chip.available{border-color:rgba(255,255,255,.11)}
 #SakuraTeaConfigPage .st-chip.available:hover{border-color:rgba(255,147,184,.38);background:rgba(255,147,184,.05)}
@@ -172,7 +189,7 @@
   <div class="st-title-flower" aria-hidden="true"></div>
   <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
  </div>
- <div class="st-badge">0.1.0.9 drag & drop preview</div>
+ <div class="st-badge">0.1.0.10 SleekFin-style builder test</div>
 </div>
 
 <div class="st-toolbar">
@@ -222,17 +239,17 @@
     <div class="st-sectionlabel">Header Preview</div>
     <div class="st-stage" data-device="desktop">
      <div id="SakuraTeaHeaderPreview" class="st-header-preview" data-position="Left">
-      <div class="st-floatbar">
+      <div id="SakuraTeaFloatBar" class="st-floatbar">
        <div class="st-flowericon"></div>
        <div id="SakuraTeaHeaderPreviewItems" class="st-preview-items"></div>
+       <button id="SakuraTeaHeaderOverflowToggle" type="button" class="st-overflow-toggle" hidden aria-label="Show overflow items">•••</button>
       </div>
+      <div id="SakuraTeaHeaderOverflowDrawer" class="st-overflow-drawer" hidden></div>
      </div>
     </div>
     <div class="st-navbuilder">
-     <div class="st-navtop"><strong>Navigation Builder</strong><span>Drag items into the header, reorder them, or drag them back below to remove.</span></div>
-     <div class="st-poollabel">Selected header items (drag to reorder)</div>
-     <div id="SakuraTeaHeaderSelected" class="st-chips"></div>
-     <div class="st-poollabel">Available items (drag or click to add)</div>
+     <div class="st-navtop"><strong>Navigation Builder</strong><span>Drag available items directly into the preview bar. Drag preview items to reorder, or back here to remove.</span></div>
+     <div class="st-poollabel">Available items</div>
      <div id="SakuraTeaHeaderAvailable" class="st-chips"></div>
      <input id="BuilderHeaderItems" type="hidden">
     </div>
@@ -328,55 +345,208 @@
  function currentDevice(){var a=page.querySelector('.st-devices .st-pillbtn.is-active');return a?a.dataset.device:'desktop'}
  function syncDevice(){var d=currentDevice();page.querySelectorAll('.st-stage').forEach(function(s){s.dataset.device=d})}
 
- var inventory=[
-  {label:'Space',icon:'□'},{label:'Separator',icon:'│'},{label:'Favourites',icon:'♥'},{label:'Anime',icon:'▶'},{label:'Not Safe',icon:'◈'},
-  {label:'Search',icon:'⌕'},{label:'Cast',icon:'▣'},{label:'SyncPlay',icon:'↻'},{label:'User Menu',icon:'▦'},{label:'Profile',icon:'●'},
-  {label:'Home',icon:'⌂'},{label:'More',icon:'•••'},{label:'Random',icon:'⤨'},{label:'Activity',icon:'▥'},{label:'Requests',icon:'☷'},
-  {label:'Calendar',icon:'▣'},{label:'Movies',icon:'▤'},{label:'TV Shows',icon:'▭'},{label:'Recommendations',icon:'★'},{label:'Audio Player',icon:'♫'}
+ var staticCatalog=[
+  {id:'space',label:'Space',icon:'□',shape:'space',repeatable:true},
+  {id:'separator',label:'Separator',icon:'│',shape:'separator',repeatable:true},
+  {id:'jellyfin:favorites',label:'Favourites',icon:'♥',shape:'text'},
+  {id:'sakura:anime',label:'Anime',icon:'▶',shape:'text'},
+  {id:'sakura:not-safe',label:'Not Safe',icon:'◈',shape:'text'},
+  {id:'jellyfin:search',label:'Search',icon:'⌕',shape:'icon'},
+  {id:'jellyfin:cast',label:'Cast',icon:'▣',shape:'icon'},
+  {id:'jellyfin:syncplay',label:'SyncPlay',icon:'↻',shape:'icon'},
+  {id:'jellyfin:user-menu',label:'User Menu',icon:'▦',shape:'icon'},
+  {id:'jellyfin:profile',label:'Profile',icon:'●',shape:'avatar'},
+  {id:'jellyfin:home',label:'Home',icon:'⌂',shape:'icon'},
+  {id:'jellyfin:more',label:'More',icon:'•••',shape:'icon'},
+  {id:'je:random',label:'Random',icon:'⤨',shape:'icon'},
+  {id:'je:activity',label:'Activity',icon:'▥',shape:'icon'},
+  {id:'je:requests',label:'Requests',icon:'☷',shape:'icon'},
+  {id:'je:calendar',label:'Calendar',icon:'▣',shape:'icon'},
+  {id:'sf:movies',label:'Movies',icon:'▤',shape:'text'},
+  {id:'sf:tv',label:'TV Shows',icon:'▭',shape:'text'},
+  {id:'je:recommendations',label:'Recommendations',icon:'★',shape:'text'},
+  {id:'jellyfin:audio-player',label:'Audio Player',icon:'♫',shape:'icon'}
  ];
- function iconFor(label){var x=inventory.find(function(i){return i.label===label});return x?x.icon:'•'}
- function headerItems(){return (q('BuilderHeaderItems').value||'Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More').split('|').filter(Boolean)}
- function navLabels(){return (q('BuilderNavOrder').value||'Favourites|Anime|Not Safe').split('|').filter(Boolean)}
- function saveHeaderItemsFromDom(){q('BuilderHeaderItems').value=Array.from(q('SakuraTeaHeaderSelected').querySelectorAll('.st-chip.selected')).map(function(x){return x.dataset.label}).join('|')}
- function saveNavLabelsFromDom(){q('BuilderNavOrder').value=Array.from(q('SakuraTeaNavSort').querySelectorAll('.st-labelchip')).map(function(x){return x.dataset.label}).join('|')}
+ var catalog=staticCatalog.slice();
 
- function selectedHeaderItemsForPreview(){
-  var selected=q('SakuraTeaHeaderSelected');
-  if(selected){
-   var nodes=Array.from(selected.querySelectorAll('.st-chip.selected'));
-   if(nodes.length)return nodes.map(function(x){return x.dataset.label}).filter(Boolean);
+ var legacyHeaderIds={
+  'Space':'space','Separator':'separator','Favourites':'jellyfin:favorites','Favorites':'jellyfin:favorites','Anime':'sakura:anime','Not Safe':'sakura:not-safe',
+  'Search':'jellyfin:search','Cast':'jellyfin:cast','SyncPlay':'jellyfin:syncplay','User Menu':'jellyfin:user-menu','Profile':'jellyfin:profile',
+  'Home':'jellyfin:home','More':'jellyfin:more','Random':'je:random','Activity':'je:activity','Requests':'je:requests','Calendar':'je:calendar',
+  'Movies':'sf:movies','TV Shows':'sf:tv','Recommendations':'je:recommendations','Audio Player':'jellyfin:audio-player'
+ };
+
+ function catalogItem(id){
+  return catalog.find(function(item){return item.id===id})||{id:id,label:id,icon:'•',shape:'text'};
+ }
+
+ function migrateHeaderItems(value){
+  var items=String(value||'').split('|').filter(Boolean);
+  return items.map(function(item){return legacyHeaderIds[item]||item});
+ }
+
+ function readRuntimeCatalog(){
+  var payload=window.__sakuraTeaHeaderCatalog||null;
+  if(!payload){
+   try{payload=JSON.parse(window.sessionStorage.getItem('sakuraTeaHeaderCatalog')||'null')}catch(e){}
   }
-  return headerItems();
+  return payload&&Array.isArray(payload.items)?payload.items:[];
  }
+
+ function refreshCatalog(){
+  var map=new Map();
+  staticCatalog.forEach(function(item){map.set(item.id,Object.assign({},item))});
+  readRuntimeCatalog().forEach(function(item){
+   if(!item||!item.id)return;
+   var old=map.get(item.id)||{};
+   map.set(item.id,Object.assign({},old,item,{repeatable:old.repeatable===true}));
+  });
+  catalog=Array.from(map.values());
+ }
+
+ function setVisual(target,item,withLabel){
+  target.replaceChildren();
+  if(item.iconHtml){
+   try{
+    var template=document.createElement('template');
+    template.innerHTML=item.iconHtml;
+    var visual=template.content.firstElementChild;
+    if(visual){
+     visual.removeAttribute('id');
+     target.appendChild(visual);
+    }
+   }catch(e){}
+  }
+  if(!target.childNodes.length&&item.icon){
+   var fallback=document.createElement('span');
+   fallback.textContent=item.icon;
+   target.appendChild(fallback);
+  }
+  if(withLabel&&item.label){
+   var label=document.createElement('span');
+   label.textContent=item.label;
+   target.appendChild(label);
+  }
+ }
+
+ function headerItems(){
+  var input=q('BuilderHeaderItems');
+  var migrated=migrateHeaderItems(input.value||'jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more');
+  var joined=migrated.join('|');
+  if(input.value!==joined)input.value=joined;
+  return migrated;
+ }
+
+ function setHeaderItems(items){
+  q('BuilderHeaderItems').value=items.filter(Boolean).join('|');
+ }
+
+ function navLabels(){return (q('BuilderNavOrder').value||'Favourites|Anime|Not Safe').split('|').filter(Boolean)}
+ function saveNavLabelsFromDom(){q('BuilderNavOrder').value=Array.from(q('SakuraTeaNavSort').querySelectorAll('.st-labelchip[data-label]')).map(function(x){return x.dataset.label}).join('|')}
+
+ function createPreviewItem(id,index){
+  var item=catalogItem(id);
+  var element=document.createElement('div');
+  element.className='st-preview-item';
+  element.draggable=true;
+  element.dataset.itemId=id;
+  element.dataset.instance=String(index);
+
+  if(item.shape==='space'){
+   var space=document.createElement('span');space.className='st-preview-space';element.appendChild(space);
+  }else if(item.shape==='separator'){
+   var separator=document.createElement('span');separator.className='st-preview-separator';element.appendChild(separator);
+  }else{
+   var chip=document.createElement('span');
+   chip.className='st-preview-chip';
+   if(item.shape==='icon')chip.classList.add('icon-only');
+   if(item.shape==='avatar')chip.classList.add('avatar-only');
+   setVisual(chip,item,item.shape==='text');
+   element.appendChild(chip);
+  }
+  return element;
+ }
+
+ function previewOrder(){
+  return Array.from(q('SakuraTeaHeaderPreviewItems').querySelectorAll('.st-preview-item')).map(function(el){return el.dataset.itemId});
+ }
+
+ function renderOverflowDrawer(){
+  var drawer=q('SakuraTeaHeaderOverflowDrawer');
+  var hidden=Array.from(q('SakuraTeaHeaderPreviewItems').querySelectorAll('.st-preview-item.is-overflowed'));
+  drawer.replaceChildren();
+  hidden.forEach(function(el){
+   var item=catalogItem(el.dataset.itemId);
+   var row=document.createElement('div');
+   row.className='st-overflow-row';
+   var visual=document.createElement('span');
+   visual.className='st-real-icon';
+   setVisual(visual,item,false);
+   row.appendChild(visual);
+   var text=document.createElement('span');text.textContent=item.label;row.appendChild(text);
+   drawer.appendChild(row);
+  });
+  if(!hidden.length)drawer.hidden=true;
+ }
+
+ function updateHeaderOverflow(){
+  var bar=q('SakuraTeaFloatBar'),toggle=q('SakuraTeaHeaderOverflowToggle');
+  var items=Array.from(q('SakuraTeaHeaderPreviewItems').querySelectorAll('.st-preview-item'));
+  items.forEach(function(el){el.classList.remove('is-overflowed')});
+  toggle.hidden=true;
+  q('SakuraTeaHeaderOverflowDrawer').hidden=true;
+
+  requestAnimationFrame(function(){
+   if(!bar||!bar.isConnected)return;
+   if(bar.scrollWidth<=bar.clientWidth+1){renderOverflowDrawer();return}
+   toggle.hidden=false;
+   for(var i=items.length-1;i>=0&&bar.scrollWidth>bar.clientWidth+1;i--){
+    items[i].classList.add('is-overflowed');
+   }
+   renderOverflowDrawer();
+  });
+ }
+
+ function updatePreviewActive(){
+  var items=Array.from(q('SakuraTeaHeaderPreviewItems').querySelectorAll('.st-preview-item'));
+  var active=items.find(function(el){
+   var item=catalogItem(el.dataset.itemId);
+   return item.shape!=='space'&&item.shape!=='separator';
+  });
+  items.forEach(function(el){el.classList.toggle('is-active',el===active)});
+ }
+
  function renderHeaderPreview(){
-  var host=q('SakuraTeaHeaderPreviewItems');host.replaceChildren();
-  selectedHeaderItemsForPreview().forEach(function(label){
-   if(label==='Space'){var s=document.createElement('span');s.className='st-preview-space';host.appendChild(s);return}
-   if(label==='Separator'){var sep=document.createElement('span');sep.className='st-preview-separator';host.appendChild(sep);return}
-   if(label==='Profile'){var p=document.createElement('span');p.className='st-preview-profile';p.id='SakuraTeaPreviewAvatar';host.appendChild(p);return}
-   var chip=document.createElement('span');chip.className='st-preview-chip'+(label==='Anime'?' is-active':'');
-   if(['Search','Cast','User Menu','Home','More','SyncPlay','Random','Activity','Requests','Calendar','Audio Player'].indexOf(label)>=0)chip.classList.add('icon-only');
-   chip.textContent=(chip.classList.contains('icon-only')?iconFor(label):((['Favourites','Anime','Not Safe'].indexOf(label)>=0?iconFor(label)+' ':'')+label));
-   host.appendChild(chip);
-  });
-  try{var uid=ApiClient.getCurrentUserId();var av=q('SakuraTeaPreviewAvatar');if(uid&&av)av.style.backgroundImage='url("'+ApiClient.getImageUrl(uid,{type:'Primary',maxWidth:96,quality:90})+'")'}catch(e){}
+  var host=q('SakuraTeaHeaderPreviewItems');
+  host.replaceChildren();
+  headerItems().forEach(function(id,index){host.appendChild(createPreviewItem(id,index))});
+  updatePreviewActive();
+  updateHeaderOverflow();
  }
+
  function renderHeaderBuilder(){
-  var sel=q('SakuraTeaHeaderSelected'),avail=q('SakuraTeaHeaderAvailable');sel.replaceChildren();avail.replaceChildren();
-  headerItems().forEach(function(label){
-   var chip=document.createElement('div');chip.className='st-chip selected';chip.draggable=true;chip.dataset.label=label;
-   chip.innerHTML='<span class="st-ic"></span><span class="st-lbl"></span><span class="st-remove">×</span>';
-   chip.querySelector('.st-ic').textContent=iconFor(label);chip.querySelector('.st-lbl').textContent=label;sel.appendChild(chip);
-  });
-  inventory.forEach(function(item){
-   var chip=document.createElement('div');chip.className='st-chip available';chip.draggable=true;chip.dataset.label=item.label;
-   chip.innerHTML='<span class="st-ic"></span><span class="st-lbl"></span>';chip.querySelector('.st-ic').textContent=item.icon;chip.querySelector('.st-lbl').textContent=item.label;avail.appendChild(chip);
+  refreshCatalog();
+  var avail=q('SakuraTeaHeaderAvailable');
+  var selectedIds=headerItems();
+  avail.replaceChildren();
+  catalog.forEach(function(item){
+   var chip=document.createElement('div');
+   chip.className='st-chip available';
+   chip.draggable=true;
+   chip.dataset.itemId=item.id;
+   chip.dataset.repeatable=item.repeatable?'true':'false';
+   if(!item.repeatable&&selectedIds.indexOf(item.id)>=0)chip.classList.add('is-selected');
+   var icon=document.createElement('span');icon.className='st-ic st-real-icon';setVisual(icon,item,false);
+   var label=document.createElement('span');label.className='st-lbl';label.textContent=item.label;
+   chip.appendChild(icon);chip.appendChild(label);avail.appendChild(chip);
   });
  }
+
  function renderNavLabels(){
   var host=q('SakuraTeaNavSort');host.replaceChildren();
   navLabels().forEach(function(label){
-   var chip=document.createElement('div');chip.className='st-labelchip'+(label==='Anime'?' is-active':'');chip.draggable=true;chip.dataset.label=label;chip.textContent=iconFor(label)+' '+label;host.appendChild(chip);
+   var item=staticCatalog.find(function(x){return x.label===label||x.label.replace('Favourites','Favorites')===label})||{icon:'•'};
+   var chip=document.createElement('div');chip.className='st-labelchip'+(label==='Anime'?' is-active':'');chip.draggable=true;chip.dataset.label=label;chip.textContent=(item.icon||'•')+' '+label;host.appendChild(chip);
   });
   var add=document.createElement('div');add.className='st-labelchip';add.textContent='＋ Add';host.appendChild(add);
  }
@@ -395,7 +565,7 @@
   syncDevice();renderHeaderPreview();
  }
  function resetHeader(){
-  setVal('BuilderHeaderHeight',44);setVal('BuilderHeaderButtonSize',34);setVal('BuilderHeaderIconSize',17);setVal('BuilderHeaderAvatarSize',30);setVal('BuilderHeaderSpacing',7);setVal('BuilderHeaderOpacity',68);setVal('BuilderHeaderPosition','Left');setVal('BuilderHeaderItems','Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More');renderHeaderBuilder();update();
+  setVal('BuilderHeaderHeight',44);setVal('BuilderHeaderButtonSize',34);setVal('BuilderHeaderIconSize',17);setVal('BuilderHeaderAvatarSize',30);setVal('BuilderHeaderSpacing',7);setVal('BuilderHeaderOpacity',68);setVal('BuilderHeaderPosition','Left');setVal('BuilderHeaderItems','jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more');renderHeaderBuilder();update();
  }
  function resetHero(){
   setVal('BuilderHeroHeight',76);setVal('BuilderHeroTitleSize',100);setVal('BuilderHeroButtonSize',90);setVal('BuilderBackdropDarkness',48);setVal('BuilderPetalDensity',55);setVal('BuilderAnimationSpeed',100);update();
@@ -408,10 +578,10 @@
    q('ThemeEnabled').checked=c.ThemeEnabled!==false;q('HeroEnabled').checked=c.HeroEnabled!==false;q('PetalsEnabled').checked=c.PetalsEnabled!==false;
    q('AnimeLibraryName').value=c.AnimeLibraryName||'Anime';q('HeroSlides').value=c.HeroSlides||10;q('HeroRotationSeconds').value=c.HeroRotationSeconds||9;
    setVal('BuilderHeaderHeight',c.BuilderHeaderHeight||44);setVal('BuilderHeaderButtonSize',c.BuilderHeaderButtonSize||34);setVal('BuilderHeaderIconSize',c.BuilderHeaderIconSize||17);setVal('BuilderHeaderAvatarSize',c.BuilderHeaderAvatarSize||30);setVal('BuilderHeaderSpacing',typeof c.BuilderHeaderSpacing==='number'?c.BuilderHeaderSpacing:7);setVal('BuilderHeaderOpacity',c.BuilderHeaderOpacity||68);setVal('BuilderHeaderPosition',c.BuilderHeaderPosition||'Left');
-   setVal('BuilderHeaderItems',c.BuilderHeaderItems||'Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More');
+   setVal('BuilderHeaderItems',c.BuilderHeaderItems||'jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more');
    setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);
    setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
-   renderHeaderBuilder();renderNavLabels();update();Dashboard.hideLoadingMsg();
+   refreshCatalog();renderHeaderBuilder();renderNavLabels();update();Dashboard.hideLoadingMsg();
   }).catch(function(){Dashboard.hideLoadingMsg()});
  }
 
@@ -423,188 +593,232 @@
  q('SakuraTeaResetHeader').addEventListener('click',resetHeader);q('SakuraTeaResetHero').addEventListener('click',resetHero);q('SakuraTeaBuilderReset').addEventListener('click',resetAll);
  q('SakuraTeaPreviewOnly').addEventListener('click',function(){update();if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Preview updated. No live Home settings were changed.')});
 
- var headerDrag=null,headerPlaceholder=null,selected=q('SakuraTeaHeaderSelected'),available=q('SakuraTeaHeaderAvailable');
+ var dragState=null;
+ var pointerState=null;
+ var dragGhost=null;
+ var previewHost=q('SakuraTeaHeaderPreviewItems');
+ var palette=q('SakuraTeaHeaderAvailable');
+ var previewBar=q('SakuraTeaFloatBar');
 
- function createSelectedChip(label,placeholder){
-  var chip=document.createElement('div');
-  chip.className='st-chip selected'+(placeholder?' is-placeholder':'');
-  chip.draggable=!placeholder;
-  chip.dataset.label=label;
-  chip.innerHTML='<span class="st-ic"></span><span class="st-lbl"></span><span class="st-remove">×</span>';
-  chip.querySelector('.st-ic').textContent=iconFor(label);
-  chip.querySelector('.st-lbl').textContent=label;
-  return chip;
+ function moveGhost(x,y){
+  if(dragGhost){dragGhost.style.left=x+'px';dragGhost.style.top=y+'px'}
  }
 
- function clearHeaderDropState(){
-  selected.classList.remove('is-drop-target');
-  available.classList.remove('is-drop-target');
+ function createGhost(id){
+  var item=catalogItem(id);
+  var ghost=document.createElement('div');
+  ghost.className='st-drag-ghost';
+  ghost.textContent=(item.icon?item.icon+' ':'')+item.label;
+  page.appendChild(ghost);
+  return ghost;
  }
 
- function restoreDraggedSelectedItem(){
-  if(!headerDrag||headerDrag.source!=='selected'||headerDrag.dropped)return;
-  var parent=headerDrag.originalParent;
-  var next=headerDrag.originalNext;
-  if(parent&&headerDrag.node){
-   parent.insertBefore(headerDrag.node,next&&next.parentNode===parent?next:null);
-  }
+ function findPreviewInstance(instance){
+  return previewHost.querySelector('.st-preview-item[data-instance="'+instance+'"]');
  }
 
- function finishHeaderDrag(){
-  restoreDraggedSelectedItem();
-  if(headerPlaceholder&&headerPlaceholder.parentNode)headerPlaceholder.remove();
-  headerPlaceholder=null;
-  clearHeaderDropState();
-  page.querySelectorAll('.st-chip.is-dragging').forEach(function(x){x.classList.remove('is-dragging')});
-  if(headerDrag&&!headerDrag.dropped){
-   saveHeaderItemsFromDom();
-   renderHeaderPreview();
-  }
-  headerDrag=null;
- }
-
- function beginHeaderDrag(e){
-  var item=e.target.closest('.st-chip');
-  if(!item)return;
-  var source=item.classList.contains('selected')?'selected':'available';
-  headerDrag={
-   label:item.dataset.label,
+ function startHeaderDrag(id,fromPreview,source,previewElement,x,y){
+  var item=catalogItem(id);
+  if(!item.repeatable&&!fromPreview&&headerItems().indexOf(id)>=0)return false;
+  dragState={
+   id:id,
+   fromPreview:fromPreview,
    source:source,
-   node:item,
-   originalParent:item.parentNode,
-   originalNext:item.nextSibling,
+   element:previewElement||null,
+   originalOrder:headerItems().slice(),
    dropped:false
   };
-  item.classList.add('is-dragging');
-  if(e.dataTransfer){
-   e.dataTransfer.effectAllowed=source==='available'?'copyMove':'move';
-   e.dataTransfer.setData('text/plain',item.dataset.label||'');
-  }
+  if(dragState.element)dragState.element.classList.add('is-being-dragged');
+  if(source)source.classList.add('is-dragging');
+  dragGhost=createGhost(id);moveGhost(x||0,y||0);
+  return true;
  }
 
- function insertDraggedNode(container,node,e){
-  var target=e.target.closest('.st-chip.selected');
-  if(target===node||target===headerPlaceholder)target=null;
-  if(!target){
-   if(node.parentNode!==container)container.appendChild(node);
-   return;
-  }
-  var r=target.getBoundingClientRect();
-  var sameRow=Math.abs(e.clientY-(r.top+r.height/2))<=Math.max(10,r.height*.55);
-  var after=sameRow?e.clientX>(r.left+r.width/2):e.clientY>(r.top+r.height/2);
-  container.insertBefore(node,after?target.nextSibling:target);
- }
-
- selected.addEventListener('dragstart',beginHeaderDrag);
- available.addEventListener('dragstart',beginHeaderDrag);
-
- selected.addEventListener('dragenter',function(e){
-  if(!headerDrag)return;
-  e.preventDefault();
-  selected.classList.add('is-drop-target');
- });
-
- selected.addEventListener('dragover',function(e){
-  if(!headerDrag)return;
-  e.preventDefault();
-  selected.classList.add('is-drop-target');
-  if(e.dataTransfer)e.dataTransfer.dropEffect=headerDrag.source==='available'?'copy':'move';
-
-  var node=headerDrag.node;
-  if(headerDrag.source==='available'){
-   if(!headerPlaceholder){
-    headerPlaceholder=createSelectedChip(headerDrag.label,true);
-    selected.appendChild(headerPlaceholder);
-   }
-   node=headerPlaceholder;
-  }
-  insertDraggedNode(selected,node,e);
+ function finishHeaderDrag(commit){
+  if(!dragState)return;
+  if(!commit)setHeaderItems(dragState.originalOrder);
+  if(dragGhost)dragGhost.remove();
+  dragGhost=null;
+  page.querySelectorAll('.is-being-dragged,.is-removing,.st-chip.is-dragging').forEach(function(el){el.classList.remove('is-being-dragged','is-removing','is-dragging')});
+  palette.classList.remove('is-drop-target');
+  dragState=null;
+  renderHeaderBuilder();
   renderHeaderPreview();
- });
+ }
 
- selected.addEventListener('dragleave',function(e){
-  if(!selected.contains(e.relatedTarget))selected.classList.remove('is-drop-target');
- });
-
- selected.addEventListener('drop',function(e){
-  if(!headerDrag)return;
-  e.preventDefault();
-  if(headerDrag.source==='available'){
-   if(!headerPlaceholder)headerPlaceholder=createSelectedChip(headerDrag.label,true);
-   headerPlaceholder.classList.remove('is-placeholder');
-   headerPlaceholder.draggable=true;
-   headerPlaceholder=null;
+ function ensureDraggedPreviewElement(){
+  if(!dragState)return null;
+  if(dragState.element&&dragState.element.isConnected)return dragState.element;
+  var item=catalogItem(dragState.id);
+  if(!item.repeatable){
+   var existing=previewHost.querySelector('.st-preview-item[data-item-id="'+CSS.escape(dragState.id)+'"]');
+   if(existing){dragState.element=existing;return existing}
   }
-  headerDrag.dropped=true;
-  saveHeaderItemsFromDom();
-  clearHeaderDropState();
-  renderHeaderBuilder();
-  update();
- });
+  var element=createPreviewItem(dragState.id,Date.now());
+  element.classList.add('is-being-dragged');
+  previewHost.appendChild(element);
+  dragState.element=element;
+  return element;
+ }
 
- available.addEventListener('dragenter',function(e){
-  if(!headerDrag||headerDrag.source!=='selected')return;
-  e.preventDefault();
-  available.classList.add('is-drop-target');
- });
-
- available.addEventListener('dragover',function(e){
-  if(!headerDrag||headerDrag.source!=='selected')return;
-  e.preventDefault();
-  available.classList.add('is-drop-target');
-  if(e.dataTransfer)e.dataTransfer.dropEffect='move';
- });
-
- available.addEventListener('dragleave',function(e){
-  if(!available.contains(e.relatedTarget))available.classList.remove('is-drop-target');
- });
-
- available.addEventListener('drop',function(e){
-  if(!headerDrag||headerDrag.source!=='selected')return;
-  e.preventDefault();
-  headerDrag.dropped=true;
-  if(headerDrag.node&&headerDrag.node.parentNode)headerDrag.node.remove();
-  saveHeaderItemsFromDom();
-  clearHeaderDropState();
-  renderHeaderBuilder();
-  update();
- });
-
- selected.addEventListener('click',function(e){
-  var remove=e.target.closest('.st-remove');
-  if(!remove)return;
-  var chip=remove.closest('.st-chip.selected');
-  if(chip){
-   chip.remove();
-   saveHeaderItemsFromDom();
-   renderHeaderBuilder();
-   update();
+ function moveDraggedInPreview(clientX){
+  var element=ensureDraggedPreviewElement();
+  if(!element)return;
+  var items=Array.from(previewHost.querySelectorAll('.st-preview-item')).filter(function(el){return el!==element});
+  var reference=null;
+  for(var i=0;i<items.length;i++){
+   var r=items[i].getBoundingClientRect();
+   if(clientX<r.left+r.width/2){reference=items[i];break}
   }
+  previewHost.insertBefore(element,reference);
+  setHeaderItems(previewOrder());
+  updatePreviewActive();
+  updateHeaderOverflow();
+ }
+
+ function removeDraggedFromPreview(){
+  if(!dragState||!dragState.fromPreview)return;
+  if(dragState.element&&dragState.element.isConnected)dragState.element.remove();
+  setHeaderItems(previewOrder());
+ }
+
+ function nativeDragStart(e,fromPreview){
+  var source=fromPreview?e.target.closest('.st-preview-item'):e.target.closest('.st-chip.available');
+  if(!source)return;
+  var id=fromPreview?source.dataset.itemId:source.dataset.itemId;
+  if(!startHeaderDrag(id,fromPreview,source,fromPreview?source:null,e.clientX,e.clientY)){e.preventDefault();return}
+  if(e.dataTransfer){
+   e.dataTransfer.effectAllowed='move';
+   e.dataTransfer.setData('text/plain',id);
+   try{
+    var canvas=document.createElement('canvas');canvas.width=1;canvas.height=1;
+    e.dataTransfer.setDragImage(canvas,0,0);
+   }catch(err){}
+  }
+ }
+
+ previewHost.addEventListener('dragstart',function(e){nativeDragStart(e,true)});
+ palette.addEventListener('dragstart',function(e){nativeDragStart(e,false)});
+
+ previewBar.addEventListener('dragover',function(e){
+  if(!dragState)return;e.preventDefault();moveGhost(e.clientX,e.clientY);moveDraggedInPreview(e.clientX);
+ });
+ previewBar.addEventListener('drop',function(e){
+  if(!dragState)return;e.preventDefault();moveDraggedInPreview(e.clientX);setHeaderItems(previewOrder());dragState.dropped=true;finishHeaderDrag(true);
  });
 
- available.addEventListener('click',function(e){
-  var chip=e.target.closest('.st-chip.available');
-  if(!chip)return;
-  var vals=headerItems();
-  vals.push(chip.dataset.label);
-  q('BuilderHeaderItems').value=vals.join('|');
-  renderHeaderBuilder();
-  update();
+ palette.addEventListener('dragover',function(e){
+  if(!dragState)return;e.preventDefault();moveGhost(e.clientX,e.clientY);palette.classList.add('is-drop-target');
+  if(dragState.fromPreview&&dragState.element)dragState.element.classList.add('is-removing');
+ });
+ palette.addEventListener('dragleave',function(e){
+  if(!palette.contains(e.relatedTarget)){palette.classList.remove('is-drop-target');if(dragState&&dragState.element)dragState.element.classList.remove('is-removing')}
+ });
+ palette.addEventListener('drop',function(e){
+  if(!dragState)return;e.preventDefault();
+  if(dragState.fromPreview){removeDraggedFromPreview();dragState.dropped=true;finishHeaderDrag(true)}
+  else finishHeaderDrag(false);
+ });
+ page.addEventListener('dragover',function(e){if(dragState)moveGhost(e.clientX,e.clientY)});
+ page.addEventListener('dragend',function(){if(dragState)finishHeaderDrag(Boolean(dragState.dropped))});
+
+ function pointerDown(e,fromPreview){
+  if(e.button!==0)return;
+  var source=fromPreview?e.target.closest('.st-preview-item'):e.target.closest('.st-chip.available');
+  if(!source)return;
+  pointerState={
+   id:source.dataset.itemId,
+   fromPreview:fromPreview,
+   source:source,
+   previewElement:fromPreview?source:null,
+   pointerId:e.pointerId,
+   startX:e.clientX,startY:e.clientY,
+   moved:false
+  };
+  try{source.setPointerCapture(e.pointerId)}catch(err){}
+  e.preventDefault();
+ }
+
+ previewHost.addEventListener('pointerdown',function(e){pointerDown(e,true)});
+ palette.addEventListener('pointerdown',function(e){pointerDown(e,false)});
+
+ page.addEventListener('pointermove',function(e){
+  if(!pointerState||e.pointerId!==pointerState.pointerId)return;
+  if(!pointerState.moved&&Math.hypot(e.clientX-pointerState.startX,e.clientY-pointerState.startY)>6){
+   pointerState.moved=startHeaderDrag(pointerState.id,pointerState.fromPreview,pointerState.source,pointerState.previewElement,e.clientX,e.clientY);
+  }
+  if(!pointerState.moved||!dragState)return;
+  moveGhost(e.clientX,e.clientY);
+  var target=document.elementFromPoint(e.clientX,e.clientY);
+  if(target&&(previewBar.contains(target)||previewHost.contains(target))){
+   moveDraggedInPreview(e.clientX);
+   palette.classList.remove('is-drop-target');
+   if(dragState.element)dragState.element.classList.remove('is-removing');
+  }else if(target&&palette.contains(target)){
+   palette.classList.add('is-drop-target');
+   if(dragState.fromPreview&&dragState.element)dragState.element.classList.add('is-removing');
+  }else{
+   palette.classList.remove('is-drop-target');
+   if(dragState.element)dragState.element.classList.remove('is-removing');
+  }
+  e.preventDefault();
  });
 
- page.addEventListener('dragend',finishHeaderDrag);
+ function finishPointer(e,cancelled){
+  if(!pointerState||e.pointerId!==pointerState.pointerId)return;
+  var state=pointerState;pointerState=null;
+  try{state.source.releasePointerCapture(e.pointerId)}catch(err){}
+  if(!state.moved){return}
+  var target=document.elementFromPoint(e.clientX,e.clientY);
+  if(cancelled){finishHeaderDrag(false);return}
+  if(target&&(previewBar.contains(target)||previewHost.contains(target))){
+   moveDraggedInPreview(e.clientX);setHeaderItems(previewOrder());dragState.dropped=true;finishHeaderDrag(true);
+  }else if(target&&palette.contains(target)&&dragState&&dragState.fromPreview){
+   removeDraggedFromPreview();dragState.dropped=true;finishHeaderDrag(true);
+  }else{
+   finishHeaderDrag(false);
+  }
+  e.preventDefault();
+ }
+ page.addEventListener('pointerup',function(e){finishPointer(e,false)});
+ page.addEventListener('pointercancel',function(e){finishPointer(e,true)});
+
+ palette.addEventListener('click',function(e){
+  if(pointerState&&pointerState.moved)return;
+  var chip=e.target.closest('.st-chip.available');if(!chip)return;
+  var item=catalogItem(chip.dataset.itemId),items=headerItems();
+  if(!item.repeatable&&items.indexOf(item.id)>=0)return;
+  items.push(item.id);setHeaderItems(items);renderHeaderBuilder();renderHeaderPreview();
+ });
+
+ q('SakuraTeaHeaderOverflowToggle').addEventListener('click',function(e){
+  e.stopPropagation();var drawer=q('SakuraTeaHeaderOverflowDrawer');drawer.hidden=!drawer.hidden;
+ });
+ q('SakuraTeaHeaderPreview').addEventListener('click',function(e){
+  if(!q('SakuraTeaHeaderOverflowDrawer').contains(e.target)&&e.target!==q('SakuraTeaHeaderOverflowToggle'))q('SakuraTeaHeaderOverflowDrawer').hidden=true;
+ });
+
+ var previewResizeObserver=null;
+ function startPreviewObserver(){
+  if(typeof ResizeObserver==='function'){
+   previewResizeObserver=new ResizeObserver(updateHeaderOverflow);
+   previewResizeObserver.observe(q('SakuraTeaHeaderPreview'));
+  }else window.addEventListener('resize',updateHeaderOverflow);
+ }
+ startPreviewObserver();
 
  var navDrag=null,nav=q('SakuraTeaNavSort');
  nav.addEventListener('dragstart',function(e){var item=e.target.closest('.st-labelchip[data-label]');if(!item)return;navDrag=item;item.classList.add('is-dragging');if(e.dataTransfer)e.dataTransfer.effectAllowed='move'});
  nav.addEventListener('dragover',function(e){e.preventDefault();if(!navDrag)return;var t=e.target.closest('.st-labelchip[data-label]');if(!t||t===navDrag)return;var r=t.getBoundingClientRect();nav.insertBefore(navDrag,e.clientX>r.left+r.width/2?t.nextSibling:t)});
  nav.addEventListener('dragend',function(){if(navDrag)navDrag.classList.remove('is-dragging');navDrag=null;saveNavLabelsFromDom();renderNavLabels()});
 
+ window.addEventListener('sakura-tea:header-catalog-changed',function(){refreshCatalog();renderHeaderBuilder();renderHeaderPreview()});
  page.addEventListener('pageshow',load);
  form.addEventListener('submit',function(e){
-  e.preventDefault();Dashboard.showLoadingMsg();saveHeaderItemsFromDom();saveNavLabelsFromDom();
+  e.preventDefault();Dashboard.showLoadingMsg();setHeaderItems(previewOrder());saveNavLabelsFromDom();
   ApiClient.getPluginConfiguration(pluginId).then(function(c){
    c.ThemeEnabled=q('ThemeEnabled').checked;c.HeroEnabled=q('HeroEnabled').checked;c.PetalsEnabled=q('PetalsEnabled').checked;c.AnimeLibraryName=q('AnimeLibraryName').value.trim()||'Anime';c.HeroSlides=num('HeroSlides',10);c.HeroRotationSeconds=num('HeroRotationSeconds',9);
-   c.BuilderHeaderHeight=num('BuilderHeaderHeight',44);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',34);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',17);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',30);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',7);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',68);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';c.BuilderHeaderItems=q('BuilderHeaderItems').value||'Favourites|Anime|Not Safe|Search|Cast|User Menu|Profile|Home|More';
+   c.BuilderHeaderHeight=num('BuilderHeaderHeight',44);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',34);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',17);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',30);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',7);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',68);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';c.BuilderHeaderItems=q('BuilderHeaderItems').value||'jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:search|jellyfin:cast|jellyfin:user-menu|jellyfin:profile|jellyfin:home|jellyfin:more';
    c.BuilderHeroHeight=num('BuilderHeroHeight',76);c.BuilderHeroTitleSize=num('BuilderHeroTitleSize',100);c.BuilderHeroButtonSize=num('BuilderHeroButtonSize',90);c.BuilderBackdropDarkness=num('BuilderBackdropDarkness',48);c.BuilderPetalDensity=num('BuilderPetalDensity',55);c.BuilderAnimationSpeed=num('BuilderAnimationSpeed',100);
    c.BuilderPerformanceMode=q('BuilderPerformanceMode').value||'Balanced';c.BuilderNavOrder=q('BuilderNavOrder').value||'Favourites|Anime|Not Safe';
    return ApiClient.updatePluginConfiguration(pluginId,c);
