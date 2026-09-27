@@ -8,6 +8,15 @@ namespace Jellyfin.Plugin.SakuraTea.Controllers;
 [Route("SakuraTea")]
 public sealed class SakuraTeaAssetsController : ControllerBase
 {
+    // Visual settings are readable by signed-in viewers, not just administrators.
+    [HttpGet("Settings")]
+    [Authorize]
+    public ActionResult GetSettings()
+    {
+        Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+        return Ok(SakuraTeaPlugin.Instance.Configuration);
+    }
+
     [HttpGet("{assetFileName}")]
     [AllowAnonymous]
     public ActionResult GetAsset(string assetFileName)

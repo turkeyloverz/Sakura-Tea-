@@ -1,18 +1,16 @@
 (() => {
     'use strict';
 
-    const CORE_VERSION = 3;
+    const CORE_VERSION = 5;
     if (window.SakuraTeaHeaderCore && Number(window.SakuraTeaHeaderCore.version || 0) >= CORE_VERSION) {
         return;
     }
 
     const DEFAULT_HEADER_ITEMS = Object.freeze([
         'sakura:flower',
-        'header:split',
         'jellyfin:favorites',
         'sakura:anime',
         'sakura:not-safe',
-        'header:split',
         'jellyfin:user-menu',
         'jellyfin:cast',
         'jellyfin:profile-avatar'
@@ -20,7 +18,6 @@
 
     const STATIC_CATALOG = Object.freeze([
         { id: 'sakura:flower', label: 'Sakura Flower', icon: '🌸', shape: 'flower' },
-        { id: 'header:split', label: 'Pill Split', icon: '↔', shape: 'split', repeatable: true },
         { id: 'space', label: 'Space', icon: '□', shape: 'space', repeatable: true },
         { id: 'separator', label: 'Separator', icon: '│', shape: 'separator', repeatable: true },
         { id: 'jellyfin:favorites', label: 'Favourites', icon: '♥', shape: 'text' },
@@ -72,7 +69,7 @@
         'Audio Player': 'jellyfin:audio-player'
     });
 
-    const REPEATABLE = new Set(['space', 'separator', 'header:split']);
+    const REPEATABLE = new Set(['space', 'separator']);
     const STORAGE_KEY = 'sakuraTeaHeaderCatalog';
 
     function normalizeItemId(value) {
@@ -87,7 +84,7 @@
 
         source.forEach((entry) => {
             const id = normalizeItemId(entry);
-            if (!id) {
+            if (!id || id === 'header:split') {
                 return;
             }
 
@@ -117,63 +114,24 @@
             result.unshift('sakura:flower');
         }
 
-        if (!result.includes('header:split')) {
-            const utilityIds = new Set([
-                'jellyfin:search',
-                'jellyfin:cast',
-                'jellyfin:syncplay',
-                'jellyfin:user-menu',
-                'jellyfin:profile-avatar',
-                'jellyfin:home',
-                'jellyfin:more',
-                'jellyfin:audio-player'
-            ]);
-            let splitIndex = result.findIndex((id) => utilityIds.has(id));
-            if (splitIndex < 0) {
-                splitIndex = result.length;
-            }
-            result.splice(splitIndex, 0, 'header:split');
-        }
-
         return result;
     }
 
+    // Preserve the helper contract for existing consumers while migrating split layouts.
     function splitOrder(value) {
         const order = normalizeOrder(value);
-        const splitIndex = order.indexOf('header:split');
-
-        if (splitIndex < 0) {
-            return { order, hasSplit: false, left: order.slice(), right: [] };
-        }
-
-        return {
-            order,
-            hasSplit: true,
-            left: order.slice(0, splitIndex),
-            right: order.slice(splitIndex + 1)
-        };
+        return { order, hasSplit: false, left: order.slice(), right: [] };
     }
 
     function groupOrder(value) {
         const order = normalizeOrder(value);
-        const groups = [[]];
-        const splitIndices = [];
-
-        order.forEach((id, index) => {
-            if (id === 'header:split') {
-                splitIndices.push(index);
-                groups.push([]);
-                return;
-            }
-
-            groups[groups.length - 1].push({ id, index });
-        });
-
+        const entries = order.map((id, index) => ({ id, index }));
         return {
             order,
-            hasSplit: splitIndices.length > 0,
-            groups,
-            splitIndices
+            hasSplit: false,
+            groups: [entries],
+            splitIndices: [],
+            pillGroups: entries.length ? [{ entries, groupIndex: 0, role: 'left' }] : []
         };
     }
 
@@ -182,7 +140,7 @@
         STATIC_CATALOG.forEach((item) => map.set(item.id, { ...item }));
 
         (Array.isArray(runtimeItems) ? runtimeItems : []).forEach((item) => {
-            if (!item || !item.id) {
+            if (!item || !item.id || normalizeItemId(item.id) === 'header:split') {
                 return;
             }
 

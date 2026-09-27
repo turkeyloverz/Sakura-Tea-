@@ -13,9 +13,12 @@
  --st-pink:#ff93b8;--st-pink2:#e981a5;--st-pinkSoft:#ffc5da;--st-lav:#bda7ff;
  --st-wallpaper:url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg");
  --st-logo:url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/pngwing.com.png");
+ background:var(--st-bg);color:var(--st-text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;
  padding:1em .8em 3em!important;box-sizing:border-box
 }
 #SakuraTeaConfigPage *{box-sizing:border-box}
+#SakuraTeaConfigPage button{font-family:inherit;color:inherit}
+#SakuraTeaConfigPage .st-chip{color:var(--st-text)}
 #SakuraTeaConfigPage .content-primary{width:100%!important;max-width:none!important;margin:0!important;padding-left:0!important;padding-right:0!important}
 #SakuraTeaConfigPage form{width:100%!important;max-width:none!important}
 #SakuraTeaConfigPage .st-shell{width:100%;max-width:none;margin:0}
@@ -56,14 +59,10 @@
  background:linear-gradient(rgba(10,6,12,.15),rgba(10,6,12,.32)),var(--st-wallpaper) center 42%/cover no-repeat
 }
 #SakuraTeaConfigPage .st-header-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,10,22,.13),rgba(20,10,22,.02) 70%,rgba(20,10,22,.18));pointer-events:none}
-#SakuraTeaConfigPage .st-preview-surface{position:absolute;z-index:3;left:28px;right:28px;top:26px;display:flex;align-items:center;justify-content:flex-start;gap:12px;min-width:0}
-#SakuraTeaConfigPage .st-header-preview.has-split .st-preview-surface{justify-content:flex-start}
-#SakuraTeaConfigPage .st-preview-item.is-final-split{margin-left:auto}
-#SakuraTeaConfigPage .st-header-preview:not(.has-split)[data-position="Center"] .st-preview-surface{justify-content:center}
-#SakuraTeaConfigPage .st-header-preview:not(.has-split)[data-position="Right"] .st-preview-surface{justify-content:flex-end}
-#SakuraTeaConfigPage .st-floatbar{width:max-content;max-width:calc(100% - 4px);min-width:0;height:var(--hp-h);border-radius:18px;background:linear-gradient(180deg,rgba(255,220,233,var(--hp-alpha)),rgba(207,129,163,.46)),rgba(55,35,48,.35);border:1px solid rgba(255,243,248,.33);backdrop-filter:blur(16px);display:flex;align-items:center;padding:5px 7px;gap:var(--hp-gap);box-shadow:inset 0 1px rgba(255,255,255,.28),0 8px 26px rgba(0,0,0,.28);overflow:hidden}
-#SakuraTeaConfigPage .st-header-preview.has-split .st-floatbar{max-width:min(62%,780px)}
-#SakuraTeaConfigPage .st-header-preview.has-split .st-floatbar:last-child{max-width:min(42%,520px)}
+#SakuraTeaConfigPage .st-preview-surface{position:absolute;z-index:3;left:28px;right:28px;top:26px;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:12px;min-width:0}
+#SakuraTeaConfigPage .st-header-preview[data-position="Center"] .st-preview-surface{justify-content:center}
+#SakuraTeaConfigPage .st-header-preview[data-position="Right"] .st-preview-surface{justify-content:flex-end}
+#SakuraTeaConfigPage .st-floatbar{width:max-content;max-width:calc(100% - 4px);min-width:0;height:var(--hp-h);border-radius:18px;background:linear-gradient(180deg,rgba(255,220,233,var(--hp-alpha)),rgba(207,129,163,.46)),rgba(55,35,48,.35);border:1px solid rgba(255,243,248,.33);backdrop-filter:blur(16px);display:flex;flex:0 0 auto;align-items:center;padding:5px 7px;gap:var(--hp-gap);box-shadow:inset 0 1px rgba(255,255,255,.28),0 8px 26px rgba(0,0,0,.28);overflow:hidden}
 #SakuraTeaConfigPage .st-preview-items{display:flex;align-items:center;gap:var(--hp-gap);flex:0 1 auto;min-width:0;overflow:hidden}
 #SakuraTeaConfigPage .st-preview-item{position:relative;display:inline-flex;align-items:center;flex:0 0 auto;touch-action:none;user-select:none;cursor:grab}
 #SakuraTeaConfigPage .st-preview-item.is-being-dragged{opacity:.28}
@@ -74,13 +73,13 @@
 #SakuraTeaConfigPage .st-preview-item.is-active .st-preview-chip{background:linear-gradient(180deg,#ffa4c4,#e986aa);color:#311723;font-weight:700}
 #SakuraTeaConfigPage .st-preview-chip.icon-only{width:var(--hp-b);padding:0;justify-content:center;font-size:var(--hp-i)}
 #SakuraTeaConfigPage .st-preview-chip :is(svg,img,.material-icons,.MuiSvgIcon-root){width:var(--hp-i)!important;height:var(--hp-i)!important;max-width:var(--hp-i)!important;max-height:var(--hp-i)!important;font-size:var(--hp-i)!important;line-height:var(--hp-i)!important;object-fit:contain}
-#SakuraTeaConfigPage .st-preview-chip.avatar-only{width:var(--hp-a);height:var(--hp-a);padding:0;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.08);box-shadow:0 0 0 1px rgba(255,255,255,.16)}
+#SakuraTeaConfigPage .st-preview-chip.avatar-only{width:var(--hp-a);height:var(--hp-a);padding:0;border-radius:50%;overflow:hidden;background:transparent;box-shadow:none}
 #SakuraTeaConfigPage .st-preview-chip.avatar-only :is(svg,img,.MuiAvatar-root,.headerUserButtonRound){width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;max-width:100%!important;max-height:100%!important;border-radius:50%!important;object-fit:cover!important}
 #SakuraTeaConfigPage .st-preview-chip.avatar-only :is(.MuiBadge-root){display:contents!important}
 #SakuraTeaConfigPage .st-preview-flower{width:calc(var(--hp-b) + 8px);height:calc(var(--hp-b) + 8px);flex:0 0 calc(var(--hp-b) + 8px);background:var(--st-logo) center/contain no-repeat;filter:drop-shadow(0 3px 8px rgba(73,24,48,.28))}
 #SakuraTeaConfigPage .st-preview-separator{width:1px;height:22px;background:rgba(255,255,255,.28);margin:0 3px}
 #SakuraTeaConfigPage .st-preview-space{width:var(--hp-b);height:1px;flex:0 0 var(--hp-b)}
-#SakuraTeaConfigPage .st-preview-split{height:28px;padding:0 9px;border-radius:999px;border:1px dashed rgba(255,211,229,.62);background:rgba(30,20,28,.58);color:#ffd4e3;font-size:.66em;display:flex;align-items:center;gap:5px;white-space:nowrap}
+#SakuraTeaConfigPage .st-preview-empty{display:flex;align-items:center;min-height:var(--hp-h);padding:0 12px;border:1px dashed rgba(255,211,229,.62);border-radius:16px;background:rgba(30,20,28,.58);color:#ffd4e3;font-size:.72em}
 #SakuraTeaConfigPage .st-overflow-toggle{display:grid;place-items:center;flex:0 0 var(--hp-b);width:var(--hp-b);height:var(--hp-b);padding:0;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:18px;cursor:pointer}
 #SakuraTeaConfigPage .st-overflow-toggle[hidden],#SakuraTeaConfigPage .st-overflow-drawer[hidden]{display:none!important}
 #SakuraTeaConfigPage .st-overflow-drawer{position:absolute;z-index:6;top:82px;left:28px;width:min(240px,calc(100% - 56px));max-height:72px;overflow:auto;padding:5px;border:1px solid rgba(255,240,247,.22);border-radius:11px;background:rgba(42,28,39,.94);backdrop-filter:blur(16px);box-shadow:0 10px 26px rgba(0,0,0,.32);display:flex;flex-direction:column;gap:3px}
@@ -89,8 +88,6 @@
 #SakuraTeaConfigPage .st-drag-ghost{position:fixed;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);opacity:.96;padding:5px 9px;border:1px solid rgba(255,147,184,.55);border-radius:9px;background:rgba(42,28,39,.94);box-shadow:0 10px 28px rgba(0,0,0,.4);color:#fff;font-size:12px}
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-preview{height:220px}
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-preview-surface{left:12px;right:12px;top:auto;bottom:16px;gap:7px}
-#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-preview.has-split .st-floatbar{max-width:calc(58% - 10px)}
-#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-header-preview.has-split .st-floatbar:last-child{max-width:calc(42% - 10px)}
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-preview-chip{padding:0 8px;font-size:.7em}
 
 #SakuraTeaConfigPage .st-navbuilder{padding-top:9px}
@@ -161,7 +158,7 @@
 
 #SakuraTeaConfigPage .st-footer{display:flex;justify-content:space-between;align-items:center;gap:1em;padding-top:2px}
 #SakuraTeaConfigPage .st-footer-right{display:flex;gap:8px}
-#SakuraTeaConfigPage .st-btn{min-width:0!important;width:auto!important;padding:.68em 1em!important;border-radius:8px!important}
+#SakuraTeaConfigPage .st-btn{background:var(--st-panel2);color:var(--st-text);border:1px solid var(--st-border);cursor:pointer;min-width:0!important;width:auto!important;padding:.68em 1em!important;border-radius:8px!important}
 #SakuraTeaConfigPage .st-save{background:linear-gradient(180deg,var(--st-pink),var(--st-pink2))!important;color:#23121a!important;font-weight:800}
 #SakuraTeaConfigPage .st-overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 #SakuraTeaConfigPage .st-overview-card{border:1px solid var(--st-border);border-radius:13px;background:rgba(255,255,255,.02);padding:1em}
@@ -185,6 +182,14 @@
  #SakuraTeaConfigPage .st-footer-right{display:grid;grid-template-columns:1fr 1fr;width:100%}
  #SakuraTeaConfigPage .st-footer>.st-btn{width:100%!important}
 }
+#SakuraTeaConfigPage .st-footer{position:sticky;bottom:12px;z-index:8;padding:12px 16px;border:1px solid var(--st-border);border-radius:14px;background:rgba(23,24,29,.97);box-shadow:0 8px 32px #0005;flex-wrap:wrap}
+#SakuraTeaConfigPage #SakuraTeaSaveStatus{font-size:.8em;color:var(--st-pinkSoft);flex:1}
+#SakuraTeaConfigPage .st-search{width:100%;padding:10px 12px;border:1px solid var(--st-border);border-radius:9px;background:var(--st-panel3);color:var(--st-text);margin:4px 0 8px}
+#SakuraTeaConfigPage .st-help{color:var(--st-muted);font-size:.8em;line-height:1.6}
+#SakuraTeaConfigPage :is(button,input,.st-preview-item):focus-visible{outline:2px solid var(--st-pink);outline-offset:3px}
+#SakuraTeaConfigPage button:disabled{opacity:.45;cursor:default}
+#SakuraTeaConfigPage .st-hero-preview{height:calc(var(--hero-h) * 2.5px)}
+#SakuraTeaConfigPage [hidden]{display:none!important}
 </style>
 
 <div data-role="content">
@@ -196,7 +201,7 @@
   <div class="st-title-flower" aria-hidden="true"></div>
   <div><h2>Sakura Tea</h2><p class="st-sub">Customize the look and feel of your Jellyfin experience.</p></div>
  </div>
- <div class="st-badge">0.1.0.15 preview recovery hotfix</div>
+ <div class="st-badge">Appearance studio</div>
 </div>
 
 <div class="st-toolbar">
@@ -230,7 +235,7 @@
   </div>
   <div class="st-overview-card">
    <h3>Builder status</h3>
-   <p style="opacity:.65;line-height:1.5;margin:.2em 0">Main Home header test: the flower, repeatable Pill Split controls, navigation actions and clean profile avatar all use the same saved modular layout as the live Home screen.</p>
+   <p style="opacity:.65;line-height:1.5;margin:.2em 0">Preview changes here, then save to apply them when you return Home. Settings apply to this server. Device buttons resize the preview; they do not create separate device settings.</p>
   </div>
  </div>
 </section>
@@ -251,9 +256,9 @@
      </div>
     </div>
     <div class="st-navbuilder">
-     <div class="st-navtop"><strong>Navigation Builder</strong><span>Drag available items directly into the preview bar. Drag preview items to reorder, or back here to remove.</span></div>
+     <div class="st-navtop"><strong>Navigation Builder</strong><span>Click an item to add it, or drag it into the preview. Focus a preview item and use Alt + ← / → to move it, or Delete to remove it.</span></div>
      <div class="st-poollabel">Available items</div>
-     <div id="SakuraTeaHeaderAvailable" class="st-chips"></div>
+     <label class="st-poollabel" for="SakuraTeaItemSearch">Find a control</label><input id="SakuraTeaItemSearch" type="search" placeholder="Search header controls…" class="st-search"><div id="SakuraTeaHeaderAvailable" class="st-chips"></div>
      <input id="BuilderHeaderItems" type="hidden">
     </div>
    </div>
@@ -273,17 +278,17 @@
 
  <div class="st-twocol">
   <section class="st-mini">
-   <div class="st-minititle">⚡ Performance</div><div class="st-minisub">Adjust effects for your device.</div>
+   <div class="st-minititle">⚡ Performance</div><div class="st-minisub">Choose an effects budget for this server.</div>
    <div id="SakuraTeaPerformance" class="st-presets">
     <button type="button" class="st-preset" data-value="Performance"><strong>Performance</strong><span>Minimal effects, best for low-end devices.</span></button>
-    <button type="button" class="st-preset" data-value="Balanced"><strong>Balanced</strong><span>Good balance of quality and performance.</span></button>
-    <button type="button" class="st-preset" data-value="Full Effects"><strong>Full Effects</strong><span>All animations and visual effects.</span></button>
+    <button type="button" class="st-preset" data-value="Balanced"><strong>Balanced</strong><span>Uses your chosen petal density.</span></button>
+    <button type="button" class="st-preset" data-value="Full Effects"><strong>Full Effects</strong><span>Sets petal density to 100%.</span></button>
    </div>
    <input id="BuilderPerformanceMode" type="hidden">
   </section>
   <section class="st-mini">
-   <div class="st-minititle">☰ Navigation Labels</div><div class="st-minisub">Drag to reorder your navigation labels.</div>
-   <div id="SakuraTeaNavSort" class="st-labelrow"></div>
+   <div class="st-minititle">Arrange your header</div><p class="st-help">Use the header preview above to arrange all navigation items. All controls share one floating bar. Add spaces or separators to organize items within it.</p>
+   <div id="SakuraTeaNavSort" class="st-labelrow" hidden></div>
    <input id="BuilderNavOrder" type="hidden">
   </section>
  </div>
@@ -318,19 +323,20 @@
     <div class="st-sliderrow"><span>Button size</span><input id="BuilderHeroButtonSize" type="range" min="70" max="115" step="1"><span id="BuilderHeroButtonSizeValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Backdrop darkness</span><input id="BuilderBackdropDarkness" type="range" min="15" max="80" step="1"><span id="BuilderBackdropDarknessValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Petal density</span><input id="BuilderPetalDensity" type="range" min="0" max="100" step="1"><span id="BuilderPetalDensityValue" class="st-val"></span></div>
-    <div class="st-sliderrow"><span>Animation speed</span><input id="BuilderAnimationSpeed" type="range" min="0" max="140" step="5"><span id="BuilderAnimationSpeedValue" class="st-val"></span></div>
+    <div class="st-sliderrow"><span>Petal animation speed</span><input id="BuilderAnimationSpeed" type="range" min="0" max="140" step="5"><span id="BuilderAnimationSpeedValue" class="st-val"></span></div>
    </div>
   </div>
  </section>
 
+</section>
  <div class="st-footer">
-  <button id="SakuraTeaBuilderReset" is="emby-button" type="button" class="raised st-btn"><span>↶ Reset to defaults</span></button>
+  <button id="SakuraTeaBuilderReset" is="emby-button" type="button" class="raised st-btn"><span>↶ Reset appearance</span></button>
+  <span id="SakuraTeaSaveStatus" role="status" aria-live="polite">Loading settings…</span>
   <div class="st-footer-right">
-   <button id="SakuraTeaPreviewOnly" is="emby-button" type="button" class="raised st-btn"><span>◉ Preview only</span></button>
-   <button is="emby-button" type="submit" class="raised st-btn st-save"><span>✓ Save changes</span></button>
+   <button id="SakuraTeaDiscard" is="emby-button" type="button" class="raised st-btn"><span>Discard changes</span></button>
+   <button id="SakuraTeaSave" is="emby-button" type="submit" class="raised st-btn st-save"><span>✓ Save changes</span></button>
   </div>
  </div>
-</section>
 
 </form>
 </div>
@@ -345,13 +351,37 @@
  function num(id,f){var v=parseInt(q(id).value,10);return isNaN(v)?f:v}
  function setVal(id,v){var e=q(id);if(e)e.value=v}
  function setText(id,v){var e=q(id);if(e)e.textContent=v}
+ var savedValues=null,loading=false,saving=false;
+ function snapshot(){return Array.from(form.querySelectorAll('input[id]')).filter(function(el){return el.id!=='SakuraTeaItemSearch'}).map(function(el){return {id:el.id,value:el.value,checked:el.checked}})}
+ function isDirty(){return savedValues!==null&&JSON.stringify(snapshot())!==JSON.stringify(savedValues)}
+ function refreshSaveState(message){
+  q('SakuraTeaSave').disabled=loading||saving||!isDirty();
+  q('SakuraTeaDiscard').disabled=loading||saving||!isDirty();
+  q('SakuraTeaSaveStatus').textContent=message||(loading?'Loading settings…':saving?'Saving…':isDirty()?'Unsaved changes · preview only':'All changes saved');
+ }
+ function restoreSaved(){if(!savedValues)return;savedValues.forEach(function(v){var el=q(v.id);el.value=v.value;el.checked=v.checked});renderHeaderBuilder();renderNavLabels();update();refreshSaveState('Changes discarded')}
+ form.addEventListener('input',function(){refreshSaveState()});
+ form.addEventListener('change',function(){refreshSaveState()});
+ page.querySelectorAll('.st-sliderrow').forEach(function(row){var input=row.querySelector('input');input.setAttribute('aria-label',row.querySelector('span').textContent)});
  function currentDevice(){var a=page.querySelector('.st-devices .st-pillbtn.is-active');return a?a.dataset.device:'desktop'}
- function syncDevice(){var d=currentDevice();page.querySelectorAll('.st-stage').forEach(function(s){s.dataset.device=d})}
+ function syncDevice(){var d=currentDevice();page.querySelectorAll('.st-stage').forEach(function(s){s.dataset.device=d});requestAnimationFrame(updateHeaderOverflow)}
 
  var HeaderCore=null;
  var headerCorePromise=null;
  var catalog=[];
- var REQUIRED_HEADER_CORE_VERSION=3;
+ var REQUIRED_HEADER_CORE_VERSION=5;
+ var DEFAULT_HEADER_ITEMS='sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar';
+ var FALLBACK_CATALOG=[
+  {id:'sakura:flower',label:'Sakura Flower',icon:'🌸',shape:'flower'},
+  {id:'space',label:'Space',icon:'□',shape:'space',repeatable:true},
+  {id:'separator',label:'Separator',icon:'│',shape:'separator',repeatable:true},
+  {id:'jellyfin:favorites',label:'Favourites',icon:'♥',shape:'text'},
+  {id:'sakura:anime',label:'Anime',icon:'▶',shape:'text'},
+  {id:'sakura:not-safe',label:'Not Safe',icon:'◈',shape:'text'},
+  {id:'jellyfin:user-menu',label:'User Menu',icon:'▦',shape:'icon'},
+  {id:'jellyfin:cast',label:'Cast',icon:'▣',shape:'icon'},
+  {id:'jellyfin:profile-avatar',label:'Profile Avatar',icon:'●',shape:'avatar'}
+ ];
 
  function headerCoreCompatible(core){
   return !!core &&
@@ -385,7 +415,7 @@
   headerCorePromise=new Promise(function(resolve,reject){
    var script=document.createElement('script');
    var url=headerCoreAssetUrl();
-   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=0.1.0.15';
+   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=5';
    script.async=true;
    script.dataset.sakuraTeaConfigCore='true';
    script.onload=function(){
@@ -408,13 +438,16 @@
   var core=syncHeaderCore();
   return core
    ? core.itemById(catalog,id)
-   : {id:id,label:id,icon:'•',shape:'text'};
+   : (catalog.find(function(item){return item.id===id})||{id:id,label:id,icon:'•',shape:'text'});
  }
 
  function refreshCatalog(){
   var core=syncHeaderCore();
   if(!core){
-   catalog=[];
+   catalog=FALLBACK_CATALOG.slice();
+   headerItems().forEach(function(id){
+    if(!catalog.some(function(item){return item.id===id}))catalog.push({id:id,label:id,icon:'•',shape:'text'});
+   });
    return;
   }
   var published=core.readPublishedCatalog();
@@ -428,15 +461,23 @@
    return;
   }
   target.replaceChildren();
+  if(item&&item.id==='jellyfin:profile-avatar'){
+   var source=document.querySelector('.headerUserButton .MuiAvatar-root img, .headerUserButtonRound img, .headerUserButton img');
+   if(source&&(source.currentSrc||source.src)){
+    var avatar=document.createElement('img');avatar.src=source.currentSrc||source.src;avatar.alt='';target.appendChild(avatar);
+   }
+  }
+  if(!target.childNodes.length){
   var fallback=document.createElement('span');fallback.textContent=(item&&item.icon)||'•';target.appendChild(fallback);
+  }
   if(withLabel&&item&&item.label){var label=document.createElement('span');label.textContent=item.label;target.appendChild(label)}
  }
 
  function headerItems(){
   var input=q('BuilderHeaderItems');
-  var source=input.value||'sakura:flower|header:split|jellyfin:favorites|sakura:anime|sakura:not-safe|header:split|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar';
+  var source=input.value;
   var core=syncHeaderCore();
-  var normalized=core?core.upgradeLegacyOrder(source):String(source).split('|').filter(Boolean);
+  var normalized=core?core.upgradeLegacyOrder(source):String(source).split('|').filter(function(id){return id&&id!=='header:split'&&id!=='Split'});
   var joined=normalized.join('|');
   if(input.value!==joined)input.value=joined;
   return normalized;
@@ -444,7 +485,7 @@
 
  function setHeaderItems(items){
   var core=syncHeaderCore();
-  var normalized=core?core.normalizeOrder(items):items.filter(Boolean);
+  var normalized=core?core.normalizeOrder(items):items.filter(function(id){return id&&id!=='header:split'&&id!=='Split'});
   q('BuilderHeaderItems').value=normalized.join('|');
  }
 
@@ -456,13 +497,14 @@
   var element=document.createElement('div');
   element.className='st-preview-item';
   element.draggable=true;
+  element.tabIndex=0;
+  element.setAttribute('aria-label',item.label+'. Alt and arrow keys to move; Delete to remove.');
   element.dataset.itemId=id;
   element.dataset.orderIndex=String(index);
 
   if(item.shape==='flower'){
    var flower=document.createElement('span');flower.className='st-preview-flower';element.appendChild(flower);
-  }else if(item.shape==='split'){
-   var split=document.createElement('span');split.className='st-preview-split';split.textContent='↔ Split';element.appendChild(split);
+
   }else if(item.shape==='space'){
    var space=document.createElement('span');space.className='st-preview-space';element.appendChild(space);
   }else if(item.shape==='separator'){
@@ -546,6 +588,8 @@
      items[i].classList.add('is-overflowed');
     }
    });
+   var preview=q('SakuraTeaHeaderPreview');
+   preview.style.height=Math.max(currentDevice()==='mobile'?220:168,surface.getBoundingClientRect().height+(currentDevice()==='mobile'?90:80))+'px';
   });
  }
 
@@ -558,16 +602,8 @@
  }
 
  function localGroupOrder(order){
-  var groups=[[]],splitIndices=[];
-  order.forEach(function(id,index){
-   if(id==='header:split'){
-    splitIndices.push(index);
-    groups.push([]);
-   }else{
-    groups[groups.length-1].push({id:id,index:index});
-   }
-  });
-  return {order:order,hasSplit:splitIndices.length>0,groups:groups,splitIndices:splitIndices};
+  var entries=order.map(function(id,index){return {id:id,index:index}});
+  return {pillGroups:entries.length?[{entries:entries,groupIndex:0,role:'left'}]:[]};
  }
 
  function renderHeaderPreview(){
@@ -580,23 +616,21 @@
    : localGroupOrder(order);
 
   surface.replaceChildren();
-  preview.classList.toggle('has-split',layout.hasSplit);
 
-  layout.groups.forEach(function(group,groupIndex){
-   if(group.length){
-    var role=groupIndex===layout.groups.length-1&&layout.groups.length>1?'right':'left';
-    surface.appendChild(createPreviewPill(group,role));
-   }
-
-   if(groupIndex<layout.splitIndices.length){
-    var split=createPreviewItem('header:split',layout.splitIndices[groupIndex]);
-    if(groupIndex===layout.splitIndices.length-1)split.classList.add('is-final-split');
-    surface.appendChild(split);
-   }
+  layout.pillGroups.forEach(function(group){
+   var pill=createPreviewPill(group.entries,group.role);
+   pill.dataset.groupIndex=String(group.groupIndex);
+   surface.appendChild(pill);
   });
+
+
+  if(!layout.pillGroups.length){
+   var empty=document.createElement('div');empty.className='st-preview-empty';empty.textContent='Drag an item here to build your header.';surface.appendChild(empty);
+  }
 
   updatePreviewActive();
   updateHeaderOverflow();
+  refreshSaveState();
  }
 
  function renderHeaderBuilder(){
@@ -606,12 +640,13 @@
   avail.replaceChildren();
 
   catalog.forEach(function(item){
-   var chip=document.createElement('div');
+   var chip=document.createElement('button');chip.type='button';
    chip.className='st-chip available';
    chip.draggable=true;
+   chip.hidden=Boolean(q('SakuraTeaItemSearch').value)&&item.label.toLowerCase().indexOf(q('SakuraTeaItemSearch').value.toLowerCase())<0;
    chip.dataset.itemId=item.id;
    chip.dataset.repeatable=item.repeatable?'true':'false';
-   if(!item.repeatable&&selectedIds.indexOf(item.id)>=0)chip.classList.add('is-selected');
+   if(!item.repeatable&&selectedIds.indexOf(item.id)>=0){chip.classList.add('is-selected');chip.disabled=true;chip.title='Already in your header'}
 
    var icon=document.createElement('span');icon.className='st-ic st-real-icon';setVisual(icon,item,false);
    var label=document.createElement('span');label.className='st-lbl';label.textContent=item.label;
@@ -627,9 +662,10 @@
 
   navLabels().forEach(function(label){
    var item=baseCatalog.find(function(x){return x.label===label||x.label.replace('Favourites','Favorites')===label})||{icon:'•'};
-   var chip=document.createElement('div');
+   var chip=document.createElement('button');chip.type='button';
    chip.className='st-labelchip'+(label==='Anime'?' is-active':'');
-   chip.draggable=true;chip.dataset.label=label;chip.textContent=(item.icon||'•')+' '+label;
+   chip.draggable=true;
+   chip.hidden=Boolean(q('SakuraTeaItemSearch').value)&&item.label.toLowerCase().indexOf(q('SakuraTeaItemSearch').value.toLowerCase())<0;chip.dataset.label=label;chip.textContent=(item.icon||'•')+' '+label;
    host.appendChild(chip);
   });
 
@@ -643,14 +679,14 @@
   setText('BuilderHeaderHeightValue',hh+'px');setText('BuilderHeaderButtonSizeValue',bs+'px');setText('BuilderHeaderIconSizeValue',is+'px');setText('BuilderHeaderAvatarSizeValue',as+'px');setText('BuilderHeaderSpacingValue',sp+'px');setText('BuilderHeaderOpacityValue',op+'%');
   page.querySelectorAll('#BuilderHeaderPositionControl button').forEach(function(b){b.classList.toggle('is-active',b.dataset.value===q('BuilderHeaderPosition').value)});
   var h=num('BuilderHeroHeight',76),ts=num('BuilderHeroTitleSize',100),hb=num('BuilderHeroButtonSize',90),dark=num('BuilderBackdropDarkness',48),pet=num('BuilderPetalDensity',55),anim=num('BuilderAnimationSpeed',100);
-  var mode=q('BuilderPerformanceMode').value||'Balanced',visualPet=pet;if(mode==='Performance')visualPet=Math.min(pet,28);if(mode==='Full Effects')visualPet=Math.max(pet,68);
+  var mode=q('BuilderPerformanceMode').value||'Balanced',visualPet=pet;if(mode==='Performance')visualPet=Math.min(pet,28);
   hero.style.setProperty('--hero-h',h);hero.style.setProperty('--hero-title',(ts/100).toFixed(2));hero.style.setProperty('--hero-btn',(hb/100).toFixed(2));hero.style.setProperty('--hero-dark',(dark/100).toFixed(2));hero.style.setProperty('--hero-petals',(visualPet/100).toFixed(2));
   setText('BuilderHeroHeightValue',h+'%');setText('BuilderHeroTitleSizeValue',ts+'%');setText('BuilderHeroButtonSizeValue',hb+'%');setText('BuilderBackdropDarknessValue',dark+'%');setText('BuilderPetalDensityValue',pet+'%');setText('BuilderAnimationSpeedValue',anim+'%');
   page.querySelectorAll('#SakuraTeaPerformance .st-preset').forEach(function(b){b.classList.toggle('is-active',b.dataset.value===mode)});
   syncDevice();renderHeaderPreview();
  }
  function resetHeader(){
-  setVal('BuilderHeaderHeight',44);setVal('BuilderHeaderButtonSize',34);setVal('BuilderHeaderIconSize',17);setVal('BuilderHeaderAvatarSize',30);setVal('BuilderHeaderSpacing',7);setVal('BuilderHeaderOpacity',68);setVal('BuilderHeaderPosition','Left');setVal('BuilderHeaderItems','sakura:flower|header:split|jellyfin:favorites|sakura:anime|sakura:not-safe|header:split|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar');renderHeaderBuilder();update();
+  setVal('BuilderHeaderHeight',44);setVal('BuilderHeaderButtonSize',34);setVal('BuilderHeaderIconSize',17);setVal('BuilderHeaderAvatarSize',30);setVal('BuilderHeaderSpacing',7);setVal('BuilderHeaderOpacity',68);setVal('BuilderHeaderPosition','Left');setVal('BuilderHeaderItems','sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar');renderHeaderBuilder();update();
  }
  function resetHero(){
   setVal('BuilderHeroHeight',76);setVal('BuilderHeroTitleSize',100);setVal('BuilderHeroButtonSize',90);setVal('BuilderBackdropDarkness',48);setVal('BuilderPetalDensity',55);setVal('BuilderAnimationSpeed',100);update();
@@ -658,36 +694,49 @@
  function resetAll(){resetHeader();resetHero();setVal('BuilderPerformanceMode','Balanced');setVal('BuilderNavOrder','Favourites|Anime|Not Safe');renderNavLabels();update()}
 
  function load(){
+  if(loading||saving||isDirty())return;
+  loading=true;refreshSaveState();form.inert=true;
+  refreshCatalog();renderHeaderBuilder();renderHeaderPreview();
   Dashboard.showLoadingMsg();
-  ensureHeaderCore().then(function(){
+  ensureHeaderCore().catch(function(){return null}).then(function(){
    return ApiClient.getPluginConfiguration(pluginId);
   }).then(function(c){
    q('ThemeEnabled').checked=c.ThemeEnabled!==false;q('HeroEnabled').checked=c.HeroEnabled!==false;q('PetalsEnabled').checked=c.PetalsEnabled!==false;
    q('AnimeLibraryName').value=c.AnimeLibraryName||'Anime';q('HeroSlides').value=c.HeroSlides||10;q('HeroRotationSeconds').value=c.HeroRotationSeconds||9;
    setVal('BuilderHeaderHeight',c.BuilderHeaderHeight||44);setVal('BuilderHeaderButtonSize',c.BuilderHeaderButtonSize||34);setVal('BuilderHeaderIconSize',c.BuilderHeaderIconSize||17);setVal('BuilderHeaderAvatarSize',c.BuilderHeaderAvatarSize||30);setVal('BuilderHeaderSpacing',typeof c.BuilderHeaderSpacing==='number'?c.BuilderHeaderSpacing:7);setVal('BuilderHeaderOpacity',c.BuilderHeaderOpacity||68);setVal('BuilderHeaderPosition',c.BuilderHeaderPosition||'Left');
-   setVal('BuilderHeaderItems',c.BuilderHeaderItems||'sakura:flower|header:split|jellyfin:favorites|sakura:anime|sakura:not-safe|header:split|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar');
+   setVal('BuilderHeaderItems',typeof c.BuilderHeaderItems==='string'?c.BuilderHeaderItems:'sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar');
    setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);
    setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
-   refreshCatalog();renderHeaderBuilder();renderNavLabels();update();Dashboard.hideLoadingMsg();
+   refreshCatalog();renderHeaderBuilder();renderNavLabels();update();savedValues=snapshot();
   }).catch(function(error){
    console.error('[Sakura Tea] Could not initialize configuration page.',error);
    Dashboard.hideLoadingMsg();
-   if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Sakura Tea could not load the header builder core. Reload the page after restarting Jellyfin.');
-  });
+   if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Sakura Tea could not load its configuration. Reload the page and try again.');
+  }).finally(function(){loading=false;form.inert=false;Dashboard.hideLoadingMsg();refreshSaveState(savedValues?undefined:'Could not load settings. Reopen this page to retry.')});
  }
 
  page.querySelectorAll('.st-tabs .st-pillbtn').forEach(function(b){b.addEventListener('click',function(){var name=b.dataset.panel;page.querySelectorAll('.st-tabs .st-pillbtn').forEach(function(x){x.classList.toggle('is-active',x===b)});page.querySelectorAll('.st-panel').forEach(function(p){p.hidden=p.dataset.panel!==name});q('SakuraTeaDeviceSwitcher').style.display=name==='builder'?'flex':'none'})});
  page.querySelectorAll('.st-devices .st-pillbtn').forEach(function(b){b.addEventListener('click',function(){page.querySelectorAll('.st-devices .st-pillbtn').forEach(function(x){x.classList.toggle('is-active',x===b)});syncDevice()})});
  ['BuilderHeaderHeight','BuilderHeaderButtonSize','BuilderHeaderIconSize','BuilderHeaderAvatarSize','BuilderHeaderSpacing','BuilderHeaderOpacity','BuilderHeroHeight','BuilderHeroTitleSize','BuilderHeroButtonSize','BuilderBackdropDarkness','BuilderPetalDensity','BuilderAnimationSpeed'].forEach(function(id){q(id).addEventListener('input',update)});
  q('BuilderHeaderPositionControl').addEventListener('click',function(e){var b=e.target.closest('button[data-value]');if(!b)return;q('BuilderHeaderPosition').value=b.dataset.value;update()});
- q('SakuraTeaPerformance').addEventListener('click',function(e){var b=e.target.closest('.st-preset[data-value]');if(!b)return;q('BuilderPerformanceMode').value=b.dataset.value;update()});
+ q('SakuraTeaPerformance').addEventListener('click',function(e){var b=e.target.closest('.st-preset[data-value]');if(!b)return;q('BuilderPerformanceMode').value=b.dataset.value;if(b.dataset.value==='Full Effects')setVal('BuilderPetalDensity',100);update()});
  q('SakuraTeaResetHeader').addEventListener('click',resetHeader);q('SakuraTeaResetHero').addEventListener('click',resetHero);q('SakuraTeaBuilderReset').addEventListener('click',resetAll);
- q('SakuraTeaPreviewOnly').addEventListener('click',function(){update();if(window.Dashboard&&Dashboard.alert)Dashboard.alert('Preview updated. No live Home settings were changed.')});
+ q('SakuraTeaDiscard').addEventListener('click',restoreSaved);
+ q('SakuraTeaItemSearch').addEventListener('input',renderHeaderBuilder);
 
  var dragState=null;
  var pointerState=null;
  var dragGhost=null;
  var previewSurface=q('SakuraTeaHeaderPreviewSurface');
+ previewSurface.addEventListener('keydown',function(e){
+  var item=e.target.closest('.st-preview-item');if(!item)return;
+  var index=Number(item.dataset.orderIndex),order=headerItems(),next=index;
+  if(e.key==='Delete'||e.key==='Backspace'){order.splice(index,1);next=Math.min(index,order.length-1)}
+  else if(e.altKey&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){next=Math.max(0,Math.min(order.length-1,index+(e.key==='ArrowLeft'?-1:1)));var moved=order.splice(index,1)[0];order.splice(next,0,moved)}
+  else return;
+  e.preventDefault();setHeaderItems(order);renderHeaderBuilder();renderHeaderPreview();
+  var focus=previewSurface.querySelector('[data-order-index="'+next+'"]');if(focus)focus.focus();
+ });
  var palette=q('SakuraTeaHeaderAvailable');
 
  function moveGhost(x,y){
@@ -707,16 +756,24 @@
   previewSurface.querySelectorAll('.is-drop-before').forEach(function(el){el.classList.remove('is-drop-before')});
  }
 
- function calculateDropIndex(clientX){
-  var items=Array.from(previewSurface.querySelectorAll('.st-preview-item')).sort(function(a,b){
-   return parseInt(a.dataset.orderIndex,10)-parseInt(b.dataset.orderIndex,10);
-  });
+ function calculateDropIndex(clientX,clientY){
 
-  for(var i=0;i<items.length;i++){
-   var rect=items[i].getBoundingClientRect();
-   if(clientX<rect.left+rect.width/2)return parseInt(items[i].dataset.orderIndex,10);
+  var rows=[];
+  previewSurface.querySelectorAll('.st-preview-item:not(.is-overflowed)').forEach(function(item){
+   var rect=item.getBoundingClientRect();
+   if(!rect.width||!rect.height)return;
+   var row=rows.find(function(candidate){return Math.abs(candidate.top-rect.top)<8});
+   if(!row){row={top:rect.top,center:rect.top+rect.height/2,items:[]};rows.push(row)}
+   row.items.push({element:item,rect:rect});
+  });
+  if(!rows.length)return headerItems().length;
+  var row=rows.reduce(function(best,candidate){return Math.abs(candidate.center-clientY)<Math.abs(best.center-clientY)?candidate:best});
+  row.items.sort(function(a,b){return a.rect.left-b.rect.left});
+  for(var i=0;i<row.items.length;i++){
+   var entry=row.items[i];
+   if(clientX<entry.rect.left+entry.rect.width/2)return parseInt(entry.element.dataset.orderIndex,10);
   }
-  return headerItems().length;
+  return parseInt(row.items[row.items.length-1].element.dataset.orderIndex,10)+1;
  }
 
  function showDropMarker(index){
@@ -774,9 +831,9 @@
   renderHeaderPreview();
  }
 
- function commitPreviewDrop(clientX){
+ function commitPreviewDrop(clientX,clientY){
   if(!dragState)return;
-  var index=calculateDropIndex(clientX);
+  var index=calculateDropIndex(clientX,clientY);
   setHeaderItems(buildDroppedOrder(index));
   dragState.dropped=true;
   finishHeaderDrag(true);
@@ -813,11 +870,11 @@
  previewSurface.addEventListener('dragover',function(e){
   if(!dragState)return;
   e.preventDefault();moveGhost(e.clientX,e.clientY);
-  showDropMarker(calculateDropIndex(e.clientX));
+  showDropMarker(calculateDropIndex(e.clientX,e.clientY));
  });
  previewSurface.addEventListener('drop',function(e){
   if(!dragState)return;
-  e.preventDefault();commitPreviewDrop(e.clientX);
+  e.preventDefault();commitPreviewDrop(e.clientX,e.clientY);
  });
 
  palette.addEventListener('dragover',function(e){
@@ -874,7 +931,7 @@
 
   if(target&&previewSurface.contains(target)){
    palette.classList.remove('is-drop-target');
-   showDropMarker(calculateDropIndex(e.clientX));
+   showDropMarker(calculateDropIndex(e.clientX,e.clientY));
    if(dragState.source)dragState.source.classList.remove('is-removing');
   }else if(target&&palette.contains(target)){
    clearDropMarkers();palette.classList.add('is-drop-target');
@@ -894,7 +951,7 @@
 
   var target=document.elementFromPoint(e.clientX,e.clientY);
   if(cancelled){finishHeaderDrag(false);return}
-  if(target&&previewSurface.contains(target))commitPreviewDrop(e.clientX);
+  if(target&&previewSurface.contains(target))commitPreviewDrop(e.clientX,e.clientY);
   else if(target&&palette.contains(target)&&dragState&&dragState.fromPreview)removePreviewItem();
   else finishHeaderDrag(false);
   e.preventDefault();
@@ -951,19 +1008,28 @@
   dragGhost=null;dragState=null;pointerState=null;
  }
  window.addEventListener('sakura-tea:header-catalog-changed',handleHeaderCatalogChanged);
- page.addEventListener('pagehide',cleanupBuilder,{once:true});
- page.addEventListener('pageshow',load);
+ page.addEventListener('pagehide',cleanupBuilder);
+ page.addEventListener('pageshow',function(){window.addEventListener('sakura-tea:header-catalog-changed',handleHeaderCatalogChanged);if(previewResizeObserver)previewResizeObserver.disconnect();startPreviewObserver();load()});
+ refreshCatalog();renderHeaderBuilder();renderHeaderPreview();
  form.addEventListener('submit',function(e){
-  e.preventDefault();Dashboard.showLoadingMsg();setHeaderItems(headerItems());saveNavLabelsFromDom();
+  e.preventDefault();if(loading||saving||!savedValues||!form.reportValidity())return;setHeaderItems(headerItems());saving=true;form.inert=true;refreshSaveState();Dashboard.showLoadingMsg();
   ApiClient.getPluginConfiguration(pluginId).then(function(c){
    c.ThemeEnabled=q('ThemeEnabled').checked;c.HeroEnabled=q('HeroEnabled').checked;c.PetalsEnabled=q('PetalsEnabled').checked;c.AnimeLibraryName=q('AnimeLibraryName').value.trim()||'Anime';c.HeroSlides=num('HeroSlides',10);c.HeroRotationSeconds=num('HeroRotationSeconds',9);
-   c.BuilderHeaderHeight=num('BuilderHeaderHeight',44);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',34);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',17);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',30);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',7);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',68);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';c.BuilderHeaderItems=q('BuilderHeaderItems').value||'sakura:flower|header:split|jellyfin:favorites|sakura:anime|sakura:not-safe|header:split|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar';
+   c.BuilderHeaderHeight=num('BuilderHeaderHeight',44);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',34);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',17);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',30);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',7);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',68);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';c.BuilderHeaderItems=q('BuilderHeaderItems').value;
    c.BuilderHeroHeight=num('BuilderHeroHeight',76);c.BuilderHeroTitleSize=num('BuilderHeroTitleSize',100);c.BuilderHeroButtonSize=num('BuilderHeroButtonSize',90);c.BuilderBackdropDarkness=num('BuilderBackdropDarkness',48);c.BuilderPetalDensity=num('BuilderPetalDensity',55);c.BuilderAnimationSpeed=num('BuilderAnimationSpeed',100);
    c.BuilderPerformanceMode=q('BuilderPerformanceMode').value||'Balanced';c.BuilderNavOrder=q('BuilderNavOrder').value||'Favourites|Anime|Not Safe';
    return ApiClient.updatePluginConfiguration(pluginId,c);
-  }).then(Dashboard.processPluginConfigurationUpdateResult);
+  }).then(function(result){
+   savedValues=snapshot();Dashboard.processPluginConfigurationUpdateResult(result);
+   window.dispatchEvent(new CustomEvent('sakura-tea:settings-changed'));
+   refreshSaveState('Saved · your Home screen will use these settings');
+  }).catch(function(error){
+   console.error('[Sakura Tea] Save failed.',error);
+   refreshSaveState('Could not save. Your changes are still here; try again.');
+  }).finally(function(){saving=false;form.inert=false;Dashboard.hideLoadingMsg();q('SakuraTeaSave').disabled=!isDirty();q('SakuraTeaDiscard').disabled=!isDirty()});
   return false;
  });
+ load();
 })();
 </script>
 </div>

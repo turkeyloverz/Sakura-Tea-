@@ -2,8 +2,8 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    height: 76vh;
-    min-height: 610px;
+    height: var(--sakura-hero-height, 76vh);
+    min-height: 440px;
     max-height: 920px;
     overflow: hidden;
     isolation: isolate;
@@ -33,6 +33,7 @@
     z-index: 2;
     pointer-events: none;
     background:
+        linear-gradient(rgba(0,0,0,var(--sakura-backdrop-darkness,.48)), rgba(0,0,0,var(--sakura-backdrop-darkness,.48))),
         linear-gradient(90deg,
             rgba(7,5,11,.92) 0%,
             rgba(7,5,11,.72) 20%,
@@ -68,7 +69,7 @@
 #sakuraTeaHero .sakuraTeaHeroLogo {
     display: block;
     max-width: min(430px, 42vw);
-    max-height: 145px;
+    max-height: calc(145px * var(--sakura-title-scale, 1));
     width: auto;
     height: auto;
     object-fit: contain;
@@ -81,7 +82,7 @@
     margin: 0;
     max-width: 590px;
     color: #fff;
-    font-size: clamp(44px, 5.1vw, 74px);
+    font-size: calc(clamp(44px, 5.1vw, 74px) * var(--sakura-title-scale, 1));
     font-weight: 800;
     line-height: .96;
     letter-spacing: -.04em;
@@ -131,7 +132,7 @@
 
 #sakuraTeaHero .sakuraTeaHeroButton {
     min-width: 0;
-    height: 45px;
+    height: max(36px, calc(50px * var(--sakura-button-scale, .9)));
     padding: 0 21px;
     border: 0;
     border-radius: 999px;
@@ -140,7 +141,7 @@
     justify-content: center;
     gap: 9px;
     font: inherit;
-    font-size: 15px;
+    font-size: calc(16.67px * var(--sakura-button-scale, .9));
     font-weight: 650;
     cursor: pointer;
     transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
@@ -166,8 +167,8 @@
 
 @media (max-width: 800px) {
     #sakuraTeaHero {
-        height: 68vh;
-        min-height: 560px;
+        height: var(--sakura-hero-height, 68vh);
+        min-height: 440px;
     }
 
     #sakuraTeaHero .sakuraTeaHeroContent {
@@ -180,11 +181,11 @@
 
     #sakuraTeaHero .sakuraTeaHeroLogo {
         max-width: 72vw;
-        max-height: 110px;
+        max-height: calc(110px * var(--sakura-title-scale, 1));
     }
 
     #sakuraTeaHero .sakuraTeaHeroTitle {
-        font-size: clamp(38px, 9vw, 58px);
+        font-size: calc(clamp(38px, 9vw, 58px) * var(--sakura-title-scale, 1));
     }
 
     #sakuraTeaHero .sakuraTeaHeroDescription {

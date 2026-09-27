@@ -14,6 +14,8 @@
         divider: null,
         decor: null,
         host: null,
+        pendingHost: null,
+        renderGeneration: 0,
         items: [],
         index: 0,
         rotateTimer: 0,
@@ -32,6 +34,11 @@
         if (match) {
             const tab = new URLSearchParams(match[1] || '').get('tab');
             return !tab || tab === '0';
+        }
+
+        // A non-home SPA hash takes precedence over the server's root path.
+        if (window.location.hash && window.location.hash !== '#') {
+            return false;
         }
 
         const path = window.location.pathname || '/';
@@ -53,43 +60,64 @@
 
     function setHomeClass() {
         ROOT.classList.add('sakura-tea-runtime');
-        ROOT.classList.toggle('sakura-tea-home', isHomeRoute());
+        ROOT.classList.toggle('sakura-tea-home', isHomeRoute() && Boolean(STATE.config && STATE.config.ThemeEnabled));
     }
 
     async function loadConfig() {
         const client = window.ApiClient;
-        if (!client || typeof client.getPluginConfiguration !== 'function') {
-            return {
-                ThemeEnabled: true,
-                HeroEnabled: true,
-                PetalsEnabled: true,
-                AnimeLibraryName: 'Anime',
-                HeroSlides: 10,
-                HeroRotationSeconds: 9
-            };
-        }
+        // The public visual-settings endpoint works for non-admin viewers too.
+        const config = typeof client.ajax === 'function'
+            ? await client.ajax({ type: 'GET', url: client.getUrl('SakuraTea/Settings'), dataType: 'json' })
+            : await client.getPluginConfiguration(PLUGIN_ID);
+        return Object.fromEntries(Object.entries(config || {}).map(([key, value]) => [key.charAt(0).toUpperCase() + key.slice(1), value]));
+    }
 
-        try {
-            const config = await client.getPluginConfiguration(PLUGIN_ID);
-            return Object.assign({
-                ThemeEnabled: true,
-                HeroEnabled: true,
-                PetalsEnabled: true,
-                AnimeLibraryName: 'Anime',
-                HeroSlides: 10,
-                HeroRotationSeconds: 9
-            }, config || {});
-        } catch (error) {
-            console.warn('[Sakura Tea] Could not load plugin configuration.', error);
-            return {
-                ThemeEnabled: true,
-                HeroEnabled: true,
-                PetalsEnabled: true,
-                AnimeLibraryName: 'Anime',
-                HeroSlides: 10,
-                HeroRotationSeconds: 9
-            };
-        }
+    function bounded(value, minimum, maximum, fallback) {
+        const number = Number(value);
+        return value == null || !Number.isFinite(number) ? fallback : Math.max(minimum, Math.min(maximum, number));
+    }
+
+    function applyVisualSettings(config) {
+        const styles = {
+            'sakura-tea-theme.css': config.ThemeEnabled,
+            'sakura-tea-hero.css': config.HeroEnabled,
+            'sakura-tea-petals.css': config.PetalsEnabled
+        };
+        document.querySelectorAll('link[data-sakura-tea-asset]').forEach((link) => {
+            const name = link.getAttribute('data-sakura-tea-asset');
+            if (name in styles) link.disabled = styles[name] === false;
+        });
+        setHomeClass();
+    }
+
+    function applyHeroSettings(hero, config) {
+        const values = {
+            '--sakura-hero-height': bounded(config.BuilderHeroHeight, 60, 90, 76) + 'vh',
+            '--sakura-title-scale': bounded(config.BuilderHeroTitleSize, 70, 125, 100) / 100,
+            '--sakura-button-scale': bounded(config.BuilderHeroButtonSize, 70, 115, 90) / 100,
+            '--sakura-backdrop-darkness': bounded(config.BuilderBackdropDarkness, 15, 80, 48) / 100
+        };
+        Object.entries(values).forEach(([name, value]) => hero.style.setProperty(name, value));
+    }
+
+    function applyEffectSettings(element, config) {
+        let density = bounded(config.BuilderPetalDensity, 0, 100, 55);
+        if (config.BuilderPerformanceMode === 'Performance') density = Math.min(density, 28);
+        const speed = bounded(config.BuilderAnimationSpeed, 0, 140, 100);
+        const particles = element.querySelectorAll('span');
+        const count = Math.round(particles.length * density / 100);
+        particles.forEach((particle, index) => {
+            particle.hidden = index >= count;
+            const duration = parseFloat(particle.style.getPropertyValue('--t')) || 7;
+            particle.style.animationDuration = (duration * 100 / (speed || 100)) + 's';
+            particle.style.animationPlayState = !speed || document.hidden ? 'paused' : 'running';
+        });
+    }
+
+    function refreshSettings() {
+        STATE.generation += 1;
+        removeMount();
+        scheduleReconcile();
     }
 
     async function loadAnimeItems(config) {
@@ -332,6 +360,7 @@
             return;
         }
 
+        const renderGeneration = ++STATE.renderGeneration;
         hero.dataset.switching = 'true';
 
         const backdrop = hero.querySelector('.sakuraTeaHeroBackdrop');
@@ -347,7 +376,7 @@
 
         const preloader = new Image();
         preloader.onload = () => {
-            if (STATE.hero !== hero) {
+            if (STATE.hero !== hero || renderGeneration !== STATE.renderGeneration) {
                 return;
             }
 
@@ -390,12 +419,16 @@
             actionAttributes(info, item, 'link');
 
             requestAnimationFrame(() => {
-                hero.dataset.switching = 'false';
+                if (STATE.hero === hero && renderGeneration === STATE.renderGeneration) {
+                    hero.dataset.switching = 'false';
+                }
             });
         };
 
         preloader.onerror = () => {
-            hero.dataset.switching = 'false';
+            if (STATE.hero === hero && renderGeneration === STATE.renderGeneration) {
+                hero.dataset.switching = 'false';
+            }
         };
 
         preloader.src = nextBackdrop;
@@ -425,11 +458,11 @@
     function startRotation() {
         stopRotation();
 
-        if (STATE.items.length <= 1) {
+        if (document.hidden || !STATE.hero || STATE.items.length <= 1) {
             return;
         }
 
-        const seconds = Math.max(4, Number((STATE.config && STATE.config.HeroRotationSeconds) || 9));
+        const seconds = bounded(STATE.config && STATE.config.HeroRotationSeconds, 3, 60, 9);
         STATE.rotateTimer = window.setInterval(() => {
             STATE.index = (STATE.index + 1) % STATE.items.length;
             renderItem(STATE.items[STATE.index]);
@@ -438,6 +471,8 @@
 
     function removeMount() {
         stopRotation();
+        STATE.pendingHost = null;
+        STATE.renderGeneration += 1;
 
         if (STATE.hero) {
             STATE.hero.remove();
@@ -466,6 +501,24 @@
 
     async function mount(host) {
         const generation = ++STATE.generation;
+        STATE.pendingHost = host;
+        try {
+            await mountExperience(host, generation);
+        } catch (error) {
+            if (generation === STATE.generation) {
+                removeMount();
+                STATE.config = null;
+                setHomeClass();
+            }
+            console.warn('[Sakura Tea] Could not mount home experience.', error);
+        } finally {
+            if (generation === STATE.generation) {
+                STATE.pendingHost = null;
+            }
+        }
+    }
+
+    async function mountExperience(host, generation) {
         const config = await loadConfig();
 
         if (generation !== STATE.generation || !isHomeRoute() || !isVisible(host)) {
@@ -473,12 +526,14 @@
         }
 
         STATE.config = config;
+        applyVisualSettings(config);
 
         if (config.ThemeEnabled && window.SakuraTeaHeaderRuntime) {
             window.SakuraTeaHeaderRuntime.mount(config);
         }
 
         if (!config.HeroEnabled && !config.PetalsEnabled) {
+            STATE.host = host;
             return;
         }
 
@@ -490,6 +545,7 @@
 
         if (config.HeroEnabled && items.length) {
             STATE.hero = createHero();
+            applyHeroSettings(STATE.hero, config);
             host.parentNode.insertBefore(STATE.hero, host);
             STATE.items = items;
             STATE.index = 0;
@@ -502,9 +558,11 @@
 
         if (config.PetalsEnabled) {
             STATE.divider = createDivider();
+            applyEffectSettings(STATE.divider, config);
             host.parentNode.insertBefore(STATE.divider, host);
 
             STATE.decor = createHomeDecor();
+            applyEffectSettings(STATE.decor, config);
             host.insertBefore(STATE.decor, host.firstChild);
         }
 
@@ -524,10 +582,20 @@
         const host = findHost();
 
         if (!host) {
+            STATE.generation += 1;
+            removeMount();
             return;
         }
 
-        if (STATE.host === host && ((STATE.hero && STATE.hero.isConnected) || (STATE.divider && STATE.divider.isConnected))) {
+        // Keep one in-flight mount per host while API requests are pending.
+        if (STATE.pendingHost === host) {
+            return;
+        }
+
+        if (STATE.host === host
+            && (!STATE.hero || STATE.hero.isConnected)
+            && (!STATE.divider || STATE.divider.isConnected)
+            && (!STATE.decor || STATE.decor.isConnected)) {
             if (window.SakuraTeaHeaderRuntime) {
                 window.SakuraTeaHeaderRuntime.sync();
             }
@@ -540,11 +608,6 @@
     }
 
     function scheduleReconcile() {
-        setHomeClass();
-        if (window.SakuraTeaHeaderRuntime) {
-            window.SakuraTeaHeaderRuntime.sync();
-        }
-
         if (STATE.reconcileTimer) {
             return;
         }
@@ -558,10 +621,20 @@
     setHomeClass();
     scheduleReconcile();
 
+    window.addEventListener('sakura-tea:settings-changed', refreshSettings);
     window.addEventListener('hashchange', scheduleReconcile);
     window.addEventListener('popstate', scheduleReconcile);
     window.addEventListener('pageshow', scheduleReconcile);
     document.addEventListener('viewshow', scheduleReconcile);
+    document.addEventListener('visibilitychange', () => {
+        [STATE.divider, STATE.decor].filter(Boolean).forEach((element) => applyEffectSettings(element, STATE.config || {}));
+        if (document.hidden) {
+            stopRotation();
+        } else {
+            startRotation();
+            scheduleReconcile();
+        }
+    });
 
     new MutationObserver(scheduleReconcile).observe(document.documentElement, {
         childList: true,

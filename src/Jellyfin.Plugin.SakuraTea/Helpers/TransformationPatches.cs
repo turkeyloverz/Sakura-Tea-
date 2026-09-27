@@ -35,11 +35,12 @@ public static class TransformationPatches
 
         foreach (FrontendAssets.Asset asset in FrontendAssets.Ordered)
         {
-            if (!ShouldInject(asset, config)) continue;
+            // Include disabled styles too; the runtime can enable them after a save.
+            string disabled = ShouldInject(asset, config) ? string.Empty : " disabled";
 
             string url = $"../SakuraTea/{asset.FileName}{cacheQuery}";
             string element = asset.IsStyle
-                ? $"<link rel=\"stylesheet\" href=\"{url}\" data-sakura-tea-asset=\"{asset.FileName}\" />"
+                ? $"<link rel=\"stylesheet\" href=\"{url}\" data-sakura-tea-asset=\"{asset.FileName}\"{disabled} />"
                 : $"<script defer src=\"{url}\" data-sakura-tea-asset=\"{asset.FileName}\"></script>";
 
             string closingTag = asset.IsStyle ? "</head>" : "</body>";

@@ -88,34 +88,22 @@
     }
 
     function sourceAvatar(source) {
-        const candidate =
-            source.querySelector('.MuiAvatar-root img') ||
-            source.querySelector('.headerUserButtonRound img') ||
-            source.querySelector('img') ||
-            source.querySelector('.MuiAvatar-root') ||
-            source.querySelector('.headerUserButtonRound');
-
-        if (!candidate) {
-            return null;
+        const image = source.querySelector('.MuiAvatar-root img, .headerUserButtonRound img, .headerUserButton img');
+        if (image && (image.currentSrc || image.src)) {
+            const avatar = document.createElement('img');
+            avatar.className = 'sakuraTeaAvatarImage';
+            avatar.src = image.currentSrc || image.src;
+            avatar.alt = '';
+            return avatar;
         }
 
-        const clone = candidate.cloneNode(true);
-        clone.removeAttribute('id');
-        clone.removeAttribute('srcset');
-        clone.querySelectorAll?.('[id]').forEach((node) => node.removeAttribute('id'));
+        const nativeAvatar = source.querySelector('.MuiAvatar-root, .headerUserButtonRound');
+        if (!nativeAvatar) return null;
 
-        if (clone.matches('img')) {
-            clone.src = candidate.currentSrc || candidate.src;
-        } else {
-            const nestedImage = clone.querySelector('img');
-            const liveImage = candidate.querySelector && candidate.querySelector('img');
-            if (nestedImage && liveImage) {
-                nestedImage.src = liveImage.currentSrc || liveImage.src;
-                nestedImage.removeAttribute('srcset');
-            }
-        }
-
-        return clone;
+        const fallback = document.createElement('span');
+        fallback.className = 'sakuraTeaAvatarFallback';
+        fallback.textContent = nativeAvatar.textContent.trim().slice(0, 2) || '●';
+        return fallback;
     }
 
     function sourceId(source) {
@@ -188,7 +176,7 @@
         return safeMarkup(sourceAvatar(source));
     }
 
-    function collectSources() {
+    function collectSources(publish = true) {
         const header = getNativeHeader();
         if (!header) {
             return { nav: [], actions: [] };
@@ -262,7 +250,7 @@
                 .slice(0, 10);
         }
 
-        publishCatalog(nav, actions);
+        if (publish) publishCatalog(nav, actions);
         return { nav: nav.slice(0, 10), actions: actions.slice(0, 10) };
     }
 
@@ -415,6 +403,21 @@
         return null;
     }
 
+    function createUnavailableButton(item) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'sakuraTeaHeaderButton';
+        button.dataset.itemId = item.id;
+        button.dataset.unavailable = 'true';
+        button.disabled = true;
+        button.setAttribute('aria-label', item.label + ' (unavailable)');
+        button.title = item.label + ' is unavailable in the current Jellyfin header';
+        if (item.shape === 'avatar') button.classList.add('has-avatar', 'icon-only');
+        else if (item.shape !== 'text') button.classList.add('icon-only');
+        Core.renderVisual(button, item, item.shape === 'text');
+        return button;
+    }
+
     function createPill(ids, sourceMap, catalog, role) {
         const pill = document.createElement('div');
         pill.className = 'sakuraTeaHeaderPill ' + (role === 'right' ? 'sakuraTeaActionPill' : 'sakuraTeaNavPill');
@@ -429,6 +432,7 @@
 
             const source = sourceMap.get(id);
             if (!source) {
+                pill.appendChild(createUnavailableButton(item));
                 return;
             }
 
@@ -438,7 +442,7 @@
         return pill.childElementCount ? pill : null;
     }
 
-    function applySettings(header, config, groupCount) {
+    function applySettings(header, config) {
         const height = Math.max(34, Math.min(58, Number(config.BuilderHeaderHeight || 44)));
         const button = Math.max(28, Math.min(44, Number(config.BuilderHeaderButtonSize || 34)));
         const icon = Math.max(13, Math.min(22, Number(config.BuilderHeaderIconSize || 17)));
@@ -456,8 +460,6 @@
         header.style.setProperty('--sakura-tea-action-alpha', Math.max(.18, opacity * .76).toFixed(2));
         header.style.setProperty('--sakura-tea-action-alpha-soft', Math.max(.14, opacity * .50).toFixed(2));
         header.dataset.position = String(config.BuilderHeaderPosition || 'Left');
-        header.dataset.groupCount = String(Math.max(1, groupCount || 1));
-        header.classList.toggle('has-split', (groupCount || 1) > 1);
     }
 
     function create(config) {
@@ -469,25 +471,19 @@
         const sourceMap = buildSourceMap(sources);
         const published = Core.readPublishedCatalog();
         const catalog = Core.mergeCatalog(published.items);
-        const rawOrder = (config && config.BuilderHeaderItems) || Core.DEFAULT_HEADER_ITEMS;
+        const rawOrder = config && typeof config.BuilderHeaderItems === 'string' ? config.BuilderHeaderItems : Core.DEFAULT_HEADER_ITEMS;
         const migratedOrder = Core.upgradeLegacyOrder(rawOrder);
         const layout = Core.groupOrder(migratedOrder);
-        const populatedGroups = layout.groups.filter((group) => group.length > 0);
-
         STATE.sourceBindings = [];
 
         const header = document.createElement('div');
         header.id = 'sakuraTeaFloatingHeader';
-        applySettings(header, config || {}, populatedGroups.length || 1);
+        applySettings(header, config || {});
 
-        populatedGroups.forEach((group, index) => {
-            const ids = group.map((entry) => entry.id);
-            const role = index === populatedGroups.length - 1 && populatedGroups.length > 1
-                ? 'right'
-                : 'left';
-            const pill = createPill(ids, sourceMap, catalog, role);
+        layout.pillGroups.forEach((group) => {
+            const pill = createPill(group.entries.map((entry) => entry.id), sourceMap, catalog, group.role);
             if (pill) {
-                pill.dataset.groupIndex = String(index);
+                pill.dataset.groupIndex = String(group.groupIndex);
                 header.appendChild(pill);
             }
         });
@@ -515,8 +511,25 @@
             return;
         }
 
+        const unavailable = STATE.root.querySelectorAll('[data-unavailable]');
+        if (unavailable.length) {
+            const sources = collectSources(false);
+            const sourceMap = buildSourceMap(sources);
+            if (Array.from(unavailable).some((button) => sourceMap.has(button.dataset.itemId))) {
+                mount(STATE.config);
+                return;
+            }
+        }
+
         STATE.sourceBindings.forEach((record) => {
             record.proxy.classList.toggle('is-active', sourceIsActive(record.source));
+            if (record.proxy.dataset.itemId === 'jellyfin:profile-avatar') {
+                const avatar = sourceAvatar(record.source);
+                const current = record.proxy.firstElementChild;
+                if (avatar && current && (avatar.getAttribute('src') !== current.getAttribute('src') || avatar.textContent !== current.textContent)) {
+                    current.replaceWith(avatar);
+                }
+            }
         });
     }
 
