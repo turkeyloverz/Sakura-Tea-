@@ -1,7 +1,7 @@
 (() => {
     'use strict';
 
-    const CORE_VERSION = 7;
+    const CORE_VERSION = 8;
     if (window.SakuraTeaHeaderCore && Number(window.SakuraTeaHeaderCore.version || 0) >= CORE_VERSION) {
         return;
     }
@@ -314,6 +314,7 @@
 
     window.SakuraTeaHeaderCore = Object.freeze({
         version: CORE_VERSION,
+        SERVER_ICON_URL: 'https://cdn.jsdelivr.net/gh/turkeyloverz/jellyfin-theme@580929b18f03c982b41ed9d2a215b54c4bf02e62/icon-removebg-preview.png',
         HEADER_STYLE_FIELDS,
         normalizeHeaderStyle,
         applyHeaderStyle,

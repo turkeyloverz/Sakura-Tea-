@@ -98,7 +98,7 @@ jobs:
             --arg targetAbi "$TARGET_ABI" \
             '{
               category: "General",
-              changelog: "Independent server icon, server name and hotbar positioning; text-only navigation with profile dropdown; responsive overflow and optional cinematic detail pages.",
+              changelog: "Use the custom Sakura Tea server icon in the live header and UI Builder, preserving independent icon size and position controls.",
               description: "A Sakura-inspired cinematic Jellyfin Web experience.",
               guid: "3bf6515b-c10a-4307-a3e8-942eaffe900d",
               name: "Sakura Tea",
@@ -138,7 +138,7 @@ jobs:
             '.[0].versions = (
               [{
                 version: $version,
-                changelog: "Independent server icon, server name and hotbar positioning; text-only navigation with profile dropdown; responsive overflow and optional cinematic detail pages.",
+                changelog: "Use the custom Sakura Tea server icon in the live header and UI Builder, preserving independent icon size and position controls.",
                 targetAbi: $targetAbi,
                 sourceUrl: $sourceUrl,
                 checksum: $checksum,
@@ -177,17 +177,9 @@ jobs:
           body: |
             Sakura Tea ${{ needs.parse.outputs.tag }} for Jellyfin 12.
 
-            - Independently position the server icon, server name, and hotbar with horizontal and vertical sliders.
-            - Text-only navigation; default hotbar is Profile picture with the native settings dropdown, Anime, and Favourites.
-            - Reorderable controls, collision-safe positioning, and keyboard-accessible More menu on small screens.
-            - Branding, colour, padding, and independent header controls in the UI Builder.
-            - Optional cinematic detail pages preserve Jellyfin playback controls and permissions.
-            - Personal dark mode, the pupil switch, and the full-width sakura divider are preserved.
-            - Shared preview/runtime positioning with batched updates while dragging sliders.
-
-            Existing custom hotbar orders are preserved. Use UI Builder > Header Builder > Reset section, then Save changes, to try the new defaults.
-            Cinematic detail pages are off by default; enable them in Overview.
-            Validated with a Release build, JavaScript tests, and Brave browser fixtures. Live Jellyfin testing is still needed.
+            - Use the supplied transparent Sakura Tea artwork as the server icon in both the live header and UI Builder.
+            - Preserve independent icon positioning and size controls.
+            - Keep a flower fallback if the external image cannot load.
 
             Requires File Transformation for frontend injection.
           files: dist/${{ steps.package.outputs.zip_name }}

@@ -212,6 +212,7 @@
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-preview-surface{top:18px;bottom:auto}
 #SakuraTeaConfigPage .st-preview-pill,#SakuraTeaConfigPage .st-preview-brand{position:absolute;max-width:100%;box-sizing:border-box}
 #SakuraTeaConfigPage .st-preview-brand{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 6px;overflow:hidden;color:var(--st-brand-color,#fff);text-shadow:0 2px 8px #0009}
+#SakuraTeaConfigPage .st-preview-logo img{width:var(--st-logo-height,30px);height:var(--st-logo-height,30px);object-fit:contain}
 #SakuraTeaConfigPage .st-preview-logo{min-width:44px;font-size:var(--st-logo-height,30px)}
 #SakuraTeaConfigPage .st-preview-name{font-size:14px;white-space:nowrap;max-width:min(180px,100%)}
 #SakuraTeaConfigPage .st-overflow-toggle{width:auto;flex-basis:auto;padding:0 8px;font-size:12px}
@@ -404,7 +405,7 @@
  var HeaderCore=null;
  var headerCorePromise=null;
  var catalog=[];
- var REQUIRED_HEADER_CORE_VERSION=7;
+ var REQUIRED_HEADER_CORE_VERSION=8;
  var DEFAULT_HEADER_ITEMS='jellyfin:profile-avatar|sakura:anime|jellyfin:favorites';
  var FALLBACK_CATALOG=[
   {id:'sakura:flower',label:'Sakura Flower',icon:'🌸',shape:'flower'},
@@ -450,7 +451,7 @@
   headerCorePromise=new Promise(function(resolve,reject){
    var script=document.createElement('script');
    var url=headerCoreAssetUrl();
-   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=7';
+   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=8';
    script.async=true;
    script.dataset.sakuraTeaConfigCore='true';
    script.onload=function(){
@@ -732,7 +733,7 @@
  }
  function previewBrand(surface){
   var values=readStyleSettings(),display=values.BuilderBrandDisplay;if(!display||display==='None')return;
-  if(display!=='ServerName'){var logo=document.createElement('span');logo.className='st-preview-brand st-preview-logo';logo.textContent='✿';surface.appendChild(logo)}
+  if(display!=='ServerName'){var logo=document.createElement('span');logo.className='st-preview-brand st-preview-logo';var image=document.createElement('img');image.alt='';image.src=syncHeaderCore().SERVER_ICON_URL;image.addEventListener('error',function(){logo.textContent='✿'},{once:true});logo.appendChild(image);surface.appendChild(logo)}
   if(display!=='Logo'){var name=document.createElement('span');name.className='st-preview-brand st-preview-name';name.textContent='Sakura Tea';surface.appendChild(name)}
  }
 

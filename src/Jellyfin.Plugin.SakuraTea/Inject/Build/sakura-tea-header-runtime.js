@@ -469,10 +469,11 @@
         brand.setAttribute('aria-label', kind === 'Logo' ? 'Server icon · Home' : 'Server name · Home');
         if (kind === 'Logo') {
             const logo = document.createElement('img'); logo.alt = '';
-            const native = getNativeHeader()?.querySelector('a[href="#/"] img');
-            const icon = document.querySelector('link[rel~="icon"]');
-            if (native?.src || icon?.href) { logo.src = native?.src || icon.href; brand.appendChild(logo); }
-            else { const flower = document.createElement('span'); flower.textContent = '✿'; flower.setAttribute('aria-hidden', 'true'); brand.appendChild(flower); }
+            logo.addEventListener('error', () => {
+                const flower = document.createElement('span'); flower.textContent = '✿'; flower.setAttribute('aria-hidden', 'true'); logo.replaceWith(flower);
+            }, {once:true});
+            logo.src = Core.SERVER_ICON_URL;
+            brand.appendChild(logo);
         } else {
             const name = document.createElement('span'); name.className = 'sakuraTeaServerName'; name.textContent = 'Sakura Tea'; brand.appendChild(name);
             const request = ++STATE.brandRequest;
