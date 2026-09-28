@@ -1,0 +1,46 @@
+/* Shared, configurable header styling; dark mode keeps its quiet palette. */
+#sakuraTeaFloatingHeader .sakuraTeaHeaderPill {
+    box-sizing: border-box;
+    flex-wrap: nowrap;
+    padding: var(--st-bar-padding, 4px) calc(var(--st-bar-padding, 4px) + 3px);
+}
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton {
+    color: var(--st-item-color, #fff8fc);
+    background: var(--st-item-bg, transparent);
+}
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton.is-active {
+    color: var(--st-active-color, #fff);
+    background: var(--st-active-bg, #c76d91);
+}
+#sakuraTeaFloatingHeader .sakuraTeaHeaderButton:hover { opacity: var(--st-hover-opacity, 1); }
+#sakuraTeaFloatingHeader [hidden] { display: none !important; }
+#sakuraTeaFloatingHeader .sakuraTeaBrand {
+    display: inline-flex; align-items: center; gap: var(--st-brand-gap, 10px);
+    flex: 0 0 auto; color: var(--st-brand-color, #fff); text-decoration: none;
+    padding: 0 6px; min-height: 44px;
+}
+#sakuraTeaFloatingHeader .sakuraTeaBrand img { width: var(--st-logo-height, 30px); height: var(--st-logo-height, 30px); object-fit: contain; }
+#sakuraTeaFloatingHeader .sakuraTeaBrand > span:first-child:not(.sakuraTeaServerName) { font-size: var(--st-logo-height, 30px); }
+#sakuraTeaFloatingHeader .sakuraTeaServerName { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#sakuraTeaFloatingHeader #sakuraTeaOverflow {
+    position: fixed; z-index: 1201; pointer-events: auto;
+    display: flex; flex-direction: column; gap: 5px; width: 260px;
+    max-width: calc(100vw - 16px); max-height: min(420px, 65vh); overflow: auto;
+    padding: 8px; box-sizing: border-box; border: 1px solid #654355;
+    border-radius: 14px; background: #291d28; box-shadow: 0 12px 30px #0008;
+}
+#sakuraTeaOverflow .sakuraTeaHeaderButton { justify-content: flex-start; width: 100%; min-height: 44px; }
+#sakuraTeaOverflow .sakuraTeaHeaderSpacer, #sakuraTeaOverflow .sakuraTeaHeaderFlower { display: none; }
+#sakuraTeaOverflow .sakuraTeaHeaderSeparator { width: 100%; height: 1px; margin: 4px 0; }
+html.sakura-tea-dark #sakuraTeaFloatingHeader .sakuraTeaHeaderButton { background: transparent; color: #fff8fc; }
+html.sakura-tea-dark #sakuraTeaFloatingHeader .sakuraTeaHeaderButton.is-active { background: #453344; }
+html.sakura-tea-dark #sakuraTeaFloatingHeader #sakuraTeaOverflow { background: #221e26; box-shadow: none; }
+/* Native-header mode still exposes the personal appearance switch. */
+.sakuraTeaAppearance[data-native="true"] { flex-shrink: 0; margin-inline: 10px; }
+/* Branding and the single hotbar have independent, collision-safe positions. */
+#sakuraTeaFloatingHeader { display: block; }
+#sakuraTeaFloatingHeader > .sakuraTeaHeaderPill,
+#sakuraTeaFloatingHeader > .sakuraTeaBrand { position: absolute; max-width: 100%; }
+#sakuraTeaFloatingHeader > .sakuraTeaBrand { pointer-events: auto; min-height: 44px; padding: 0 6px; text-shadow: 0 2px 8px #0009; }
+#sakuraTeaFloatingHeader > .sakuraTeaBrandLogo { min-width: 44px; justify-content: center; }
+#sakuraTeaFloatingHeader .sakuraTeaOverflowToggle { flex-shrink: 0; }

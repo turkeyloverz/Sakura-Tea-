@@ -5,7 +5,7 @@
     <RootNamespace>Jellyfin.Plugin.SakuraTea</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.1.16.0</Version>
+    <Version>0.1.17.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,12 +16,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\..\THIRD_PARTY_NOTICES.md" LogicalName="SakuraTea.ThirdPartyNotices" />
     <EmbeddedResource Include="Configuration\config.html" />
     <EmbeddedResource Include="Inject\**\*.css" />
     <EmbeddedResource Include="Inject\**\*.js" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\THIRD_PARTY_NOTICES.md" Link="THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="Always" />
     <None Include="..\..\meta.json" Link="meta.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 </Project>

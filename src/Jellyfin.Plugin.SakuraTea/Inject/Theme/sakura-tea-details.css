@@ -1,0 +1,30 @@
+/* Opt-in detail layout. Native controls, permissions and episode sections are retained. */
+#itemDetailPage[data-sakura-tea-details] { background: #100e14; }
+#itemDetailPage[data-sakura-tea-details] #itemBackdrop { display: none; }
+.sakuraTeaDetailHero {
+    position: relative; isolation: isolate; overflow: hidden;
+    min-height: 430px; display: flex; align-items: flex-end;
+    background: #19131c; color: #fff8fc;
+    padding: clamp(70px, 12vw, 150px) clamp(22px, 6vw, 96px) 48px;
+    box-sizing: border-box;
+}
+.sakuraTeaDetailBackdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.sakuraTeaDetailHero::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg,#100e14ed,#100e1455),linear-gradient(0deg,#100e14,transparent 80%); }
+.sakuraTeaDetailStack { width: min(760px, 100%); }
+.sakuraTeaDetailStack .nameContainer { padding: 0; margin: 0; }
+.sakuraTeaDetailStack h1 { font-size: clamp(28px,4vw,54px); line-height: 1.1; }
+.sakuraTeaDetailStack .detailLogo { position: static; max-width: min(450px,100%); height: 100px; background-position: left center; background-size: contain; background-repeat: no-repeat; }
+.sakuraTeaDetailStack .overview { max-width: 70ch; line-height: 1.6; }
+.sakuraTeaDetailStack .mainDetailButtons { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 10px; margin-top: 20px; }
+.sakuraTeaDetailKicker,.sakuraTeaDetailFacts { color: #f1b5d0; line-height: 1.7; }
+#itemDetailPage[data-sakura-tea-details] .detailPageWrapperContainer { margin-top: 0; }
+#itemDetailPage[data-sakura-tea-details] .sectionTitle { border-inline-start: 3px solid #ff9fbd; padding-inline-start: 12px; }
+#itemDetailPage[data-sakura-tea-details] .cardBox { border-radius: 12px; overflow: hidden; }
+@media(max-width:600px) { .sakuraTeaDetailHero { min-height: 340px; padding-bottom: 26px; } }
+.sakuraTeaDetailStack .mainDetailButtons button {
+    min-height: 44px; padding: 10px 18px; border: 1px solid #70576a;
+    border-radius: 24px; background: #2a222f; color: #fff8fc;
+    font: inherit; cursor: pointer;
+}
+.sakuraTeaDetailStack .mainDetailButtons .btnPlay,
+.sakuraTeaDetailStack .mainDetailButtons .btnReplay { background: #ffe4ef; color: #291923; }

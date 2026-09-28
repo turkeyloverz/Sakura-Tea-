@@ -1,23 +1,16 @@
 (() => {
     'use strict';
 
-    const CORE_VERSION = 5;
+    const CORE_VERSION = 7;
     if (window.SakuraTeaHeaderCore && Number(window.SakuraTeaHeaderCore.version || 0) >= CORE_VERSION) {
         return;
     }
 
     const DEFAULT_HEADER_ITEMS = Object.freeze([
-        'sakura:flower',
-        'jellyfin:favorites',
-        'sakura:anime',
-        'sakura:not-safe',
-        'jellyfin:user-menu',
-        'jellyfin:cast',
-        'jellyfin:profile-avatar'
+        'jellyfin:profile-avatar', 'sakura:anime', 'jellyfin:favorites'
     ]);
 
     const STATIC_CATALOG = Object.freeze([
-        { id: 'sakura:flower', label: 'Sakura Flower', icon: '🌸', shape: 'flower' },
         { id: 'space', label: 'Space', icon: '□', shape: 'space', repeatable: true },
         { id: 'separator', label: 'Separator', icon: '│', shape: 'separator', repeatable: true },
         { id: 'jellyfin:favorites', label: 'Favourites', icon: '♥', shape: 'text' },
@@ -30,6 +23,12 @@
         { id: 'jellyfin:profile-avatar', label: 'Profile Avatar', icon: '●', shape: 'avatar' },
         { id: 'jellyfin:home', label: 'Home', icon: '⌂', shape: 'icon' },
         { id: 'jellyfin:more', label: 'More', icon: '•••', shape: 'icon' },
+        { id: 'je:active-streams', label: 'Active Streams', icon: '▶', shape: 'text' },
+        { id: 'je:bookmarks', label: 'Bookmarks', icon: '♥', shape: 'text' },
+        { id: 'je:hidden-content', label: 'Hidden Content', icon: '◈', shape: 'text' },
+        { id: 'sf:requests', label: 'SeerrFin Requests', icon: '＋', shape: 'text' },
+        { id: 'sf:letterboxd', label: 'Letterboxd', icon: '●', shape: 'text' },
+        { id: 'jellyfin:back', label: 'Back', icon: '←', shape: 'icon' },
         { id: 'je:random', label: 'Random', icon: '⤨', shape: 'icon' },
         { id: 'je:activity', label: 'Activity', icon: '▥', shape: 'icon' },
         { id: 'je:requests', label: 'Requests', icon: '☷', shape: 'icon' },
@@ -84,7 +83,7 @@
 
         source.forEach((entry) => {
             const id = normalizeItemId(entry);
-            if (!id || id === 'header:split') {
+            if (!id || id === 'header:split' || id === 'sakura:flower') {
                 return;
             }
 
@@ -108,10 +107,6 @@
 
         if (!wasLegacy) {
             return result;
-        }
-
-        if (!result.includes('sakura:flower')) {
-            result.unshift('sakura:flower');
         }
 
         return result;
@@ -215,14 +210,80 @@
         }
     }
 
+    // Shared schema keeps the builder preview and live header on the same settings.
+    const HEADER_STYLE_FIELDS = Object.freeze([
+        { key: 'BuilderHeaderPadding', label: 'Bar padding', group: 'Layout', type: 'range', min: 0, max: 20, value: 4, css: '--st-bar-padding', unit: 'px' },
+        { key: 'BuilderBrandDisplay', label: 'Show branding', group: 'Branding', type: 'select', options: ['None', 'Logo', 'ServerName', 'Both'], value: 'Both' },
+        { key: 'BuilderLogoHeight', label: 'Logo size', group: 'Branding', type: 'range', min: 16, max: 56, value: 30, css: '--st-logo-height', unit: 'px' },
+        { key: 'BuilderHeaderX', label: 'Hotbar · left / middle / right', group: 'Positioning', type: 'range', min: 0, max: 100, value: 50 },
+        { key: 'BuilderHeaderY', label: 'Hotbar · top / lower', group: 'Positioning', type: 'range', min: 0, max: 100, value: 0 },
+        { key: 'BuilderLogoX', label: 'Server icon · left / middle / right', group: 'Positioning', type: 'range', min: 0, max: 100, value: 0 },
+        { key: 'BuilderLogoY', label: 'Server icon · top / lower', group: 'Positioning', type: 'range', min: 0, max: 100, value: 0 },
+        { key: 'BuilderNameX', label: 'Server name · left / middle / right', group: 'Positioning', type: 'range', min: 0, max: 100, value: 100 },
+        { key: 'BuilderNameY', label: 'Server name · top / lower', group: 'Positioning', type: 'range', min: 0, max: 100, value: 0 },
+        { key: 'BuilderBrandColor', label: 'Server name', group: 'Colours', type: 'color', value: '#FFFFFF', css: '--st-brand-color' },
+        { key: 'BuilderItemColor', label: 'Button text', group: 'Colours', type: 'color', value: '#FFF8FC', css: '--st-item-color' },
+        { key: 'BuilderItemBackground', label: 'Button background', group: 'Colours', type: 'color', value: 'transparent', css: '--st-item-bg' },
+        { key: 'BuilderActiveColor', label: 'Selected text', group: 'Colours', type: 'color', value: '#FFFFFF', css: '--st-active-color' },
+        { key: 'BuilderActiveBackground', label: 'Selected background', group: 'Colours', type: 'color', value: '#C76D91', css: '--st-active-bg' },
+        { key: 'BuilderHoverOpacity', label: 'Hover opacity', group: 'Colours', type: 'range', min: 30, max: 100, value: 100, css: '--st-hover-opacity', divisor: 100 }
+    ]);
+
+    function normalizeHeaderStyle(config = {}) {
+        return Object.fromEntries(HEADER_STYLE_FIELDS.map(field => {
+            let value = config[field.key] ?? (field.key === 'BuilderHeaderX' ? ({Left:0,Center:50,Right:100}[config.BuilderHeaderPosition] ?? field.value) : field.value);
+            if (field.type === 'range') value = Number.isFinite(Number(value)) ? Math.max(field.min, Math.min(field.max, Number(value))) : field.value;
+            else if (field.options) value = field.options.includes(value) ? value : field.value;
+            else if (!/^(transparent|#[0-9a-f]{6})$/i.test(String(value))) value = field.value;
+            return [field.key, value];
+        }));
+    }
+
+    function applyHeaderStyle(element, config) {
+        const values = normalizeHeaderStyle(config);
+        HEADER_STYLE_FIELDS.forEach(field => {
+            if (field.css) element.style.setProperty(field.css, String(field.divisor ? values[field.key] / field.divisor : values[field.key]) + (field.unit || ''));
+        });
+        return values;
+    }
+
+    // Measure once, then place independent elements inside the available width.
+    // When chosen positions collide, move the later element below the earlier one.
+    function positionHeaderElements(container, entries) {
+        const width = container.clientWidth;
+        const placed = [];
+        const measured = entries.filter(entry => entry.element).map(entry => ({...entry,
+            width: entry.element.offsetWidth, height: entry.element.offsetHeight}));
+        measured.forEach(entry => {
+            const left = Math.max(0, width - entry.width) * entry.x / 100;
+            let top = entry.y * 1.2;
+            for (let pass = 0; pass < measured.length; pass++) {
+                const collisions = placed.filter(box => left < box.left + box.width + 8 && left + entry.width + 8 > box.left && top < box.top + box.height + 8 && top + entry.height + 8 > box.top);
+                if (!collisions.length) break;
+                top = Math.max(...collisions.map(box => box.top + box.height + 8));
+            }
+            placed.push({left,top,width:entry.width,height:entry.height});
+            entry.element.style.left = Math.round(left) + 'px';
+            entry.element.style.top = Math.round(top) + 'px';
+        });
+        const height = Math.ceil(Math.max(0, ...placed.map(box => box.top + box.height)));
+        container.style.height = height + 'px';
+        return height;
+    }
+
+    function catalogScope() {
+        const client = window.ApiClient;
+        return JSON.stringify([client?.serverId?.() || client?.getUrl?.('') || '', client?.getCurrentUserId?.() || '']);
+    }
+
     function readPublishedCatalog() {
-        if (window.__sakuraTeaHeaderCatalog && Array.isArray(window.__sakuraTeaHeaderCatalog.items)) {
+        if (window.__sakuraTeaHeaderCatalog && window.__sakuraTeaHeaderCatalog.scope === catalogScope() && Array.isArray(window.__sakuraTeaHeaderCatalog.items)) {
             return window.__sakuraTeaHeaderCatalog;
         }
 
         try {
             const parsed = JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) || 'null');
-            if (parsed && parsed.version === 2 && Array.isArray(parsed.items)) {
+            if (parsed && parsed.version === 2 && parsed.scope === catalogScope() && Array.isArray(parsed.items)) {
                 return parsed;
             }
         } catch (error) {}
@@ -233,6 +294,7 @@
     function publishCatalog(items) {
         const payload = {
             version: 2,
+            scope: catalogScope(),
             updatedAt: Date.now(),
             items: Array.isArray(items) ? items : []
         };
@@ -252,6 +314,10 @@
 
     window.SakuraTeaHeaderCore = Object.freeze({
         version: CORE_VERSION,
+        HEADER_STYLE_FIELDS,
+        normalizeHeaderStyle,
+        applyHeaderStyle,
+        positionHeaderElements,
         DEFAULT_HEADER_ITEMS,
         STATIC_CATALOG,
         normalizeItemId,

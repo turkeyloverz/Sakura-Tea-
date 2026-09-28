@@ -1,14 +1,16 @@
 {
   "category": "General",
-  "changelog": "Personal appearance slider and dark mode; full-width sakura divider.",
+  "changelog": "Independent server icon, server name and hotbar positioning; text-only navigation with profile dropdown; responsive overflow and optional cinematic detail pages.",
   "description": "A Sakura-inspired cinematic Jellyfin Web experience.",
   "guid": "3bf6515b-c10a-4307-a3e8-942eaffe900d",
   "name": "Sakura Tea",
   "overview": "Anime-first hero, Sakura visuals, petals and a refined Jellyfin home experience.",
   "owner": "turkeyloverz",
   "targetAbi": "12.0.0.0",
-  "version": "0.1.16.0",
+  "version": "0.1.17.0",
   "status": "Active",
   "autoUpdate": true,
-  "assemblies": ["Jellyfin.Plugin.SakuraTea.dll"]
+  "assemblies": [
+    "Jellyfin.Plugin.SakuraTea.dll"
+  ]
 }

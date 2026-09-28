@@ -2,7 +2,7 @@
 
 Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic anime-first home screen with Sakura styling.
 
-> **Status:** `0.1.16` alpha for Jellyfin 12 (plugin version `0.1.16.0`).
+> **Status:** `0.1.17` alpha for Jellyfin 12 (plugin version `0.1.17.0`).
 
 ## Features
 
@@ -21,6 +21,35 @@ Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic a
 - Jellyfin Server: **12.0**
 - .NET: **10.0**
 - Frontend injection: **File Transformation** plugin
+
+## Header and detail-page upgrades (0.1.17)
+
+- The custom header can be switched independently of the theme. The pupil switch
+  stays available in the native header when the custom header is off.
+- Layout controls include padding and wider size/spacing ranges. Collapsible
+  Branding and Colours groups offer logo/server-name display, colour pickers,
+  transparent backgrounds, and hover opacity. Independent horizontal and vertical
+  sliders position the server icon, server name, and hotbar across the top area.
+  Overlapping elements stack, keeping controls inside narrow screens.
+- The default hotbar is Profile picture (native settings dropdown), Anime, and
+  Favourites. Navigation buttons use text only; the profile picture stays visible.
+  Saved custom orders remain editable, and Reset section restores the new defaults.
+  The builder and live header share placement logic; slider layout work is batched
+  into one animation frame.
+- Narrow screens move surplus controls into a keyboard-accessible More menu.
+  User, cast and sync popups are anchored to their visible button.
+- Header controls are detected from Jellyfin, Jellyfin Enhanced and SeerrFin.
+  Undetected items remain saved but are omitted from the live bar. The builder
+  labels them as undetected rather than claiming the provider is disabled.
+  Detection caches are separated by account and server.
+- **Enable cinematic detail pages** in Overview to opt into the new movie,
+  series, season and episode layout. It moves the original title, overview and
+  action controls into a cinematic header, preserving native handlers and
+  permissions. Episode selection, cast and recommendations remain native.
+  Turning the feature off or choosing dark mode restores the original layout.
+- The details feature stays off by default and falls back to Jellyfin for
+  unsupported layouts or metadata failures. Live Jellyfin 12 validation is still
+  required; browser tests use representative DOM and mocked APIs.
 
 ## Personal appearance
 

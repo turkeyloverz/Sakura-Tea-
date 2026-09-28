@@ -9,7 +9,12 @@
     const STATE = {
         root: null,
         sourceBindings: [],
-        config: null
+        config: null,
+        missing: [],
+        anchors: new Map(),
+        layoutFrame: 0,
+        layoutItems: [],
+        brandRequest: 0
     };
 
     function getNativeHeader() {
@@ -88,7 +93,7 @@
     }
 
     function sourceAvatar(source) {
-        const image = source.querySelector('.MuiAvatar-root img, .headerUserButtonRound img, .headerUserButton img');
+        const image = source.querySelector('.MuiAvatar-root img, .headerUserButtonRound img, img');
         if (image && (image.currentSrc || image.src)) {
             const avatar = document.createElement('img');
             avatar.className = 'sakuraTeaAvatarImage';
@@ -98,15 +103,22 @@
         }
 
         const nativeAvatar = source.querySelector('.MuiAvatar-root, .headerUserButtonRound');
-        if (!nativeAvatar) return null;
+
 
         const fallback = document.createElement('span');
         fallback.className = 'sakuraTeaAvatarFallback';
-        fallback.textContent = nativeAvatar.textContent.trim().slice(0, 2) || '●';
+        fallback.textContent = nativeAvatar?.textContent.trim().slice(0, 2) || 'P';
         return fallback;
     }
 
     function sourceId(source) {
+        const provider = (source.id || '').match(/^je-native-tab-(?:btn|link)-([a-z0-9-]+)$/i);
+        if (provider) return 'je:' + provider[1].toLowerCase();
+        if (source.id === 'randomItemButton') return 'je:random';
+        if (source.id === 'je-active-streams') return 'je:active-streams';
+        const seerr = source.getAttribute('data-seerrfin-tab') || source.getAttribute('data-seerrfin-menu-nav') || (source.getAttribute('href') || '').match(/[?&]seerrfinTab=([a-z0-9-]+)/i)?.[1];
+        if (seerr) return 'sf:' + seerr;
+        if (source.matches('.headerBackButton')) return 'jellyfin:back';
         const label = sourceLabel(source).trim().toLowerCase();
         const href = (source.getAttribute('href') || '').trim();
 
@@ -216,7 +228,7 @@
 
                     return Boolean(source.matches('a[href]') || source.classList.contains('emby-tab-button'));
                 })
-                .slice(0, 10);
+                .slice(0, 64);
         }
 
         nav = nav.filter((source) => {
@@ -247,11 +259,15 @@
                         (!sourceLabel(source) && sourceIcon(source))
                     );
                 })
-                .slice(0, 10);
+                .slice(0, 64);
         }
 
+        const extras = document.querySelectorAll('#je-header-buttons-group button, #je-native-tabs-group button, [data-seerrfin-tab], #randomItemButton, #je-active-streams');
+        extras.forEach(source => {
+            if (!source.closest('#sakuraTeaFloatingHeader') && !sourceIsHidden(source) && !nav.includes(source) && !actions.includes(source)) actions.push(source);
+        });
         if (publish) publishCatalog(nav, actions);
-        return { nav: nav.slice(0, 10), actions: actions.slice(0, 10) };
+        return { nav: nav.slice(0, 64), actions: actions.slice(0, 64) };
     }
 
     function publishCatalog(nav, actions) {
@@ -278,6 +294,7 @@
                 label: avatarSource ? 'User Menu' : (sourceLabel(entry.source) || entry.source.getAttribute('aria-label') || entry.source.getAttribute('title') || id),
                 group: entry.group,
                 shape: avatarSource ? 'icon' : sourceShape(entry.source),
+                available: true,
                 iconHtml: avatarSource ? '' : sourceIconMarkup(entry.source)
             };
             items.push(descriptor);
@@ -288,12 +305,13 @@
                     label: 'Profile Avatar',
                     group: entry.group,
                     shape: 'avatar',
+                    available: true,
                     iconHtml: sourceAvatarMarkup(entry.source)
                 });
             }
         });
 
-        Core.publishCatalog(items);
+        if (JSON.stringify(Core.readPublishedCatalog().items) !== JSON.stringify(items)) Core.publishCatalog(items);
     }
 
     function buildSourceMap(sources) {
@@ -320,33 +338,16 @@
         button.dataset.itemId = item.id;
 
         const isProfileAvatar = item.id === 'jellyfin:profile-avatar';
-        const useSourceIcon = !(item.id === 'jellyfin:user-menu' && isAvatarSource(source));
-        const icon = isProfileAvatar ? sourceAvatar(source) : (useSourceIcon ? sourceIcon(source) : null);
-        if (icon) {
-            button.appendChild(icon);
-        } else if (item.icon) {
-            const fallbackIcon = document.createElement('span');
-            fallbackIcon.className = 'sakuraTeaHeaderFallbackIcon';
-            fallbackIcon.textContent = item.icon;
-            button.appendChild(fallbackIcon);
-        }
-
-        const label = sourceLabel(source);
-        const includeLabel = item.shape === 'text';
-        if (includeLabel && label) {
+        if (isProfileAvatar) {
+            button.appendChild(sourceAvatar(source));
+            button.classList.add('has-avatar');
+        } else {
             const text = document.createElement('span');
             text.className = 'sakuraTeaHeaderLabel';
-            text.textContent = label;
+            text.textContent = item.label || sourceLabel(source);
             button.appendChild(text);
         }
-
-        if (!includeLabel || !label) {
-            button.classList.add('icon-only');
-        }
-
-        if (item.id === 'jellyfin:profile-avatar') {
-            button.classList.add('has-avatar');
-        }
+        const label = item.label || sourceLabel(source);
 
         const title = item.label || source.getAttribute('aria-label') || source.getAttribute('title') || label;
         if (title) {
@@ -355,6 +356,7 @@
         }
 
         button.classList.toggle('is-active', sourceIsActive(source));
+        button.disabled = source.disabled || source.getAttribute('aria-disabled') === 'true';
 
         button.addEventListener('click', (event) => {
             event.preventDefault();
@@ -368,7 +370,9 @@
                 }
             }
 
+            anchorPopup(source, button);
             source.click();
+            closeOverflow(false);
         });
 
         STATE.sourceBindings.push({ proxy: button, source });
@@ -403,21 +407,6 @@
         return null;
     }
 
-    function createUnavailableButton(item) {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'sakuraTeaHeaderButton';
-        button.dataset.itemId = item.id;
-        button.dataset.unavailable = 'true';
-        button.disabled = true;
-        button.setAttribute('aria-label', item.label + ' (unavailable)');
-        button.title = item.label + ' is unavailable in the current Jellyfin header';
-        if (item.shape === 'avatar') button.classList.add('has-avatar', 'icon-only');
-        else if (item.shape !== 'text') button.classList.add('icon-only');
-        Core.renderVisual(button, item, item.shape === 'text');
-        return button;
-    }
-
     function createPill(ids, sourceMap, catalog, role) {
         const pill = document.createElement('div');
         pill.className = 'sakuraTeaHeaderPill ' + (role === 'right' ? 'sakuraTeaActionPill' : 'sakuraTeaNavPill');
@@ -432,7 +421,7 @@
 
             const source = sourceMap.get(id);
             if (!source) {
-                pill.appendChild(createUnavailableButton(item));
+                STATE.missing.push(id);
                 return;
             }
 
@@ -443,11 +432,11 @@
     }
 
     function applySettings(header, config) {
-        const height = Math.max(34, Math.min(58, Number(config.BuilderHeaderHeight || 44)));
-        const button = Math.max(28, Math.min(44, Number(config.BuilderHeaderButtonSize || 34)));
+        const height = Math.max(34, Math.min(80, Number(config.BuilderHeaderHeight || 44)));
+        const button = Math.max(28, Math.min(56, Number(config.BuilderHeaderButtonSize || 34)));
         const icon = Math.max(13, Math.min(22, Number(config.BuilderHeaderIconSize || 17)));
         const avatar = Math.max(22, Math.min(36, Number(config.BuilderHeaderAvatarSize || 30)));
-        const spacing = Math.max(2, Math.min(14, Number(config.BuilderHeaderSpacing || 7)));
+        const spacing = Math.max(0, Math.min(24, Number(config.BuilderHeaderSpacing ?? 7)));
         const opacity = Math.max(25, Math.min(90, Number(config.BuilderHeaderOpacity || 68))) / 100;
 
         header.style.setProperty('--sakura-tea-header-height', height + 'px');
@@ -459,7 +448,83 @@
         header.style.setProperty('--sakura-tea-header-alpha-soft', Math.max(.18, opacity * .68).toFixed(2));
         header.style.setProperty('--sakura-tea-action-alpha', Math.max(.18, opacity * .76).toFixed(2));
         header.style.setProperty('--sakura-tea-action-alpha-soft', Math.max(.14, opacity * .50).toFixed(2));
-        header.dataset.position = String(config.BuilderHeaderPosition || 'Left');
+        header.dataset.position = ['Left', 'Center', 'Right'].includes(config.BuilderHeaderPosition) ? config.BuilderHeaderPosition : 'Left';
+        Core.applyHeaderStyle(header, config);
+    }
+
+    function anchorPopup(source, button) {
+        if (!(isAvatarSource(source) || source.hasAttribute('aria-haspopup') || source.hasAttribute('aria-controls') || source.matches('.headerCastButton,.headerSyncButton'))) return;
+        const names = ['position', 'left', 'top', 'width', 'height', 'margin', 'pointer-events'];
+        if (!STATE.anchors.has(source)) STATE.anchors.set(source, names.map(name => [name, source.style.getPropertyValue(name), source.style.getPropertyPriority(name)]));
+        const bounds = button.getBoundingClientRect();
+        Object.entries({ position: 'fixed', left: bounds.left + 'px', top: bounds.top + 'px', width: bounds.width + 'px', height: bounds.height + 'px', margin: '0', 'pointer-events': 'none' })
+            .forEach(([name, value]) => source.style.setProperty(name, value, 'important'));
+    }
+
+    function createBrand(config, kind) {
+        const values = Core.normalizeHeaderStyle(config);
+        if (values.BuilderBrandDisplay === 'None' || (kind === 'Logo' && values.BuilderBrandDisplay === 'ServerName') || (kind === 'Name' && values.BuilderBrandDisplay === 'Logo')) return null;
+        const brand = document.createElement('a');
+        brand.className = 'sakuraTeaBrand sakuraTeaBrand' + kind; brand.href = '#/home';
+        brand.setAttribute('aria-label', kind === 'Logo' ? 'Server icon · Home' : 'Server name · Home');
+        if (kind === 'Logo') {
+            const logo = document.createElement('img'); logo.alt = '';
+            const native = getNativeHeader()?.querySelector('a[href="#/"] img');
+            const icon = document.querySelector('link[rel~="icon"]');
+            if (native?.src || icon?.href) { logo.src = native?.src || icon.href; brand.appendChild(logo); }
+            else { const flower = document.createElement('span'); flower.textContent = '✿'; flower.setAttribute('aria-hidden', 'true'); brand.appendChild(flower); }
+        } else {
+            const name = document.createElement('span'); name.className = 'sakuraTeaServerName'; name.textContent = 'Sakura Tea'; brand.appendChild(name);
+            const request = ++STATE.brandRequest;
+            const client = window.ApiClient;
+            if (client?.ajax && client.getUrl) Promise.resolve(client.ajax({type:'GET',url:client.getUrl('System/Info/Public'),dataType:'json'})).then(info => {
+                if (request !== STATE.brandRequest || !brand.isConnected) return;
+                name.textContent = info?.ServerName || info?.serverName || 'Sakura Tea'; brand.title = name.textContent; scheduleLayout();
+            }).catch(() => {});
+        }
+        return brand;
+    }
+
+    function closeOverflow(focus) {
+        const drawer = STATE.root?.querySelector('#sakuraTeaOverflow');
+        const toggle = STATE.root?.querySelector('.sakuraTeaOverflowToggle');
+        if (!drawer || drawer.hidden) return;
+        drawer.hidden = true; toggle.setAttribute('aria-expanded', 'false');
+        if (focus) toggle.focus();
+    }
+
+    function layout() {
+        const root = STATE.root; if (!root?.isConnected) return;
+        const pill = root.querySelector('.sakuraTeaHeaderPill');
+        const toggle = root.querySelector('.sakuraTeaOverflowToggle');
+        const drawer = root.querySelector('#sakuraTeaOverflow');
+        if (!pill || !toggle || !drawer) return;
+        const focused = document.activeElement;
+        STATE.layoutItems.forEach(node => pill.insertBefore(node, toggle));
+        toggle.hidden = true;
+        if (pill.scrollWidth > pill.clientWidth + 1) {
+            toggle.hidden = false;
+            for (let i = STATE.layoutItems.length - 1; i >= 0 && pill.scrollWidth > pill.clientWidth + 1; i--) {
+                drawer.insertBefore(STATE.layoutItems[i], drawer.firstChild);
+            }
+        }
+        if (!drawer.children.length) closeOverflow(false);
+        if (focused && drawer.contains(focused) && drawer.hidden) toggle.focus();
+        const values = Core.normalizeHeaderStyle(STATE.config);
+        Core.positionHeaderElements(root, [
+            {element:root.querySelector('.sakuraTeaBrandLogo'),x:values.BuilderLogoX,y:values.BuilderLogoY},
+            {element:root.querySelector('.sakuraTeaBrandName'),x:values.BuilderNameX,y:values.BuilderNameY},
+            {element:pill,x:values.BuilderHeaderX,y:values.BuilderHeaderY}
+        ]);
+        const rect = pill.getBoundingClientRect();
+        drawer.style.top = (rect.bottom + 8) + 'px';
+        drawer.style.left = Math.max(8, Math.min(rect.left, window.innerWidth - 268)) + 'px';
+        updateContentTop();
+    }
+
+    function scheduleLayout() {
+        if (STATE.layoutFrame) return;
+        STATE.layoutFrame = requestAnimationFrame(() => { STATE.layoutFrame = 0; layout(); });
     }
 
     function create(config) {
@@ -475,6 +540,7 @@
         const migratedOrder = Core.upgradeLegacyOrder(rawOrder);
         const layout = Core.groupOrder(migratedOrder);
         STATE.sourceBindings = [];
+        STATE.missing = [];
 
         const header = document.createElement('div');
         header.id = 'sakuraTeaFloatingHeader';
@@ -499,16 +565,42 @@
             pill.appendChild(appearance);
         }
 
-        return header.childElementCount ? header : null;
+        let pill = header.querySelector('.sakuraTeaHeaderPill');
+        if (!pill) {
+            pill = document.createElement('div'); pill.className = 'sakuraTeaHeaderPill'; header.appendChild(pill);
+        }
+        ['Logo', 'Name'].forEach(kind => { const brand = createBrand(config, kind); if (brand) header.appendChild(brand); });
+        STATE.layoutItems = Array.from(pill.children).filter(node => node !== appearance);
+        const toggle = document.createElement('button');
+        toggle.type = 'button'; toggle.className = 'sakuraTeaHeaderButton sakuraTeaOverflowToggle'; toggle.textContent = 'More';
+        toggle.setAttribute('aria-label', 'More navigation'); toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', 'sakuraTeaOverflow'); toggle.hidden = true;
+        const drawer = document.createElement('nav'); drawer.id = 'sakuraTeaOverflow'; drawer.hidden = true;
+        drawer.setAttribute('aria-label', 'More navigation');
+        toggle.addEventListener('click', () => {
+            drawer.hidden = !drawer.hidden; toggle.setAttribute('aria-expanded', String(!drawer.hidden));
+            if (!drawer.hidden) drawer.querySelector('button:not(:disabled), a')?.focus();
+        });
+        pill.insertBefore(toggle, appearance || null); header.appendChild(drawer);
+        return header;
     }
 
     function mount(config) {
         unmount();
         STATE.config = config || STATE.config || {};
+        if (STATE.config.HeaderEnabled === false) {
+            const native = getNativeHeader();
+            const control = window.SakuraTeaAppearance?.createControl();
+            if (native && control) {
+                control.dataset.native = 'true';
+                (native.querySelector('.headerRight, .MuiToolbar-root') || native).appendChild(control);
+            }
+            return null;
+        }
         STATE.root = create(STATE.config);
         if (STATE.root) {
             document.body.appendChild(STATE.root);
-            updateContentTop();
+            scheduleLayout();
         }
         return STATE.root;
     }
@@ -518,10 +610,13 @@
             Math.ceil(STATE.root.getBoundingClientRect().bottom + 20) + 'px');
     }
 
-    window.addEventListener('resize', updateContentTop);
+    window.addEventListener('resize', scheduleLayout);
+    document.addEventListener('pointerdown', event => { if (STATE.root && !STATE.root.contains(event.target)) closeOverflow(false); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeOverflow(true); });
 
     function sync() {
         if (!STATE.root || !STATE.root.isConnected) {
+            if (STATE.config?.HeaderEnabled === false && !document.querySelector('.sakuraTeaAppearance[data-native="true"]')) mount(STATE.config);
             return;
         }
         updateContentTop();
@@ -531,18 +626,15 @@
             return;
         }
 
-        const unavailable = STATE.root.querySelectorAll('[data-unavailable]');
-        if (unavailable.length) {
-            const sources = collectSources(false);
-            const sourceMap = buildSourceMap(sources);
-            if (Array.from(unavailable).some((button) => sourceMap.has(button.dataset.itemId))) {
-                mount(STATE.config);
-                return;
-            }
+        const sources = collectSources();
+        const sourceMap = buildSourceMap(sources);
+        if (STATE.missing.some(id => sourceMap.has(id)) || STATE.sourceBindings.some(record => sourceMap.get(record.proxy.dataset.itemId) !== record.source)) {
+            mount(STATE.config); return;
         }
 
         STATE.sourceBindings.forEach((record) => {
             record.proxy.classList.toggle('is-active', sourceIsActive(record.source));
+            record.proxy.disabled = record.source.disabled || record.source.getAttribute('aria-disabled') === 'true';
             if (record.proxy.dataset.itemId === 'jellyfin:profile-avatar') {
                 const avatar = sourceAvatar(record.source);
                 const current = record.proxy.firstElementChild;
@@ -554,6 +646,15 @@
     }
 
     function unmount() {
+        document.querySelectorAll('.sakuraTeaAppearance[data-native="true"]').forEach(node => node.remove());
+        STATE.brandRequest += 1;
+        cancelAnimationFrame(STATE.layoutFrame); STATE.layoutFrame = 0;
+        STATE.anchors.forEach((styles, source) => {
+            styles.forEach(([name, value, priority]) => value ? source.style.setProperty(name, value, priority) : source.style.removeProperty(name));
+        });
+        STATE.anchors.clear();
+        STATE.layoutItems = [];
+
         if (STATE.root) {
             STATE.root.remove();
         }

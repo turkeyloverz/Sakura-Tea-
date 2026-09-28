@@ -59,6 +59,7 @@
 
     function setHomeClass() {
         ROOT.classList.add('sakura-tea-runtime');
+        ROOT.classList.toggle('sakura-tea-header-home', isHomeRoute() && Boolean(STATE.config && STATE.config.HeaderEnabled !== false));
         ROOT.classList.toggle('sakura-tea-home', isHomeRoute() && Boolean(STATE.config && STATE.config.ThemeEnabled));
     }
 
@@ -78,7 +79,7 @@
 
     function applyVisualSettings(config) {
         const styles = {
-            'sakura-tea-theme.css': config.ThemeEnabled,
+            'sakura-tea-theme.css': config.ThemeEnabled || config.HeaderEnabled !== false,
             'sakura-tea-hero.css': config.HeroEnabled,
             'sakura-tea-petals.css': config.PetalsEnabled
         };
@@ -477,7 +478,7 @@
         STATE.config = config;
         applyVisualSettings(config);
 
-        if (config.ThemeEnabled && window.SakuraTeaHeaderRuntime && !document.getElementById('sakuraTeaFloatingHeader')) {
+        if (window.SakuraTeaHeaderRuntime && !document.getElementById('sakuraTeaFloatingHeader') && !document.querySelector('.sakuraTeaAppearance[data-native="true"]')) {
             window.SakuraTeaHeaderRuntime.mount(config);
         }
 

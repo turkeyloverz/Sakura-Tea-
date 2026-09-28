@@ -45,7 +45,7 @@ jobs:
           cd src/Jellyfin.Plugin.SakuraTea/bin/Release/net10.0
           zip -j "$GITHUB_WORKSPACE/dist/SakuraTea-test.zip" \
             Jellyfin.Plugin.SakuraTea.dll \
-            meta.json
+            meta.json THIRD_PARTY_NOTICES.md
 
       - name: Upload test build
         uses: actions/upload-artifact@v4

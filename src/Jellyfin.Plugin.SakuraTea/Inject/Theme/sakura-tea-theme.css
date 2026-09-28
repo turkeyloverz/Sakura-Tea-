@@ -37,7 +37,7 @@ html.sakura-tea-runtime.sakura-tea-home #sakuraTeaHero {
 }
 
 /* Keep Jellyfin's native controls alive for proxy clicks, but remove their visual bar. */
-html.sakura-tea-runtime.sakura-tea-home :is(.skinHeader, header.MuiAppBar-root) {
+html.sakura-tea-runtime.sakura-tea-header-home :is(.skinHeader, header.MuiAppBar-root) {
     opacity: 0 !important;
     pointer-events: none !important;
     background: transparent !important;

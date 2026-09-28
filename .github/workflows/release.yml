@@ -98,7 +98,7 @@ jobs:
             --arg targetAbi "$TARGET_ABI" \
             '{
               category: "General",
-              changelog: "Personal pupil slider, per-user dark mode without hero or wallpaper, and full-width sakura divider.",
+              changelog: "Independent server icon, server name and hotbar positioning; text-only navigation with profile dropdown; responsive overflow and optional cinematic detail pages.",
               description: "A Sakura-inspired cinematic Jellyfin Web experience.",
               guid: "3bf6515b-c10a-4307-a3e8-942eaffe900d",
               name: "Sakura Tea",
@@ -114,7 +114,7 @@ jobs:
 
           (
             cd "$OUT_DIR"
-            zip -j "$ZIP_PATH" Jellyfin.Plugin.SakuraTea.dll meta.json
+            zip -j "$ZIP_PATH" Jellyfin.Plugin.SakuraTea.dll meta.json THIRD_PARTY_NOTICES.md
           )
 
           CHECKSUM=$(md5sum "$ZIP_PATH" | awk '{print toupper($1)}')
@@ -138,7 +138,7 @@ jobs:
             '.[0].versions = (
               [{
                 version: $version,
-                changelog: "Personal pupil slider, per-user dark mode without hero or wallpaper, and full-width sakura divider.",
+                changelog: "Independent server icon, server name and hotbar positioning; text-only navigation with profile dropdown; responsive overflow and optional cinematic detail pages.",
                 targetAbi: $targetAbi,
                 sourceUrl: $sourceUrl,
                 checksum: $checksum,
@@ -177,10 +177,17 @@ jobs:
           body: |
             Sakura Tea ${{ needs.parse.outputs.tag }} for Jellyfin 12.
 
-            - Compact pupil slider remembers each user’s appearance in this browser.
-            - Dark mode removes the hero, wallpaper, petals, glow, and blur.
-            - Full-width divider with more petals and two slowly spinning sakura flowers.
-            - Unified header and improved UI builder.
+            - Independently position the server icon, server name, and hotbar with horizontal and vertical sliders.
+            - Text-only navigation; default hotbar is Profile picture with the native settings dropdown, Anime, and Favourites.
+            - Reorderable controls, collision-safe positioning, and keyboard-accessible More menu on small screens.
+            - Branding, colour, padding, and independent header controls in the UI Builder.
+            - Optional cinematic detail pages preserve Jellyfin playback controls and permissions.
+            - Personal dark mode, the pupil switch, and the full-width sakura divider are preserved.
+            - Shared preview/runtime positioning with batched updates while dragging sliders.
+
+            Existing custom hotbar orders are preserved. Use UI Builder > Header Builder > Reset section, then Save changes, to try the new defaults.
+            Cinematic detail pages are off by default; enable them in Overview.
+            Validated with a Release build, JavaScript tests, and Brave browser fixtures. Live Jellyfin testing is still needed.
 
             Requires File Transformation for frontend injection.
           files: dist/${{ steps.package.outputs.zip_name }}

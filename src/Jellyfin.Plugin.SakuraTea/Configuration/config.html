@@ -193,6 +193,34 @@
 #SakuraTeaConfigPage .st-heroline::before,#SakuraTeaConfigPage .st-heroline::after{content:"✿";position:absolute;top:-12px;font-size:24px;color:#ffc4da;text-shadow:0 0 8px #ff93b8}
 #SakuraTeaConfigPage .st-heroline::before{left:4px}
 #SakuraTeaConfigPage .st-heroline::after{right:4px}
+
+#SakuraTeaConfigPage .st-extra-field{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin:12px 0;font-size:.8em}
+#SakuraTeaConfigPage .st-extra-field select{max-width:100%;background:#27232c;color:#fff;border:1px solid #675465;border-radius:7px;padding:7px}
+#SakuraTeaConfigPage .st-extra-field input[type=color]{width:42px;height:32px;padding:0;border:0;background:transparent}
+#SakuraTeaConfigPage .st-extra-field input[type=range]{width:100%;accent-color:#f393b8}#SakuraTeaConfigPage .st-extra-field input[type=checkbox]{accent-color:#f393b8}
+#SakuraTeaConfigPage .st-chip.not-detected{border-style:dashed;opacity:.7}
+#SakuraTeaConfigPage .st-floatbar{padding:var(--st-bar-padding,4px) calc(var(--st-bar-padding,4px) + 3px);height:auto;min-height:var(--hp-h)}
+#SakuraTeaConfigPage .st-preview-chip{color:var(--st-item-color,#fff8fc);background:var(--st-item-bg,transparent)}
+#SakuraTeaConfigPage .st-preview-item.is-active .st-preview-chip{color:var(--st-active-color,#fff);background:var(--st-active-bg,#c76d91)}
+#SakuraTeaConfigPage .st-preview-chip:hover{opacity:var(--st-hover-opacity,1)}
+#SakuraTeaConfigPage .st-preview-brand{display:flex;align-items:center;gap:var(--st-brand-gap,10px);color:var(--st-brand-color,#fff);flex-shrink:0;font-size:12px}
+#SakuraTeaConfigPage .st-preview-brand b{font-size:var(--st-logo-height,30px)}
+#SakuraTeaConfigPage #SakuraTeaStyleFields details{border-top:1px solid #55404e;padding:12px 0}#SakuraTeaConfigPage #SakuraTeaStyleFields summary{cursor:pointer;font-weight:600}#SakuraTeaConfigPage .st-preview-brand span{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* The preview uses the same placement function as the live Home header. */
+#SakuraTeaConfigPage .st-preview-surface{display:block}
+#SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-preview-surface{top:18px;bottom:auto}
+#SakuraTeaConfigPage .st-preview-pill,#SakuraTeaConfigPage .st-preview-brand{position:absolute;max-width:100%;box-sizing:border-box}
+#SakuraTeaConfigPage .st-preview-brand{display:flex;align-items:center;justify-content:center;min-height:44px;padding:0 6px;overflow:hidden;color:var(--st-brand-color,#fff);text-shadow:0 2px 8px #0009}
+#SakuraTeaConfigPage .st-preview-logo{min-width:44px;font-size:var(--st-logo-height,30px)}
+#SakuraTeaConfigPage .st-preview-name{font-size:14px;white-space:nowrap;max-width:min(180px,100%)}
+#SakuraTeaConfigPage .st-overflow-toggle{width:auto;flex-basis:auto;padding:0 8px;font-size:12px}
+#SakuraTeaConfigPage [hidden]{display:none!important}
+#SakuraTeaConfigPage .st-position-heading{font-size:.85em;font-weight:600;margin-top:14px}
+#SakuraTeaConfigPage .st-position-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+#SakuraTeaConfigPage .st-position-fields .st-extra-field{min-width:0;align-content:start}
+#SakuraTeaConfigPage .st-position-fields output{font-variant-numeric:tabular-nums;color:var(--st-pinkSoft)}
+@media(max-width:480px){#SakuraTeaConfigPage .st-position-fields{grid-template-columns:1fr}}
 </style>
 
 <div data-role="content">
@@ -224,6 +252,8 @@
   <div class="st-overview-card">
    <h3>Core features</h3>
    <label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label><br>
+   <label class="emby-checkbox-label"><input id="HeaderEnabled" type="checkbox" is="emby-checkbox"><span>Enable custom header</span></label><br>
+   <label class="emby-checkbox-label"><input id="DetailsEnabled" type="checkbox" is="emby-checkbox"><span>Enable cinematic detail pages</span></label><p class="st-help">Optional layout for movies, series, seasons and episodes. Dark mode restores the original layout.</p>
    <label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label><br>
    <label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable sakura divider</span></label>
   </div>
@@ -258,23 +288,25 @@
       <div id="SakuraTeaHeaderOverflowDrawer" class="st-overflow-drawer" hidden></div>
      </div>
     </div>
+    <div class="st-position-heading">Positioning</div><div id="SakuraTeaPositionFields" class="st-position-fields"></div>
     <div class="st-navbuilder">
      <div class="st-navtop"><strong>Navigation Builder</strong><span>Click an item to add it, or drag it into the preview. Focus a preview item and use Alt + ← / → to move it, or Delete to remove it.</span></div>
-     <div class="st-poollabel">Available items</div>
+     <div class="st-poollabel">Header controls</div><p class="st-help">Detected controls are ready to use. Undetected controls stay saved but appear only when Jellyfin or their plugin provides them. Visit Home to refresh detection.</p>
      <label class="st-poollabel" for="SakuraTeaItemSearch">Find a control</label><input id="SakuraTeaItemSearch" type="search" placeholder="Search header controls…" class="st-search"><div id="SakuraTeaHeaderAvailable" class="st-chips"></div>
      <input id="BuilderHeaderItems" type="hidden">
     </div>
    </div>
    <div class="st-rightpane">
-    <div class="st-styletitle">🌸 Header Style</div>
-    <div class="st-sliderrow"><span>Header height</span><input id="BuilderHeaderHeight" type="range" min="34" max="58" step="1"><span id="BuilderHeaderHeightValue" class="st-val"></span></div>
-    <div class="st-sliderrow"><span>Button size</span><input id="BuilderHeaderButtonSize" type="range" min="28" max="44" step="1"><span id="BuilderHeaderButtonSizeValue" class="st-val"></span></div>
-    <div class="st-sliderrow"><span>Icon size</span><input id="BuilderHeaderIconSize" type="range" min="13" max="22" step="1"><span id="BuilderHeaderIconSizeValue" class="st-val"></span></div>
+    <div class="st-styletitle">Layout</div>
+    <div class="st-sliderrow"><span>Header height</span><input id="BuilderHeaderHeight" type="range" min="34" max="80" step="1"><span id="BuilderHeaderHeightValue" class="st-val"></span></div>
+    <div class="st-sliderrow"><span>Button size</span><input id="BuilderHeaderButtonSize" type="range" min="28" max="56" step="1"><span id="BuilderHeaderButtonSizeValue" class="st-val"></span></div>
+    <div class="st-sliderrow" hidden><span>Icon size</span><input id="BuilderHeaderIconSize" type="range" min="13" max="22" step="1"><span id="BuilderHeaderIconSizeValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Avatar size</span><input id="BuilderHeaderAvatarSize" type="range" min="22" max="36" step="1"><span id="BuilderHeaderAvatarSizeValue" class="st-val"></span></div>
-    <div class="st-sliderrow"><span>Button spacing</span><input id="BuilderHeaderSpacing" type="range" min="2" max="14" step="1"><span id="BuilderHeaderSpacingValue" class="st-val"></span></div>
+    <div class="st-sliderrow"><span>Button spacing</span><input id="BuilderHeaderSpacing" type="range" min="0" max="24" step="1"><span id="BuilderHeaderSpacingValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Glass opacity</span><input id="BuilderHeaderOpacity" type="range" min="25" max="90" step="1"><span id="BuilderHeaderOpacityValue" class="st-val"></span></div>
-    <div id="BuilderHeaderPositionControl" class="st-seg"><button type="button" data-value="Left">Left</button><button type="button" data-value="Center">Center</button><button type="button" data-value="Right">Right</button></div>
+    <div id="BuilderHeaderPositionControl" class="st-seg" hidden><button type="button" data-value="Left">Left</button><button type="button" data-value="Center">Center</button><button type="button" data-value="Right">Right</button></div>
     <input id="BuilderHeaderPosition" type="hidden">
+    <div id="SakuraTeaStyleFields"></div>
    </div>
   </div>
  </section>
@@ -290,7 +322,7 @@
    <input id="BuilderPerformanceMode" type="hidden">
   </section>
   <section class="st-mini">
-   <div class="st-minititle">Arrange your header</div><p class="st-help">Use the header preview above to arrange all navigation items. All controls share one floating bar. Add spaces or separators to organize items within it.</p>
+   <div class="st-minititle">Arrange your header</div><p class="st-help">Reorder the profile picture and text buttons in one hotbar. Move the server icon, server name, and hotbar independently with Positioning. Overlapping elements stack automatically on narrow screens.</p>
    <div id="SakuraTeaNavSort" class="st-labelrow" hidden></div>
    <input id="BuilderNavOrder" type="hidden">
   </section>
@@ -355,7 +387,7 @@
  function setVal(id,v){var e=q(id);if(e)e.value=v}
  function setText(id,v){var e=q(id);if(e)e.textContent=v}
  var savedValues=null,loading=false,saving=false;
- function snapshot(){return Array.from(form.querySelectorAll('input[id]')).filter(function(el){return el.id!=='SakuraTeaItemSearch'}).map(function(el){return {id:el.id,value:el.value,checked:el.checked}})}
+ function snapshot(){return Array.from(form.querySelectorAll('input[id], select[id]')).filter(function(el){return el.id!=='SakuraTeaItemSearch'}).map(function(el){return {id:el.id,value:el.value,checked:el.checked}})}
  function isDirty(){return savedValues!==null&&JSON.stringify(snapshot())!==JSON.stringify(savedValues)}
  function refreshSaveState(message){
   q('SakuraTeaSave').disabled=loading||saving||!isDirty();
@@ -372,8 +404,8 @@
  var HeaderCore=null;
  var headerCorePromise=null;
  var catalog=[];
- var REQUIRED_HEADER_CORE_VERSION=5;
- var DEFAULT_HEADER_ITEMS='sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar';
+ var REQUIRED_HEADER_CORE_VERSION=7;
+ var DEFAULT_HEADER_ITEMS='jellyfin:profile-avatar|sakura:anime|jellyfin:favorites';
  var FALLBACK_CATALOG=[
   {id:'sakura:flower',label:'Sakura Flower',icon:'🌸',shape:'flower'},
   {id:'space',label:'Space',icon:'□',shape:'space',repeatable:true},
@@ -418,7 +450,7 @@
   headerCorePromise=new Promise(function(resolve,reject){
    var script=document.createElement('script');
    var url=headerCoreAssetUrl();
-   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=5';
+   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=7';
    script.async=true;
    script.dataset.sakuraTeaConfigCore='true';
    script.onload=function(){
@@ -515,9 +547,8 @@
   }else{
    var chip=document.createElement('span');
    chip.className='st-preview-chip';
-   if(item.shape==='icon')chip.classList.add('icon-only');
    if(item.shape==='avatar')chip.classList.add('avatar-only');
-   setVisual(chip,item,item.shape==='text');
+   if(item.shape==='avatar')setVisual(chip,item,false);else chip.textContent=item.label;
    element.appendChild(chip);
   }
 
@@ -542,7 +573,7 @@
   toggle.className='st-overflow-toggle';
   toggle.hidden=true;
   toggle.setAttribute('aria-label','Show overflow items');
-  toggle.textContent='•••';
+  toggle.textContent='More';
   pill.appendChild(toggle);
 
   return pill;
@@ -556,8 +587,7 @@
   hidden.forEach(function(el){
    var item=catalogItem(el.dataset.itemId);
    var row=document.createElement('div');row.className='st-overflow-row';
-   var visual=document.createElement('span');visual.className='st-real-icon';setVisual(visual,item,false);
-   row.appendChild(visual);
+   if(item.shape==='avatar'){var visual=document.createElement('span');visual.className='st-real-icon';setVisual(visual,item,false);row.appendChild(visual)}
    var text=document.createElement('span');text.textContent=item.label;row.appendChild(text);
    drawer.appendChild(row);
   });
@@ -567,16 +597,18 @@
    var preview=q('SakuraTeaHeaderPreview').getBoundingClientRect();
    var rect=pill.getBoundingClientRect();
    var left=Math.max(8,Math.min(preview.width-248,rect.left-preview.left));
-   drawer.style.left=left+'px';
+   drawer.style.left=left+'px';drawer.style.top=(rect.bottom-preview.top+8)+'px';
   }
  }
 
+ var previewLayoutFrame=0;
  function updateHeaderOverflow(){
   var surface=q('SakuraTeaHeaderPreviewSurface');
   if(!surface)return;
   q('SakuraTeaHeaderOverflowDrawer').hidden=true;
 
-  requestAnimationFrame(function(){
+  cancelAnimationFrame(previewLayoutFrame);previewLayoutFrame=requestAnimationFrame(function(){
+   previewLayoutFrame=0;
    surface.querySelectorAll('.st-preview-pill').forEach(function(pill){
     var host=pill.querySelector('.st-preview-items');
     var toggle=pill.querySelector('.st-overflow-toggle');
@@ -591,6 +623,8 @@
      items[i].classList.add('is-overflowed');
     }
    });
+   var values=readStyleSettings(),core=syncHeaderCore();
+   if(core&&core.positionHeaderElements)core.positionHeaderElements(surface,[{element:surface.querySelector('.st-preview-logo'),x:values.BuilderLogoX,y:values.BuilderLogoY},{element:surface.querySelector('.st-preview-name'),x:values.BuilderNameX,y:values.BuilderNameY},{element:surface.querySelector('.st-preview-pill'),x:values.BuilderHeaderX,y:values.BuilderHeaderY}]);
    var preview=q('SakuraTeaHeaderPreview');
    preview.style.height=Math.max(currentDevice()==='mobile'?220:168,surface.getBoundingClientRect().height+(currentDevice()==='mobile'?90:80))+'px';
   });
@@ -631,6 +665,7 @@
    var empty=document.createElement('div');empty.className='st-preview-empty';empty.textContent='Drag an item here to build your header.';surface.appendChild(empty);
   }
 
+  previewBrand(surface);
   updatePreviewActive();
   updateHeaderOverflow();
   refreshSaveState();
@@ -644,7 +679,8 @@
 
   catalog.forEach(function(item){
    var chip=document.createElement('button');chip.type='button';
-   chip.className='st-chip available';
+   var detected=item.available===true||['flower','space','separator'].indexOf(item.shape)>=0;
+   chip.className='st-chip available'+(detected?'':' not-detected');chip.title=detected?'Detected in your header':'Not detected on Home yet. Enable this control in Jellyfin or its plugin, then visit Home.';
    chip.draggable=true;
    chip.hidden=Boolean(q('SakuraTeaItemSearch').value)&&item.label.toLowerCase().indexOf(q('SakuraTeaItemSearch').value.toLowerCase())<0;
    chip.dataset.itemId=item.id;
@@ -675,8 +711,38 @@
   var add=document.createElement('div');add.className='st-labelchip';add.textContent='＋ Add';host.appendChild(add);
  }
 
+ function styleFields(){var core=syncHeaderCore();return core&&core.HEADER_STYLE_FIELDS||[]}
+ function readStyleSettings(){var values={};styleFields().forEach(function(field){var el=q(field.key);if(!el)return;values[field.key]=field.type==='range'?Number(el.value):field.type==='color'&&q(field.key+'Transparent').checked?'transparent':el.value});return values}
+ function fillStyleSettings(c){var core=syncHeaderCore();if(core&&core.normalizeHeaderStyle)c=core.normalizeHeaderStyle(c);styleFields().forEach(function(field){var value=c[field.key]==null?field.value:c[field.key];if(!q(field.key))return;if(field.type==='color'){q(field.key).value=value==='transparent'?'#000000':value;q(field.key+'Transparent').checked=value==='transparent'}else q(field.key).value=value})}
+ function buildStyleFields(){
+  var host=q('SakuraTeaStyleFields');if(host.children.length)return;
+  var previous='',groupHost=host;
+  styleFields().forEach(function(field){
+   if(field.group!==previous){groupHost=host;if(field.group==='Positioning'){groupHost=q('SakuraTeaPositionFields')}else if(field.group!=='Layout'){groupHost=document.createElement('details');if(field.group==='Positioning')groupHost.open=true;var heading=document.createElement('summary');heading.textContent=field.group;groupHost.appendChild(heading);host.appendChild(groupHost)}previous=field.group}
+   var row=document.createElement('div');row.className='st-extra-field';
+   var label=document.createElement('label');label.htmlFor=field.key;label.textContent=field.label;row.appendChild(label);
+   var input=document.createElement(field.type==='select'?'select':'input');input.id=field.key;
+   if(field.options)field.options.forEach(function(value){var option=document.createElement('option');option.value=value;option.textContent=value==='ServerName'?'Server name':value;input.appendChild(option)});
+   else {input.type=field.type;if(field.min!=null){input.min=field.min;input.max=field.max;input.step=1}}
+   row.appendChild(input);
+   if(field.type==='range'){var output=document.createElement('output');output.id=field.key+'Value';output.htmlFor=field.key;row.appendChild(output)}
+   if(field.type==='color'){var transparent=document.createElement('label');var check=document.createElement('input');check.type='checkbox';check.id=field.key+'Transparent';check.setAttribute('aria-label',field.label+' transparent');transparent.appendChild(check);transparent.appendChild(document.createTextNode(' Transparent'));row.appendChild(transparent);check.addEventListener('change',update)}
+   input.addEventListener('input',function(){if(field.type==='color')q(field.key+'Transparent').checked=false;if(field.group==='Positioning'){updateStyleOutputs();updateHeaderOverflow();refreshSaveState()}else update()});row.addEventListener('change',function(){if(field.group!=='Positioning')update()});groupHost.appendChild(row);
+  });fillStyleSettings({});
+ }
+ function previewBrand(surface){
+  var values=readStyleSettings(),display=values.BuilderBrandDisplay;if(!display||display==='None')return;
+  if(display!=='ServerName'){var logo=document.createElement('span');logo.className='st-preview-brand st-preview-logo';logo.textContent='✿';surface.appendChild(logo)}
+  if(display!=='Logo'){var name=document.createElement('span');name.className='st-preview-brand st-preview-name';name.textContent='Sakura Tea';surface.appendChild(name)}
+ }
+
+ function updateStyleOutputs(){
+  styleFields().forEach(function(field){var output=q(field.key+'Value');if(output)output.textContent=q(field.key).value+(field.unit||'%')+(field.key.endsWith('X')?' · '+(Number(q(field.key).value)===0?'Left':Number(q(field.key).value)===50?'Middle':Number(q(field.key).value)===100?'Right':''):field.key.endsWith('Y')&&Number(q(field.key).value)===0?' · Top':'')});
+ }
  function update(){
   var hp=q('SakuraTeaHeaderPreview'),hero=q('SakuraTeaHeroPreview');
+  var core=syncHeaderCore();if(core&&core.applyHeaderStyle)core.applyHeaderStyle(hp,readStyleSettings());
+  updateStyleOutputs();
   var hh=num('BuilderHeaderHeight',44),bs=num('BuilderHeaderButtonSize',34),is=num('BuilderHeaderIconSize',17),as=num('BuilderHeaderAvatarSize',30),sp=num('BuilderHeaderSpacing',7),op=num('BuilderHeaderOpacity',68);
   hp.style.setProperty('--hp-h',hh+'px');hp.style.setProperty('--hp-b',bs+'px');hp.style.setProperty('--hp-i',is+'px');hp.style.setProperty('--hp-a',as+'px');hp.style.setProperty('--hp-gap',sp+'px');hp.style.setProperty('--hp-alpha',(op/100).toFixed(2));hp.dataset.position=q('BuilderHeaderPosition').value||'Left';
   setText('BuilderHeaderHeightValue',hh+'px');setText('BuilderHeaderButtonSizeValue',bs+'px');setText('BuilderHeaderIconSizeValue',is+'px');setText('BuilderHeaderAvatarSizeValue',as+'px');setText('BuilderHeaderSpacingValue',sp+'px');setText('BuilderHeaderOpacityValue',op+'%');
@@ -689,7 +755,8 @@
   syncDevice();renderHeaderPreview();
  }
  function resetHeader(){
-  setVal('BuilderHeaderHeight',44);setVal('BuilderHeaderButtonSize',34);setVal('BuilderHeaderIconSize',17);setVal('BuilderHeaderAvatarSize',30);setVal('BuilderHeaderSpacing',7);setVal('BuilderHeaderOpacity',68);setVal('BuilderHeaderPosition','Left');setVal('BuilderHeaderItems','sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar');renderHeaderBuilder();update();
+  fillStyleSettings({});
+  setVal('BuilderHeaderHeight',44);setVal('BuilderHeaderButtonSize',34);setVal('BuilderHeaderIconSize',17);setVal('BuilderHeaderAvatarSize',30);setVal('BuilderHeaderSpacing',7);setVal('BuilderHeaderOpacity',68);setVal('BuilderHeaderPosition','Left');setVal('BuilderHeaderItems','jellyfin:profile-avatar|sakura:anime|jellyfin:favorites');renderHeaderBuilder();update();
  }
  function resetHero(){
   setVal('BuilderHeroHeight',76);setVal('BuilderHeroTitleSize',100);setVal('BuilderHeroButtonSize',90);setVal('BuilderBackdropDarkness',48);setVal('BuilderPetalDensity',55);setVal('BuilderAnimationSpeed',100);update();
@@ -702,12 +769,13 @@
   refreshCatalog();renderHeaderBuilder();renderHeaderPreview();
   Dashboard.showLoadingMsg();
   ensureHeaderCore().catch(function(){return null}).then(function(){
-   return ApiClient.getPluginConfiguration(pluginId);
+   buildStyleFields();return ApiClient.getPluginConfiguration(pluginId);
   }).then(function(c){
+   fillStyleSettings(c);q('HeaderEnabled').checked=c.HeaderEnabled!==false;q('DetailsEnabled').checked=c.DetailsEnabled===true;
    q('ThemeEnabled').checked=c.ThemeEnabled!==false;q('HeroEnabled').checked=c.HeroEnabled!==false;q('PetalsEnabled').checked=c.PetalsEnabled!==false;
    q('AnimeLibraryName').value=c.AnimeLibraryName||'Anime';q('HeroSlides').value=c.HeroSlides||10;q('HeroRotationSeconds').value=c.HeroRotationSeconds||9;
    setVal('BuilderHeaderHeight',c.BuilderHeaderHeight||44);setVal('BuilderHeaderButtonSize',c.BuilderHeaderButtonSize||34);setVal('BuilderHeaderIconSize',c.BuilderHeaderIconSize||17);setVal('BuilderHeaderAvatarSize',c.BuilderHeaderAvatarSize||30);setVal('BuilderHeaderSpacing',typeof c.BuilderHeaderSpacing==='number'?c.BuilderHeaderSpacing:7);setVal('BuilderHeaderOpacity',c.BuilderHeaderOpacity||68);setVal('BuilderHeaderPosition',c.BuilderHeaderPosition||'Left');
-   setVal('BuilderHeaderItems',typeof c.BuilderHeaderItems==='string'?c.BuilderHeaderItems:'sakura:flower|jellyfin:favorites|sakura:anime|sakura:not-safe|jellyfin:user-menu|jellyfin:cast|jellyfin:profile-avatar');
+   setVal('BuilderHeaderItems',typeof c.BuilderHeaderItems==='string'?c.BuilderHeaderItems:'jellyfin:profile-avatar|sakura:anime|jellyfin:favorites');
    setVal('BuilderHeroHeight',c.BuilderHeroHeight||76);setVal('BuilderHeroTitleSize',c.BuilderHeroTitleSize||100);setVal('BuilderHeroButtonSize',c.BuilderHeroButtonSize||90);setVal('BuilderBackdropDarkness',c.BuilderBackdropDarkness||48);setVal('BuilderPetalDensity',typeof c.BuilderPetalDensity==='number'?c.BuilderPetalDensity:55);setVal('BuilderAnimationSpeed',typeof c.BuilderAnimationSpeed==='number'?c.BuilderAnimationSpeed:100);
    setVal('BuilderPerformanceMode',c.BuilderPerformanceMode||'Balanced');setVal('BuilderNavOrder',c.BuilderNavOrder||'Favourites|Anime|Not Safe');
    refreshCatalog();renderHeaderBuilder();renderNavLabels();update();savedValues=snapshot();
@@ -1007,6 +1075,7 @@
   window.removeEventListener('sakura-tea:header-catalog-changed',handleHeaderCatalogChanged);
   if(usesWindowResizeFallback)window.removeEventListener('resize',updateHeaderOverflow);
   if(previewResizeObserver)previewResizeObserver.disconnect();
+  cancelAnimationFrame(previewLayoutFrame);previewLayoutFrame=0;
   if(dragGhost)dragGhost.remove();
   dragGhost=null;dragState=null;pointerState=null;
  }
@@ -1017,6 +1086,7 @@
  form.addEventListener('submit',function(e){
   e.preventDefault();if(loading||saving||!savedValues||!form.reportValidity())return;setHeaderItems(headerItems());saving=true;form.inert=true;refreshSaveState();Dashboard.showLoadingMsg();
   ApiClient.getPluginConfiguration(pluginId).then(function(c){
+   Object.assign(c,readStyleSettings());c.HeaderEnabled=q('HeaderEnabled').checked;c.DetailsEnabled=q('DetailsEnabled').checked;
    c.ThemeEnabled=q('ThemeEnabled').checked;c.HeroEnabled=q('HeroEnabled').checked;c.PetalsEnabled=q('PetalsEnabled').checked;c.AnimeLibraryName=q('AnimeLibraryName').value.trim()||'Anime';c.HeroSlides=num('HeroSlides',10);c.HeroRotationSeconds=num('HeroRotationSeconds',9);
    c.BuilderHeaderHeight=num('BuilderHeaderHeight',44);c.BuilderHeaderButtonSize=num('BuilderHeaderButtonSize',34);c.BuilderHeaderIconSize=num('BuilderHeaderIconSize',17);c.BuilderHeaderAvatarSize=num('BuilderHeaderAvatarSize',30);c.BuilderHeaderSpacing=num('BuilderHeaderSpacing',7);c.BuilderHeaderOpacity=num('BuilderHeaderOpacity',68);c.BuilderHeaderPosition=q('BuilderHeaderPosition').value||'Left';c.BuilderHeaderItems=q('BuilderHeaderItems').value;
    c.BuilderHeroHeight=num('BuilderHeroHeight',76);c.BuilderHeroTitleSize=num('BuilderHeroTitleSize',100);c.BuilderHeroButtonSize=num('BuilderHeroButtonSize',90);c.BuilderBackdropDarkness=num('BuilderBackdropDarkness',48);c.BuilderPetalDensity=num('BuilderPetalDensity',55);c.BuilderAnimationSpeed=num('BuilderAnimationSpeed',100);

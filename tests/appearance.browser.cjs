@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const assert = require('node:assert/strict');
 const base = 'src/Jellyfin.Plugin.SakuraTea/Inject/';
 const scripts = ['sakura-tea-appearance.js', 'sakura-tea-header-core.js', 'sakura-tea-header-runtime.js', 'sakura-tea-runtime.js'];
-const styles = ['Theme/sakura-tea-theme.css', 'Hero/sakura-tea-hero.css', 'Petals/sakura-tea-petals.css', 'Theme/sakura-tea-appearance.css'];
+const styles = ['Theme/sakura-tea-theme.css', 'Hero/sakura-tea-hero.css', 'Petals/sakura-tea-petals.css', 'Theme/sakura-tea-appearance.css', 'Theme/sakura-tea-controls.css'];
 const html = '<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;color:white;font-family:system-ui}.sections h2{margin:0;padding:12px}.card{width:140px;height:120px;background:#25202b;margin:12px}</style>'
  + styles.map(file => '<style>' + fs.readFileSync(base + file, 'utf8') + '</style>').join('')
  + '</head><body><header class="skinHeader"><div class="headerTabs"><a href="#/home">Anime</a><a href="#/home?tab=1">Favourites</a></div><div class="headerRight"><button class="headerUserButton">User Menu</button></div></header>'
@@ -78,7 +78,7 @@ const html = '<!doctype html><html><head><meta charset="utf-8"><style>body{margi
   await page.screenshot({path:'/tmp/sakura-release-dark-mobile.png'});
   // Empty builder layouts still leave the appearance switch reachable.
   await page.evaluate(()=>{window.testConfig.BuilderHeaderItems='';window.dispatchEvent(new Event('sakura-tea:settings-changed'))});
-  await page.waitForFunction(()=>document.querySelector('#sakuraTeaFloatingHeader')?.querySelectorAll('.sakuraTeaHeaderButton').length===0);await slider.waitFor();assert.equal(await page.locator('.sakuraTeaHeaderPill').count(),1);
+  await page.waitForFunction(()=>document.querySelector('#sakuraTeaFloatingHeader')?.querySelectorAll('.sakuraTeaHeaderButton:not(.sakuraTeaOverflowToggle)').length===0);await slider.waitFor();assert.equal(await page.locator('.sakuraTeaHeaderPill').count(),1);
   await slider.press('ArrowRight');await page.locator('#sakuraTeaHero').waitFor();
   await page.emulateMedia({reducedMotion:'reduce'});
   assert.equal(await page.locator('.sakuraTeaAppearancePupil').evaluate(e=>getComputedStyle(e).transitionDuration),'0s');
