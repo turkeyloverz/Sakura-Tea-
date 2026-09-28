@@ -9,6 +9,15 @@
     "repositoryUrl": "https://github.com/turkeyloverz/Sakura-Tea-",
     "versions": [
       {
+        "version": "0.1.16.0",
+        "changelog": "Personal pupil slider, per-user dark mode without hero or wallpaper, and full-width sakura divider.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/turkeyloverz/Sakura-Tea-/releases/download/0.1.16/Jellyfin.Plugin.SakuraTea_12.0.0.zip",
+        "checksum": "4FC67509C5C03012BC0945A15141CE00",
+        "timestamp": "2026-09-28T17:02:49.0000000Z",
+        "dependencies": []
+      },
+      {
         "version": "0.1.0.15",
         "changelog": "Sakura Tea alpha test build.",
         "targetAbi": "12.0.0.0",
