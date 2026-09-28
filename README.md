@@ -2,14 +2,17 @@
 
 Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic anime-first home screen with Sakura styling.
 
-> **Status:** early development scaffold for `0.1.0-alpha.1`. It is not ready for normal installation yet.
+> **Status:** `0.1.16` alpha for Jellyfin 12 (plugin version `0.1.16.0`).
 
-## Planned 0.1.0-alpha.1
+## Features
 
 - Sakura Tea theme foundation
 - Anime-library hero
 - Sakura petal divider
-- Floating background petals and flowers
+- Full-width divider with extra petals and two slowly spinning, glowing sakura flowers
+- Compact pupil slider in the unified floating header
+- Personal dark mode removes the hero, wallpaper, petals, glow, and blur
+- UI builder with live preview, searchable controls, and keyboard reordering
 - Clean enable/disable configuration
 - Jellyfin SPA-safe runtime foundation
 
@@ -19,9 +22,13 @@ Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic a
 - .NET: **10.0**
 - Frontend injection: **File Transformation** plugin
 
-## Test channel
+## Personal appearance
 
-The first direct-install test package is published as internal version `0.1.0.0`.
+Move the pupil slider right for effects or left for dark mode. Use the arrow keys
+when the slider has focus. Preferences are stored separately for each Jellyfin
+server and user in the current browser, persist across reloads, and synchronize
+between tabs. They do not change the administrator’s settings or other users’
+appearance. If browser storage is blocked, the choice lasts for the current page.
 
 ## Build
 
@@ -29,7 +36,7 @@ The first direct-install test package is published as internal version `0.1.0.0`
 dotnet build SakuraTea.slnx --configuration Release
 ```
 
-The repository currently contains the plugin/server foundation and frontend module boundaries. The approved Sakura Tea hero and petal design will be wired into these modules next.
+See [frontend checks](tests/README.md) for runtime and browser validation.
 
 ## License
 

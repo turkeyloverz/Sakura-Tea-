@@ -253,7 +253,7 @@ html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab.is-active > .section
     backdrop-filter: blur(1px);
 }
 
-html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab.is-active > .sections > *:not(#sakuraTeaHomeDecor) {
+html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab.is-active > .sections > * {
     position: relative;
     z-index: 2;
 }

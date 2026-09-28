@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
       release: ${{ steps.version.outputs.release }}
     steps:
       - name: Parse release version
@@ -25,8 +26,12 @@ jobs:
         shell: bash
         run: |
           MSG=$(jq -r '.head_commit.message' "$GITHUB_EVENT_PATH" | head -n1)
-          if [[ "$MSG" =~ \(v([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\) ]]; then
-            echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          if [[ "$MSG" =~ \(v([0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?)\) ]]; then
+            TAG="${BASH_REMATCH[1]}"
+            VERSION="$TAG"
+            if [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then VERSION="$VERSION.0"; fi
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
             echo "release=true" >> "$GITHUB_OUTPUT"
           else
             echo "release=false" >> "$GITHUB_OUTPUT"
@@ -61,6 +66,7 @@ jobs:
           Path("/tmp/sakura-config.js").write_text("\n".join(scripts), encoding="utf-8")
           PY
           node --check /tmp/sakura-config.js
+          node --test tests/*.test.cjs
 
       - uses: actions/setup-dotnet@v4
         with:
@@ -92,7 +98,7 @@ jobs:
             --arg targetAbi "$TARGET_ABI" \
             '{
               category: "General",
-              changelog: "Sakura Tea alpha test build.",
+              changelog: "Personal pupil slider, per-user dark mode without hero or wallpaper, and full-width sakura divider.",
               description: "A Sakura-inspired cinematic Jellyfin Web experience.",
               guid: "3bf6515b-c10a-4307-a3e8-942eaffe900d",
               name: "Sakura Tea",
@@ -112,7 +118,7 @@ jobs:
           )
 
           CHECKSUM=$(md5sum "$ZIP_PATH" | awk '{print toupper($1)}')
-          SOURCE_URL="https://github.com/turkeyloverz/Sakura-Tea-/releases/download/$VERSION/$ZIP_NAME"
+          SOURCE_URL="https://github.com/turkeyloverz/Sakura-Tea-/releases/download/${{ needs.parse.outputs.tag }}/$ZIP_NAME"
 
           echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
           echo "checksum=$CHECKSUM" >> "$GITHUB_OUTPUT"
@@ -132,7 +138,7 @@ jobs:
             '.[0].versions = (
               [{
                 version: $version,
-                changelog: "Sakura Tea alpha test build.",
+                changelog: "Personal pupil slider, per-user dark mode without hero or wallpaper, and full-width sakura divider.",
                 targetAbi: $targetAbi,
                 sourceUrl: $sourceUrl,
                 checksum: $checksum,
@@ -158,17 +164,23 @@ jobs:
         shell: bash
         run: |
           VERSION="${{ needs.parse.outputs.version }}"
-          git tag -a "$VERSION" -m "Sakura Tea $VERSION"
-          git push origin "$VERSION"
+          TAG="${{ needs.parse.outputs.tag }}"
+          git tag -a "$TAG" -m "Sakura Tea $TAG"
+          git push origin "$TAG"
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.parse.outputs.version }}
-          name: Sakura Tea ${{ needs.parse.outputs.version }} alpha
+          tag_name: ${{ needs.parse.outputs.tag }}
+          name: Sakura Tea ${{ needs.parse.outputs.tag }}
           prerelease: true
           body: |
-            Sakura Tea early alpha test build for Jellyfin 12.
+            Sakura Tea ${{ needs.parse.outputs.tag }} for Jellyfin 12.
+
+            - Compact pupil slider remembers each user’s appearance in this browser.
+            - Dark mode removes the hero, wallpaper, petals, glow, and blur.
+            - Full-width divider with more petals and two slowly spinning sakura flowers.
+            - Unified header and improved UI builder.
 
             Requires File Transformation for frontend injection.
           files: dist/${{ steps.package.outputs.zip_name }}

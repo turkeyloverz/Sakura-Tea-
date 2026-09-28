@@ -12,7 +12,6 @@
     const STATE = {
         hero: null,
         divider: null,
-        decor: null,
         host: null,
         pendingHost: null,
         renderGeneration: 0,
@@ -104,13 +103,19 @@
         let density = bounded(config.BuilderPetalDensity, 0, 100, 55);
         if (config.BuilderPerformanceMode === 'Performance') density = Math.min(density, 28);
         const speed = bounded(config.BuilderAnimationSpeed, 0, 140, 100);
-        const particles = element.querySelectorAll('span');
+        const particles = element.querySelectorAll('.sakuraTeaLinePetal');
         const count = Math.round(particles.length * density / 100);
         particles.forEach((particle, index) => {
             particle.hidden = index >= count;
+            particle.style.setProperty('--x', (4 + 92 * (index + .5) / Math.max(1, count)) + '%');
             const duration = parseFloat(particle.style.getPropertyValue('--t')) || 7;
             particle.style.animationDuration = (duration * 100 / (speed || 100)) + 's';
             particle.style.animationPlayState = !speed || document.hidden ? 'paused' : 'running';
+        });
+        // End flowers remain visible even at zero petal density.
+        element.querySelectorAll('.sakuraTeaLineFlower').forEach((flower) => {
+            flower.style.animationDuration = (36 * 100 / (speed || 100)) + 's';
+            flower.style.animationPlayState = !speed || document.hidden ? 'paused' : 'running';
         });
     }
 
@@ -257,88 +262,37 @@
         const divider = document.createElement('div');
         divider.id = 'sakuraTeaDivider';
         divider.className = 'sakuraTeaPetalDivider';
+        divider.setAttribute('aria-hidden', 'true');
 
         const line = document.createElement('div');
         line.className = 'sakuraTeaPetalLine';
         divider.appendChild(line);
 
-        const linePetals = [
-            [8,45,-24,1.15,-0.2],[13,58,50,.78,-.7],[19,38,79,1,-1.5],[25,56,-17,.78,-2.1],
-            [31,41,32,1.2,-1.1],[37,59,66,1,-2.9],[43,39,-36,.76,-.4],[48,57,46,1,-2],
-            [53,39,80,1.2,-1.4],[59,57,-20,.75,-3],[65,41,31,1,-.9],[71,58,69,1.18,-2.5],
-            [77,39,-40,.75,-1.6],[83,56,48,1,-3.3],[89,41,84,1.16,-.3],[94,53,-20,.76,-2.2]
-        ];
-
-        linePetals.forEach((data, index) => {
+        // More petals, with positions redistributed across the whole line at any density.
+        for (let index = 0; index < 64; index += 1) {
             const petal = document.createElement('span');
             petal.className = 'sakuraTeaLinePetal';
-            petal.style.setProperty('--x', data[0] + '%');
-            petal.style.setProperty('--y', data[1] + '%');
-            petal.style.setProperty('--r', data[2] + 'deg');
-            petal.style.setProperty('--s', data[3]);
-            petal.style.setProperty('--d', data[4] + 's');
+            petal.style.setProperty('--x', (4 + 92 * (index + .5) / 64) + '%');
+            petal.style.setProperty('--y', (35 + (index * 7 % 30)) + '%');
+            petal.style.setProperty('--r', (-55 + index * 47 % 130) + 'deg');
+            petal.style.setProperty('--s', .65 + (index % 5) * .12);
+            petal.style.setProperty('--d', (-index * .63) + 's');
             petal.style.setProperty('--t', (5.2 + (index % 4) * .7) + 's');
             divider.appendChild(petal);
-        });
+        }
 
-        [[16,8,9,-1],[34,69,11,-2],[69,7,10,-4],[87,66,12,-1.3]].forEach((data) => {
+        ['left', 'right'].forEach((side) => {
             const flower = document.createElement('span');
             flower.className = 'sakuraTeaLineFlower';
-            flower.textContent = '✿';
-            flower.style.setProperty('--x', data[0] + '%');
-            flower.style.setProperty('--y', data[1] + '%');
-            flower.style.setProperty('--fs', data[2] + 'px');
-            flower.style.setProperty('--d', data[3] + 's');
+            flower.dataset.side = side;
+            // Five notched petals make the blossom recognizable without a remote image.
+            flower.innerHTML = '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">'
+                + Array.from({ length: 5 }, (_, index) => '<path transform="rotate(' + index * 72 + ' 32 32)" d="M32 32 C18 24 17 12 25 5 L32 10 L39 5 C47 12 46 24 32 32Z" fill="#ffc4da" stroke="#fff0f5" stroke-width="1.2"/>').join('')
+                + '<circle cx="32" cy="32" r="5" fill="#fff0d9"/></svg>';
             divider.appendChild(flower);
         });
 
         return divider;
-    }
-
-    function createHomeDecor() {
-        const decor = document.createElement('div');
-        decor.id = 'sakuraTeaHomeDecor';
-
-        const petals = [
-            [5,3,22,1.2,-.4,.42],[14,8,-34,.75,-2,.32],[23,5,61,1,-4,.38],[34,12,15,1,-1.1,.36],
-            [43,4,-28,.72,-3,.30],[55,10,75,1.25,-1.8,.43],[66,5,-16,1,-4.6,.36],[77,12,43,.72,-.9,.31],
-            [91,5,-40,1,-2.7,.38],[8,25,57,.72,-1.4,.32],[18,31,-22,1,-3.6,.36],[30,27,69,1.3,-.7,.44],
-            [41,36,-31,1,-2.9,.38],[53,29,33,.72,-1.9,.31],[64,37,81,1.25,-3.1,.43],[76,26,-17,1,-2.3,.36],
-            [91,33,48,.72,-.5,.30],[12,49,-32,1,-2.2,.35],[29,55,71,1.25,-4.2,.43],[47,48,24,.72,-1,.30],
-            [65,58,-40,1,-3.4,.38],[88,51,55,1.2,-1.7,.41],[7,70,31,.75,-2.8,.31],[22,78,-48,1,-1.2,.36],
-            [39,68,76,1.2,-3.8,.42],[58,82,-16,.78,-.6,.32],[74,72,35,1,-2.4,.37],[93,86,63,1.15,-4.4,.40]
-        ];
-
-        petals.forEach((data, index) => {
-            const petal = document.createElement('span');
-            petal.className = 'sakuraTeaBgPetal';
-            petal.style.setProperty('--x', data[0] + '%');
-            petal.style.setProperty('--y', data[1] + '%');
-            petal.style.setProperty('--r', data[2] + 'deg');
-            petal.style.setProperty('--s', data[3]);
-            petal.style.setProperty('--d', data[4] + 's');
-            petal.style.setProperty('--o', data[5]);
-            petal.style.setProperty('--t', (7.4 + (index % 6) * .75) + 's');
-            decor.appendChild(petal);
-        });
-
-        [
-            [10,7,10,-.5,.42],[38,9,14,-2.3,.50],[86,7,20,-4,.53],[7,29,14,-3,.47],
-            [35,33,10,-1.3,.40],[82,29,20,-4.6,.52],[19,52,14,-2,.47],[70,54,10,-.8,.39],
-            [48,74,18,-3.2,.50],[89,78,12,-1.7,.44]
-        ].forEach((data) => {
-            const flower = document.createElement('span');
-            flower.className = 'sakuraTeaBgFlower';
-            flower.textContent = '✿';
-            flower.style.setProperty('--x', data[0] + '%');
-            flower.style.setProperty('--y', data[1] + '%');
-            flower.style.setProperty('--fs', data[2] + 'px');
-            flower.style.setProperty('--d', data[3] + 's');
-            flower.style.setProperty('--o', data[4]);
-            decor.appendChild(flower);
-        });
-
-        return decor;
     }
 
     function metaPart(text, className) {
@@ -469,7 +423,7 @@
         }, seconds * 1000);
     }
 
-    function removeMount() {
+    function removeMount(keepHeader = false) {
         stopRotation();
         STATE.pendingHost = null;
         STATE.renderGeneration += 1;
@@ -482,17 +436,12 @@
             STATE.divider.remove();
         }
 
-        if (STATE.decor) {
-            STATE.decor.remove();
-        }
-
-        if (window.SakuraTeaHeaderRuntime) {
+        if (!keepHeader && window.SakuraTeaHeaderRuntime) {
             window.SakuraTeaHeaderRuntime.unmount();
         }
 
         STATE.hero = null;
         STATE.divider = null;
-        STATE.decor = null;
         STATE.host = null;
         STATE.items = [];
         STATE.index = 0;
@@ -528,11 +477,11 @@
         STATE.config = config;
         applyVisualSettings(config);
 
-        if (config.ThemeEnabled && window.SakuraTeaHeaderRuntime) {
+        if (config.ThemeEnabled && window.SakuraTeaHeaderRuntime && !document.getElementById('sakuraTeaFloatingHeader')) {
             window.SakuraTeaHeaderRuntime.mount(config);
         }
 
-        if (!config.HeroEnabled && !config.PetalsEnabled) {
+        if (window.SakuraTeaAppearance?.enabled === false || (!config.HeroEnabled && !config.PetalsEnabled)) {
             STATE.host = host;
             return;
         }
@@ -561,9 +510,6 @@
             applyEffectSettings(STATE.divider, config);
             host.parentNode.insertBefore(STATE.divider, host);
 
-            STATE.decor = createHomeDecor();
-            applyEffectSettings(STATE.decor, config);
-            host.insertBefore(STATE.decor, host.firstChild);
         }
 
         STATE.host = host;
@@ -571,6 +517,11 @@
     }
 
     function reconcile() {
+        if (window.SakuraTeaAppearance?.sync()) {
+            STATE.generation += 1;
+            removeMount();
+            STATE.config = null;
+        }
         setHomeClass();
 
         if (!isHomeRoute() || !window.ApiClient) {
@@ -594,8 +545,7 @@
 
         if (STATE.host === host
             && (!STATE.hero || STATE.hero.isConnected)
-            && (!STATE.divider || STATE.divider.isConnected)
-            && (!STATE.decor || STATE.decor.isConnected)) {
+            && (!STATE.divider || STATE.divider.isConnected)) {
             if (window.SakuraTeaHeaderRuntime) {
                 window.SakuraTeaHeaderRuntime.sync();
             }
@@ -622,12 +572,20 @@
     scheduleReconcile();
 
     window.addEventListener('sakura-tea:settings-changed', refreshSettings);
+    window.addEventListener('sakura-tea:appearance-changed', () => {
+        STATE.generation += 1;
+        // Preserve the focused slider while cancelling any pending hero request.
+        removeMount(true);
+        const host = findHost();
+        if (host) mount(host);
+        else scheduleReconcile();
+    });
     window.addEventListener('hashchange', scheduleReconcile);
     window.addEventListener('popstate', scheduleReconcile);
     window.addEventListener('pageshow', scheduleReconcile);
     document.addEventListener('viewshow', scheduleReconcile);
     document.addEventListener('visibilitychange', () => {
-        [STATE.divider, STATE.decor].filter(Boolean).forEach((element) => applyEffectSettings(element, STATE.config || {}));
+        [STATE.divider].filter(Boolean).forEach((element) => applyEffectSettings(element, STATE.config || {}));
         if (document.hidden) {
             stopRotation();
         } else {

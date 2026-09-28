@@ -488,6 +488,17 @@
             }
         });
 
+        const appearance = window.SakuraTeaAppearance?.createControl();
+        if (appearance) {
+            let pill = header.querySelector('.sakuraTeaHeaderPill');
+            if (!pill) {
+                pill = document.createElement('div');
+                pill.className = 'sakuraTeaHeaderPill sakuraTeaNavPill';
+                header.appendChild(pill);
+            }
+            pill.appendChild(appearance);
+        }
+
         return header.childElementCount ? header : null;
     }
 
@@ -497,14 +508,23 @@
         STATE.root = create(STATE.config);
         if (STATE.root) {
             document.body.appendChild(STATE.root);
+            updateContentTop();
         }
         return STATE.root;
     }
+
+    function updateContentTop() {
+        if (STATE.root) document.documentElement.style.setProperty('--sakura-tea-content-top',
+            Math.ceil(STATE.root.getBoundingClientRect().bottom + 20) + 'px');
+    }
+
+    window.addEventListener('resize', updateContentTop);
 
     function sync() {
         if (!STATE.root || !STATE.root.isConnected) {
             return;
         }
+        updateContentTop();
 
         if (STATE.sourceBindings.some((record) => !record.source.isConnected)) {
             mount(STATE.config);

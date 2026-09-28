@@ -146,8 +146,8 @@
 #SakuraTeaConfigPage .st-action{height:31px;padding:0 12px;border-radius:999px;display:flex;align-items:center;font-size:.68em}
 #SakuraTeaConfigPage .st-action.primary{background:#fff7fb;color:#151016}
 #SakuraTeaConfigPage .st-action.secondary{background:rgba(20,16,24,.75);border:1px solid rgba(255,255,255,.11)}
-#SakuraTeaConfigPage .st-heroline{position:absolute;z-index:2;left:30%;right:8%;bottom:13px;height:2px;background:linear-gradient(90deg,transparent,var(--st-pink),#fff,var(--st-lav),transparent);box-shadow:0 0 8px rgba(255,147,184,.7)}
-#SakuraTeaConfigPage .st-hero-petals{position:absolute;inset:0;z-index:1;opacity:var(--hero-petals);pointer-events:none}
+#SakuraTeaConfigPage .st-heroline{position:absolute;z-index:2;left:0;right:0;bottom:13px;height:2px;background:linear-gradient(90deg,transparent,var(--st-pink),#fff,var(--st-lav),transparent);box-shadow:0 0 8px rgba(255,147,184,.7)}
+#SakuraTeaConfigPage .st-hero-petals{position:absolute;left:0;right:0;bottom:2px;height:24px;z-index:1;opacity:var(--hero-petals);pointer-events:none}
 #SakuraTeaConfigPage .st-petal{position:absolute;width:6px;height:10px;border-radius:80% 20% 75% 25%;background:linear-gradient(145deg,#fff4f8,#ffd2df 42%,#ff9fbd);transform:rotate(var(--r))}
 #SakuraTeaConfigPage .st-stage[data-device="tablet"] .st-herocontent{width:58%}
 #SakuraTeaConfigPage .st-stage[data-device="mobile"] .st-hero-preview{height:390px}
@@ -190,6 +190,9 @@
 #SakuraTeaConfigPage button:disabled{opacity:.45;cursor:default}
 #SakuraTeaConfigPage .st-hero-preview{height:calc(var(--hero-h) * 2.5px)}
 #SakuraTeaConfigPage [hidden]{display:none!important}
+#SakuraTeaConfigPage .st-heroline::before,#SakuraTeaConfigPage .st-heroline::after{content:"✿";position:absolute;top:-12px;font-size:24px;color:#ffc4da;text-shadow:0 0 8px #ff93b8}
+#SakuraTeaConfigPage .st-heroline::before{left:4px}
+#SakuraTeaConfigPage .st-heroline::after{right:4px}
 </style>
 
 <div data-role="content">
@@ -222,7 +225,7 @@
    <h3>Core features</h3>
    <label class="emby-checkbox-label"><input id="ThemeEnabled" type="checkbox" is="emby-checkbox"><span>Enable Sakura Tea theme</span></label><br>
    <label class="emby-checkbox-label"><input id="HeroEnabled" type="checkbox" is="emby-checkbox"><span>Enable Anime hero</span></label><br>
-   <label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable petals and flowers</span></label>
+   <label class="emby-checkbox-label"><input id="PetalsEnabled" type="checkbox" is="emby-checkbox"><span>Enable sakura divider</span></label>
   </div>
   <div class="st-overview-card">
    <h3>Anime source</h3>
@@ -310,7 +313,7 @@
        <div class="st-actions"><div class="st-action primary">▶ Play</div><div class="st-action secondary">ⓘ More info</div></div>
       </div>
       <div class="st-hero-petals">
-       <i class="st-petal" style="left:8%;top:18%;--r:22deg"></i><i class="st-petal" style="left:19%;top:63%;--r:-32deg"></i><i class="st-petal" style="left:31%;top:26%;--r:72deg"></i><i class="st-petal" style="left:43%;top:69%;--r:16deg"></i><i class="st-petal" style="left:56%;top:34%;--r:-48deg"></i><i class="st-petal" style="left:67%;top:17%;--r:34deg"></i><i class="st-petal" style="left:77%;top:61%;--r:62deg"></i><i class="st-petal" style="left:89%;top:29%;--r:-18deg"></i>
+<i class="st-petal" style="left:5%;top:25%;--r:-40deg"></i><i class="st-petal" style="left:8%;top:35%;--r:-3deg"></i><i class="st-petal" style="left:11%;top:45%;--r:34deg"></i><i class="st-petal" style="left:14%;top:25%;--r:-29deg"></i><i class="st-petal" style="left:17%;top:35%;--r:8deg"></i><i class="st-petal" style="left:20%;top:45%;--r:45deg"></i><i class="st-petal" style="left:23%;top:25%;--r:-18deg"></i><i class="st-petal" style="left:26%;top:35%;--r:19deg"></i><i class="st-petal" style="left:29%;top:45%;--r:56deg"></i><i class="st-petal" style="left:32%;top:25%;--r:-7deg"></i><i class="st-petal" style="left:35%;top:35%;--r:30deg"></i><i class="st-petal" style="left:38%;top:45%;--r:-33deg"></i><i class="st-petal" style="left:41%;top:25%;--r:4deg"></i><i class="st-petal" style="left:44%;top:35%;--r:41deg"></i><i class="st-petal" style="left:47%;top:45%;--r:-22deg"></i><i class="st-petal" style="left:50%;top:25%;--r:15deg"></i><i class="st-petal" style="left:53%;top:35%;--r:52deg"></i><i class="st-petal" style="left:56%;top:45%;--r:-11deg"></i><i class="st-petal" style="left:59%;top:25%;--r:26deg"></i><i class="st-petal" style="left:62%;top:35%;--r:-37deg"></i><i class="st-petal" style="left:65%;top:45%;--r:0deg"></i><i class="st-petal" style="left:68%;top:25%;--r:37deg"></i><i class="st-petal" style="left:71%;top:35%;--r:-26deg"></i><i class="st-petal" style="left:74%;top:45%;--r:11deg"></i><i class="st-petal" style="left:77%;top:25%;--r:48deg"></i><i class="st-petal" style="left:80%;top:35%;--r:-15deg"></i><i class="st-petal" style="left:83%;top:45%;--r:22deg"></i><i class="st-petal" style="left:86%;top:25%;--r:59deg"></i><i class="st-petal" style="left:89%;top:35%;--r:-4deg"></i><i class="st-petal" style="left:92%;top:45%;--r:33deg"></i><i class="st-petal" style="left:95%;top:25%;--r:-30deg"></i>
       </div>
       <div class="st-heroline"></div>
      </div>
@@ -322,7 +325,7 @@
     <div class="st-sliderrow"><span>Title size</span><input id="BuilderHeroTitleSize" type="range" min="70" max="125" step="1"><span id="BuilderHeroTitleSizeValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Button size</span><input id="BuilderHeroButtonSize" type="range" min="70" max="115" step="1"><span id="BuilderHeroButtonSizeValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Backdrop darkness</span><input id="BuilderBackdropDarkness" type="range" min="15" max="80" step="1"><span id="BuilderBackdropDarknessValue" class="st-val"></span></div>
-    <div class="st-sliderrow"><span>Petal density</span><input id="BuilderPetalDensity" type="range" min="0" max="100" step="1"><span id="BuilderPetalDensityValue" class="st-val"></span></div>
+    <div class="st-sliderrow"><span>Divider petal density</span><input id="BuilderPetalDensity" type="range" min="0" max="100" step="1"><span id="BuilderPetalDensityValue" class="st-val"></span></div>
     <div class="st-sliderrow"><span>Petal animation speed</span><input id="BuilderAnimationSpeed" type="range" min="0" max="140" step="5"><span id="BuilderAnimationSpeedValue" class="st-val"></span></div>
    </div>
   </div>

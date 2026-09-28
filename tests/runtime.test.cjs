@@ -102,14 +102,18 @@ test('hero controls apply bounded CSS values to the live hero', () => {
 
 test('effect budget, zero density, and pause apply to actual particles', () => {
     const { api, document } = runtime();
-    const particles = Array.from({length:100}, () => ({style:{getPropertyValue:()=> '8s'}}));
-    const element = {querySelectorAll:()=> particles};
+    const particles = Array.from({length:100}, () => ({style:{getPropertyValue:()=> '8s',setProperty(){}}}));
+    const flowers=Array.from({length:2},()=>({style:{}}));
+    const element = {querySelectorAll:selector=>selector==='.sakuraTeaLinePetal'?particles:flowers};
     api.applyEffectSettings(element, {BuilderPetalDensity:100, BuilderPerformanceMode:'Performance', BuilderAnimationSpeed:50});
     assert.equal(particles.filter(p=>!p.hidden).length,28);
     assert.equal(particles[0].style.animationDuration,'16s');
+    assert.equal(flowers[0].style.animationDuration,'72s');
+    assert.equal(flowers.some(f=>f.hidden),false);
     api.applyEffectSettings(element, {BuilderPetalDensity:0, BuilderAnimationSpeed:0});
     assert.equal(particles.filter(p=>!p.hidden).length,0);
     assert.equal(particles[0].style.animationPlayState,'paused');
+    assert.equal(flowers[0].style.animationPlayState,'paused');
     document.hidden = true;
     api.applyEffectSettings(element, {BuilderPetalDensity:100, BuilderAnimationSpeed:100});
     assert.equal(particles[0].style.animationPlayState,'paused');
