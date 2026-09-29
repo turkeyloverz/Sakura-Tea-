@@ -12,7 +12,7 @@
  --st-border:rgba(255,255,255,.10);--st-muted:rgba(255,255,255,.58);--st-text:#f8f8fb;
  --st-pink:#ff93b8;--st-pink2:#e981a5;--st-pinkSoft:#ffc5da;--st-lav:#bda7ff;
  --st-wallpaper:url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg");
- --st-logo:url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/pngwing.com.png");
+ --st-logo:none;
  background:var(--st-bg);color:var(--st-text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;
  padding:1em .8em 3em!important;box-sizing:border-box
 }
@@ -405,7 +405,7 @@
  var HeaderCore=null;
  var headerCorePromise=null;
  var catalog=[];
- var REQUIRED_HEADER_CORE_VERSION=8;
+ var REQUIRED_HEADER_CORE_VERSION=9;
  var DEFAULT_HEADER_ITEMS='jellyfin:profile-avatar|sakura:anime|jellyfin:favorites';
  var FALLBACK_CATALOG=[
   {id:'sakura:flower',label:'Sakura Flower',icon:'🌸',shape:'flower'},
@@ -451,7 +451,7 @@
   headerCorePromise=new Promise(function(resolve,reject){
    var script=document.createElement('script');
    var url=headerCoreAssetUrl();
-   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=8';
+   script.src=url+(url.indexOf('?')>=0?'&':'?')+'config=9';
    script.async=true;
    script.dataset.sakuraTeaConfigCore='true';
    script.onload=function(){
@@ -742,7 +742,7 @@
  }
  function update(){
   var hp=q('SakuraTeaHeaderPreview'),hero=q('SakuraTeaHeroPreview');
-  var core=syncHeaderCore();if(core&&core.applyHeaderStyle)core.applyHeaderStyle(hp,readStyleSettings());
+  var core=syncHeaderCore();if(core&&core.applyHeaderStyle){core.applyHeaderStyle(hp,readStyleSettings());page.style.setProperty('--st-logo','url("'+core.SERVER_ICON_URL+'")')}
   updateStyleOutputs();
   var hh=num('BuilderHeaderHeight',44),bs=num('BuilderHeaderButtonSize',34),is=num('BuilderHeaderIconSize',17),as=num('BuilderHeaderAvatarSize',30),sp=num('BuilderHeaderSpacing',7),op=num('BuilderHeaderOpacity',68);
   hp.style.setProperty('--hp-h',hh+'px');hp.style.setProperty('--hp-b',bs+'px');hp.style.setProperty('--hp-i',is+'px');hp.style.setProperty('--hp-a',as+'px');hp.style.setProperty('--hp-gap',sp+'px');hp.style.setProperty('--hp-alpha',(op/100).toFixed(2));hp.dataset.position=q('BuilderHeaderPosition').value||'Left';

@@ -5,7 +5,7 @@
     <RootNamespace>Jellyfin.Plugin.SakuraTea</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.1.18.0</Version>
+    <Version>0.1.19.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
     <EmbeddedResource Include="Configuration\config.html" />
     <EmbeddedResource Include="Inject\**\*.css" />
     <EmbeddedResource Include="Inject\**\*.js" />
+    <EmbeddedResource Include="Inject\Brand\*.png" />
   </ItemGroup>
 
   <ItemGroup>

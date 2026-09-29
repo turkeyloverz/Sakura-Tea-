@@ -2,7 +2,7 @@
 
 Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic anime-first home screen with Sakura styling.
 
-> **Status:** `0.1.18` alpha for Jellyfin 12 (plugin version `0.1.18.0`).
+> **Status:** `0.1.19` alpha for Jellyfin 12 (plugin version `0.1.19.0`).
 
 ## Features
 
@@ -21,6 +21,12 @@ Sakura Tea is a Jellyfin 12 visual-customisation plugin focused on a cinematic a
 - Jellyfin Server: **12.0**
 - .NET: **10.0**
 - Frontend injection: **File Transformation** plugin
+
+## Clean flower logo (0.1.19)
+
+The header, branding preview, and builder title use the cleaned transparent flower
+logo bundled in the plugin. It is served by Jellyfin and works without an external
+image host. Independent logo size and position controls still apply.
 
 ## Server icon fix (0.1.18)
 

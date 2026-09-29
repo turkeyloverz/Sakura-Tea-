@@ -7,7 +7,7 @@ public static class FrontendAssets
     public sealed record Asset(string FileName, string Folder, Feature RequiredFeature = Feature.Always)
     {
         public bool IsStyle => FileName.EndsWith(".css", StringComparison.OrdinalIgnoreCase);
-        public string ContentType => IsStyle ? "text/css; charset=utf-8" : "text/javascript; charset=utf-8";
+        public string ContentType => FileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ? "image/png" : IsStyle ? "text/css; charset=utf-8" : "text/javascript; charset=utf-8";
         public string ResourceName => $"Jellyfin.Plugin.SakuraTea.Inject.{Folder}.{FileName}";
     }
 
@@ -27,5 +27,6 @@ public static class FrontendAssets
     ];
 
     public static IReadOnlyDictionary<string, Asset> ByFileName { get; } =
-        Ordered.ToDictionary(asset => asset.FileName, StringComparer.Ordinal);
+        Ordered.Append(new Asset("sakura-tea-logo-flower.png", "Brand"))
+            .ToDictionary(asset => asset.FileName, StringComparer.Ordinal);
 }

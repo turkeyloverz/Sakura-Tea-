@@ -98,7 +98,7 @@ jobs:
             --arg targetAbi "$TARGET_ABI" \
             '{
               category: "General",
-              changelog: "Use the custom Sakura Tea server icon in the live header and UI Builder, preserving independent icon size and position controls.",
+              changelog: "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
               description: "A Sakura-inspired cinematic Jellyfin Web experience.",
               guid: "3bf6515b-c10a-4307-a3e8-942eaffe900d",
               name: "Sakura Tea",
@@ -138,7 +138,7 @@ jobs:
             '.[0].versions = (
               [{
                 version: $version,
-                changelog: "Use the custom Sakura Tea server icon in the live header and UI Builder, preserving independent icon size and position controls.",
+                changelog: "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
                 targetAbi: $targetAbi,
                 sourceUrl: $sourceUrl,
                 checksum: $checksum,
@@ -177,9 +177,9 @@ jobs:
           body: |
             Sakura Tea ${{ needs.parse.outputs.tag }} for Jellyfin 12.
 
-            - Use the supplied transparent Sakura Tea artwork as the server icon in both the live header and UI Builder.
-            - Preserve independent icon positioning and size controls.
-            - Keep a flower fallback if the external image cannot load.
+            - Use the cleaned pink-and-gold flower logo in the header, builder preview, and builder title.
+            - Bundle the transparent PNG inside the plugin and serve it through Jellyfin; no external logo host is needed.
+            - Preserve independent logo size and position controls and support Jellyfin installations under a URL subpath.
 
             Requires File Transformation for frontend injection.
           files: dist/${{ steps.package.outputs.zip_name }}

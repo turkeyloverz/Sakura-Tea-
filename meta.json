@@ -1,13 +1,13 @@
 {
   "category": "General",
-  "changelog": "Use the custom Sakura Tea server icon in the live header and UI Builder, preserving independent icon size and position controls.",
+  "changelog": "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
   "description": "A Sakura-inspired cinematic Jellyfin Web experience.",
   "guid": "3bf6515b-c10a-4307-a3e8-942eaffe900d",
   "name": "Sakura Tea",
   "overview": "Anime-first hero, Sakura visuals, petals and a refined Jellyfin home experience.",
   "owner": "turkeyloverz",
   "targetAbi": "12.0.0.0",
-  "version": "0.1.18.0",
+  "version": "0.1.19.0",
   "status": "Active",
   "autoUpdate": true,
   "assemblies": [
