@@ -1,6 +1,6 @@
 {
   "category": "General",
-  "changelog": "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
+  "changelog": "Home light-mode wallpaper applied directly to the Home page with a lighter overlay; plain dark mode and the bundled transparent flower logo are preserved.",
   "description": "A Sakura-inspired cinematic Jellyfin Web experience.",
   "guid": "3bf6515b-c10a-4307-a3e8-942eaffe900d",
   "name": "Sakura Tea",

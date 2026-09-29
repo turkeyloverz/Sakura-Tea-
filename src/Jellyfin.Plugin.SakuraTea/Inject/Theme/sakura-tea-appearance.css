@@ -60,7 +60,8 @@
     box-shadow: none;
     border-color: #625069;
 }
-html.sakura-tea-dark.sakura-tea-home body {
+html.sakura-tea-dark.sakura-tea-home body,
+html.sakura-tea-dark.sakura-tea-home :is(#indexPage, .homePage) {
     background: #100e14 !important;
 }
 html.sakura-tea-dark #sakuraTeaHero,

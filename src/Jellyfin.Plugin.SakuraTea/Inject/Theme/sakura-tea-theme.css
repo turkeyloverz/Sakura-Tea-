@@ -5,7 +5,7 @@
     --sakura-tea-lavender: #c8b6ff;
     --sakura-tea-cream: #fff8f2;
     --sakura-tea-home-veil: rgba(10, 7, 15, .24);
-    --sakura-tea-wallpaper: url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/2069136.jpg");
+    --sakura-tea-wallpaper: url("https://cdn.jsdelivr.net/gh/turkeyloverz/jellyfin-theme@580929b18f03c982b41ed9d2a215b54c4bf02e62/2069136.jpg");
     --sakura-tea-logo: url("https://raw.githubusercontent.com/turkeyloverz/jellyfin-theme/main/pngwing.com.png");
 }
 
@@ -14,9 +14,7 @@ html.sakura-tea-runtime {
 }
 
 html.sakura-tea-runtime.sakura-tea-home body {
-    background:
-        linear-gradient(rgba(12, 9, 18, .57), rgba(15, 10, 22, .62)),
-        var(--sakura-tea-wallpaper) center / cover fixed !important;
+    background: #100e14 !important;
 }
 
 /* Reserve no native header space on Home: the hero starts at y=0. */
@@ -29,6 +27,15 @@ html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab.is-active {
     padding-top: 0 !important;
     margin-top: 0 !important;
     top: 0 !important;
+}
+
+/* Put the wallpaper on Home itself, above Jellyfin's opaque page layers. */
+html.sakura-tea-runtime.sakura-tea-home:not(.sakura-tea-dark) :is(#indexPage, .homePage) {
+    background: linear-gradient(rgba(12, 9, 18, .20), rgba(15, 10, 22, .40)),
+        var(--sakura-tea-wallpaper) center / cover fixed !important;
+}
+
+html.sakura-tea-runtime.sakura-tea-home #indexPage #homeTab {
     background: transparent !important;
 }
 

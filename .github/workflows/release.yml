@@ -98,7 +98,7 @@ jobs:
             --arg targetAbi "$TARGET_ABI" \
             '{
               category: "General",
-              changelog: "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
+              changelog: "Home light-mode wallpaper applied directly to the Home page with a lighter overlay; plain dark mode and the bundled transparent flower logo are preserved.",
               description: "A Sakura-inspired cinematic Jellyfin Web experience.",
               guid: "3bf6515b-c10a-4307-a3e8-942eaffe900d",
               name: "Sakura Tea",
@@ -138,7 +138,7 @@ jobs:
             '.[0].versions = (
               [{
                 version: $version,
-                changelog: "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
+                changelog: "Home light-mode wallpaper applied directly to the Home page with a lighter overlay; plain dark mode and the bundled transparent flower logo are preserved.",
                 targetAbi: $targetAbi,
                 sourceUrl: $sourceUrl,
                 checksum: $checksum,
@@ -177,6 +177,8 @@ jobs:
           body: |
             Sakura Tea ${{ needs.parse.outputs.tag }} for Jellyfin 12.
 
+            - Use the selected sakura wallpaper directly on Home with a lighter overlay; dark mode stays plain.
+            - Keep the plugin version at 0.1.19.0. Reinstall this corrected package if that version is already installed.
             - Use the cleaned pink-and-gold flower logo in the header, builder preview, and builder title.
             - Bundle the transparent PNG inside the plugin and serve it through Jellyfin; no external logo host is needed.
             - Preserve independent logo size and position controls and support Jellyfin installations under a URL subpath.
