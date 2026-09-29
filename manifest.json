@@ -9,6 +9,15 @@
     "repositoryUrl": "https://github.com/turkeyloverz/Sakura-Tea-",
     "versions": [
       {
+        "version": "0.1.19.0",
+        "changelog": "Clean transparent Sakura Tea flower logo bundled in the plugin for the header, builder preview and builder title; no external logo host required.",
+        "targetAbi": "12.0.0.0",
+        "sourceUrl": "https://github.com/turkeyloverz/Sakura-Tea-/releases/download/0.1.19/Jellyfin.Plugin.SakuraTea_12.0.0.zip",
+        "checksum": "6DD1E3F25711D18B0EB7730C874BD802",
+        "timestamp": "2026-09-29T20:43:18.0000000Z",
+        "dependencies": []
+      },
+      {
         "version": "0.1.18.0",
         "changelog": "Use the custom Sakura Tea server icon in the live header and UI Builder, preserving independent icon size and position controls.",
         "targetAbi": "12.0.0.0",
